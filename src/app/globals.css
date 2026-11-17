@@ -152,7 +152,7 @@ html { scroll-behavior: smooth; }
 
 /* ---------- custom cursor ---------- */
 @media (pointer: fine) {
-  .custom-cursor, .custom-cursor a, .custom-cursor button { cursor: none; }
+  .custom-cursor, .custom-cursor * { cursor: none !important; }
 }
 
 /* ---------- hero polish ---------- */

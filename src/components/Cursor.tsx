@@ -41,13 +41,13 @@ export default function Cursor() {
     >
       {hover ? (
         // hand pointer — white fill, blue outline (like heygen)
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="#ffffff" stroke="#3b82f6" strokeWidth="1.3" strokeLinejoin="round"
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="#3b82f6" stroke="#1d4ed8" strokeWidth="1.3" strokeLinejoin="round"
           style={{ transform: `translate(-2px,-4px) scale(${down ? 0.9 : 1})`, filter: 'drop-shadow(0 2px 3px rgba(0,0,0,.4))' }}>
           <path d="M8.5 12.5V5.8a1.3 1.3 0 012.6 0v5.2h1V4.5a1.3 1.3 0 012.6 0v6h1V6.3a1.3 1.3 0 012.6 0v4.2h1V8a1.3 1.3 0 012.6 0v7.2c0 4-2.8 6.3-6.3 6.3-3 0-4.6-1.2-6-3.6l-2.6-4.3c-.6-1 .3-1.9 1.2-1.6l1.7.5z" />
         </svg>
       ) : (
         // arrow pointer — white fill, blue outline
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="#ffffff" stroke="#3b82f6" strokeWidth="1.5" strokeLinejoin="round"
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="#171717" stroke="#0a0a0a" strokeWidth="1.5" strokeLinejoin="round"
           style={{ transform: `scale(${down ? 0.88 : 1})`, filter: 'drop-shadow(0 2px 3px rgba(0,0,0,.4))' }}>
           <path d="M4 2l16 8.5-7 1.5-3.2 7L4 2z" />
         </svg>
