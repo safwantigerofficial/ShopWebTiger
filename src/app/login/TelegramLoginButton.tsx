@@ -20,7 +20,7 @@ export default function TelegramLoginButton({ botUsername }: { botUsername: stri
       else setError('Login failed — please try again.');
     };
     const script = document.createElement('script');
-    script.src = 'https://telegram.org/js/telegram-widget.js?22';
+    script.src = '/api/tg-widget';
     script.async = true;
     script.setAttribute('data-telegram-login', botUsername);
     script.setAttribute('data-size', 'large');
