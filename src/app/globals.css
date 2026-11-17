@@ -2,9 +2,95 @@
 @tailwind components;
 @tailwind utilities;
 
-body { @apply bg-night-950 text-slate-100 antialiased; }
-.card { @apply bg-night-800 border border-night-600 rounded-2xl p-4; }
-.btn { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 font-semibold transition disabled:opacity-50; }
-.btn-primary { @apply btn bg-brand text-night-950 hover:bg-brand-light; }
-.btn-ghost { @apply btn bg-night-700 text-slate-200 hover:bg-night-600; }
-.input { @apply w-full rounded-xl bg-night-700 border border-night-600 px-4 py-2.5 text-slate-100 outline-none focus:border-brand; }
+:root {
+  color-scheme: dark;
+}
+
+body {
+  @apply text-slate-100 antialiased;
+  background: #111111;
+}
+
+/* subtle grid backdrop like the verify page */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 40%, transparent 100%);
+}
+
+.serif {
+  font-family: 'Newsreader', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+}
+
+.card {
+  @apply rounded-2xl p-4;
+  background: rgba(28, 28, 28, 0.82);
+  border: 1px solid #2e2e2e;
+  backdrop-filter: blur(8px);
+}
+
+.card-hover {
+  @apply transition;
+}
+.card-hover:hover {
+  border-color: rgba(62, 207, 142, 0.4);
+  background: rgba(34, 34, 34, 0.9);
+}
+
+.btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 font-semibold transition disabled:opacity-50;
+}
+.btn-primary {
+  @apply btn text-black;
+  background: #3ecf8e;
+}
+.btn-primary:hover {
+  background: #54dba1;
+}
+.btn-ghost {
+  @apply btn text-slate-200;
+  background: #232323;
+  border: 1px solid #3a3a3a;
+}
+.btn-ghost:hover {
+  background: #2a2a2a;
+}
+
+.input {
+  @apply w-full rounded-xl px-4 py-2.5 text-slate-100 outline-none;
+  background: #1c1c1c;
+  border: 1px solid #2e2e2e;
+}
+.input:focus {
+  border-color: #3ecf8e;
+}
+
+.chip {
+  @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-medium;
+}
+.chip-green {
+  color: #3ecf8e;
+  background: rgba(62, 207, 142, 0.12);
+  border: 1px solid rgba(62, 207, 142, 0.32);
+}
+.chip-amber {
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+.chip-red {
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.chip-grey {
+  color: #a1a1a1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #3a3a3a;
+}

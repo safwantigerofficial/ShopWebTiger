@@ -4,8 +4,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        brand: { DEFAULT: '#f59e0b', dark: '#b45309', light: '#fbbf24' },
-        night: { 950: '#0a0e17', 900: '#0f1420', 800: '#161c2c', 700: '#1f2739', 600: '#2a3449' },
+        brand: { DEFAULT: '#3ecf8e', dark: '#18a86b', light: '#54dba1' },
+        tiger: '#f2a65a',
+        night: { 950: '#111111', 900: '#161616', 800: '#1c1c1c', 700: '#232323', 600: '#2e2e2e', 500: '#3a3a3a' },
+      },
+      fontFamily: {
+        serif: ['Newsreader', 'Iowan Old Style', 'Georgia', 'serif'],
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
     },
   },

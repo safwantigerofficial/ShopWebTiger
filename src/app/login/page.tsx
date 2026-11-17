@@ -7,16 +7,28 @@ import TelegramLoginButton from './TelegramLoginButton';
 export default async function LoginPage() {
   const session = await getSession();
   if (session.telegramId) redirect('/shop');
+  const botId = (env.TELEGRAM_LOGIN_BOT_TOKEN ?? '').split(':')[0] ?? '';
+  const siteUrl = env.SITE_URL ? `https://${env.SITE_URL.replace(/^https?:\/\//, '')}` : '';
   return (
-    <div className="min-h-[70vh] flex flex-col items-center justify-center gap-6">
-      <div className="text-center">
-        <div className="text-4xl mb-2">🐯</div>
-        <h1 className="text-2xl font-bold">SafwanTiger Shop</h1>
-        <p className="text-slate-400 mt-1">Log in with Telegram to access your wallet & orders</p>
+    <div className="min-h-[72vh] flex flex-col items-center justify-center text-center">
+      <div className="text-5xl mb-4">🐯</div>
+      <h1 className="serif text-4xl sm:text-5xl font-medium tracking-tight">
+        SafwanTiger <em className="not-italic text-brand">Shop</em>
+      </h1>
+      <p className="text-slate-400 mt-3 max-w-sm">
+        Premium digital goods, instant delivery — your wallet, orders and referrals are already here.
+      </p>
+      <div className="mt-8">
+        <Suspense>
+          <TelegramLoginButton
+            botUsername={env.TELEGRAM_LOGIN_BOT_USERNAME}
+            botId={botId}
+            siteUrl={siteUrl}
+          />
+        </Suspense>
       </div>
-      <Suspense><TelegramLoginButton botUsername={env.TELEGRAM_LOGIN_BOT_USERNAME} /></Suspense>
-      <p className="text-xs text-slate-500 max-w-xs text-center">
-        Same account as the Telegram bot — your balance, orders and referrals are already here.
+      <p className="text-xs text-slate-500 max-w-xs mt-8">
+        Same account as the Telegram bot — one tap and your balance is waiting.
       </p>
     </div>
   );
