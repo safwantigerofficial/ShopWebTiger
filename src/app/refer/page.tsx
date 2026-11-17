@@ -15,7 +15,8 @@ export default async function ReferPage() {
     getReferralEarnings(user.telegram_id),
     getReferralValueSummary(user.telegram_id, REFERRAL_USDT_PER_REF),
   ]);
-  const link = `https://t.me/${env.MAIN_BOT_USERNAME}?start=${user.ref_code}`;
+  const base = env.SITE_URL ? `https://${env.SITE_URL.replace(/^https?:\/\//, '')}` : '';
+  const link = `${base}/login?ref=${user.ref_code}`;
   const availableUsd = valued?.availableUsd ?? earnings.available * REFERRAL_USDT_PER_REF;
   const canConvert = availableUsd >= REFERRAL_MIN_CONVERT_USDT;
 

@@ -3920,3 +3920,13 @@ export async function recordGiftCodeRedemption(args: {
   }
   return data as DBGiftCodeRedemption;
 }
+
+/** Look up a user by their public referral code (website ?ref= links). */
+export async function getUserByRefCode(ref_code: string): Promise<DBUser | null> {
+  const { data } = await supabase
+    .from('users')
+    .select('*')
+    .eq('ref_code', ref_code)
+    .maybeSingle();
+  return (data as DBUser) ?? null;
+}

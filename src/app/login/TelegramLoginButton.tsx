@@ -1,18 +1,20 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function TelegramLoginButton({ botUsername }: { botUsername: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const params = useSearchParams();
   const [error, setError] = useState('');
 
   useEffect(() => {
+    const refCode = params.get('ref') ?? '';
     (window as any).onTelegramAuth = async (user: Record<string, string>) => {
       const res = await fetch('/api/auth/telegram', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(user),
+        body: JSON.stringify({ ...user, ref: refCode }),
       });
       if (res.ok) router.push('/shop');
       else setError('Login failed — please try again.');
@@ -25,7 +27,7 @@ export default function TelegramLoginButton({ botUsername }: { botUsername: stri
     script.setAttribute('data-onauth', 'onTelegramAuth(user)');
     script.setAttribute('data-request-access', 'write');
     ref.current?.appendChild(script);
-  }, [botUsername, router]);
+  }, [botUsername, router, params]);
 
   return (
     <div>
