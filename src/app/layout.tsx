@@ -3,6 +3,8 @@ import Link from 'next/link';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import ThemeToggle from '../components/ThemeToggle';
+import Cursor from '../components/Cursor';
+import LiveBg from '../components/LiveBg';
 
 export const metadata = { title: 'SafwanTiger Shop', description: 'Premium digital goods — instant delivery' };
 
@@ -22,6 +24,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        <LiveBg />
+        <Cursor />
         <header className="sticky top-0 z-40 border-b" style={{ borderColor: 'var(--border)', background: 'var(--nav)', backdropFilter: 'blur(10px)' }}>
           <div className="mx-auto max-w-5xl px-4 h-16 flex items-center justify-between gap-4">
             <Link href="/" className="flex items-center gap-2.5 font-semibold tracking-tight shrink-0">
