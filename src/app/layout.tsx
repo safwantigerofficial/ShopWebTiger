@@ -1,6 +1,7 @@
 import './globals.css';
 import Link from 'next/link';
 import Nav from '../components/Nav';
+import Footer from '../components/Footer';
 
 export const metadata = { title: 'SafwanTiger Shop', description: 'Premium digital goods — instant delivery' };
 
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </header>
         <main className="mx-auto max-w-4xl px-4 pt-6 pb-24">{children}</main>
+        <Footer />
         <Nav />
       </body>
     </html>
