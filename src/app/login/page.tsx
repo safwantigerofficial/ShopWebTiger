@@ -11,7 +11,7 @@ export default async function LoginPage() {
   const siteUrl = env.SITE_URL ? `https://${env.SITE_URL.replace(/^https?:\/\//, '')}` : '';
   return (
     <div className="min-h-[72vh] flex flex-col items-center justify-center text-center">
-      <div className="text-5xl mb-4">🐯</div>
+      <img src="/logo.jpg" alt="SafwanTiger" className="w-24 h-24 rounded-3xl object-cover mb-5" />
       <h1 className="serif text-4xl sm:text-5xl font-medium tracking-tight">
         SafwanTiger <em className="not-italic text-brand">Shop</em>
       </h1>

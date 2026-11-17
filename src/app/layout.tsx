@@ -2,13 +2,18 @@ import './globals.css';
 import Link from 'next/link';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
+import ThemeToggle from '../components/ThemeToggle';
 
 export const metadata = { title: 'SafwanTiger Shop', description: 'Premium digital goods — instant delivery' };
 
+const themeInit = `(function(){var t=localStorage.getItem('st-theme')||'dark';document.documentElement.dataset.theme=t})()`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="dark" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInit }} />
+        <link rel="icon" href="/logo.jpg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
@@ -17,24 +22,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        <header className="sticky top-0 z-40 border-b border-night-600 bg-night-950/70 backdrop-blur">
-          <div className="mx-auto max-w-4xl px-4 h-14 flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
-              <span className="text-xl">🐯</span>
-              <span>SafwanTiger <span className="text-brand">Shop</span></span>
+        <header className="sticky top-0 z-40 border-b" style={{ borderColor: 'var(--border)', background: 'var(--nav)', backdropFilter: 'blur(10px)' }}>
+          <div className="mx-auto max-w-5xl px-4 h-16 flex items-center justify-between gap-4">
+            <Link href="/" className="flex items-center gap-2.5 font-semibold tracking-tight shrink-0">
+              <img src="/logo.jpg" alt="SafwanTiger" className="w-9 h-9 rounded-xl object-cover" />
+              <span className="hidden xs:inline">SafwanTiger <span style={{ color: 'var(--brand)' }}>Shop</span></span>
             </Link>
-            <div className="hidden sm:flex items-center gap-5 text-sm text-slate-400">
-              <Link href="/shop" className="hover:text-slate-200">Shop</Link>
-              <Link href="/orders" className="hover:text-slate-200">Orders</Link>
-              <Link href="/wallet" className="hover:text-slate-200">Wallet</Link>
-              <Link href="/freebies" className="hover:text-slate-200">Freebies</Link>
-              <Link href="/refer" className="hover:text-slate-200">Refer &amp; Earn</Link>
-            </div>
+            <Nav />
+            <ThemeToggle />
           </div>
         </header>
-        <main className="mx-auto max-w-4xl px-4 pt-6 pb-24">{children}</main>
+        <main className="mx-auto max-w-5xl px-4 pt-6 pb-10 min-h-[70vh]">{children}</main>
         <Footer />
-        <Nav />
       </body>
     </html>
   );
