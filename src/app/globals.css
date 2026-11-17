@@ -153,20 +153,6 @@ html { scroll-behavior: smooth; }
 /* ---------- custom cursor ---------- */
 @media (pointer: fine) {
   .custom-cursor, .custom-cursor a, .custom-cursor button { cursor: none; }
-  .cursor-dot {
-    position: fixed; top: -3px; left: -3px; width: 6px; height: 6px;
-    border-radius: 50%; background: var(--brand); z-index: 9999;
-    pointer-events: none;
-  }
-  .cursor-ring {
-    position: fixed; top: -17px; left: -17px; width: 34px; height: 34px;
-    border-radius: 50%; border: 1.5px solid var(--brand);
-    opacity: 0.55; z-index: 9998; pointer-events: none;
-    transition: width 0.2s, height 0.2s, top 0.2s, left 0.2s, opacity 0.2s;
-  }
-  .cursor-ring.cursor-hover {
-    width: 48px; height: 48px; top: -24px; left: -24px; opacity: 0.9;
-  }
 }
 
 /* ---------- hero polish ---------- */
