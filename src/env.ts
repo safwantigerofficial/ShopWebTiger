@@ -8,8 +8,6 @@ export const env = {
   MAIN_BOT_USERNAME: process.env.MAIN_BOT_USERNAME ?? '',
   CRYPTOBOT_API_TOKEN: process.env.CRYPTOBOT_API_TOKEN ?? '',
   CRYPTOBOT_API_BASE_URL: process.env.CRYPTOBOT_API_BASE_URL ?? 'https://pay.crypt.bot',
-  TUNVN_API_KEY: process.env.TUNVN_API_KEY ?? '',
-  TUNVN_BASE_URL: process.env.TUNVN_BASE_URL ?? '',
   SESSION_SECRET: process.env.SESSION_SECRET ?? '',
   SITE_URL: process.env.SITE_URL ?? '',
 };
