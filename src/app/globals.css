@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body { @apply bg-night-950 text-slate-100 antialiased; }
+.card { @apply bg-night-800 border border-night-600 rounded-2xl p-4; }
+.btn { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 font-semibold transition disabled:opacity-50; }
+.btn-primary { @apply btn bg-brand text-night-950 hover:bg-brand-light; }
+.btn-ghost { @apply btn bg-night-700 text-slate-200 hover:bg-night-600; }
+.input { @apply w-full rounded-xl bg-night-700 border border-night-600 px-4 py-2.5 text-slate-100 outline-none focus:border-brand; }

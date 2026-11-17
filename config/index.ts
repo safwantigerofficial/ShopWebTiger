@@ -1,0 +1,756 @@
+export const COLOR_PREFIX = {
+  blue: '🔵',
+  green: '🟢',
+  red: '🔴',
+  yellow: '🟡',
+  none: '',
+} as const;
+export type ColorMode = keyof typeof COLOR_PREFIX;
+export type Lang = 'en' | 'ar' | 'vi';
+export const DEFAULT_LANG: Lang = 'en';
+export const BUTTON_KEYS = {
+  shop: 'btn.shop',
+  topup: 'btn.topup',
+  profile: 'btn.profile',
+  support: 'btn.support',
+  ai_support: 'btn.ai_support',
+  main_menu: 'btn.main_menu',
+  back: 'btn.back',
+  next: 'btn.next',
+  prev: 'btn.prev',
+  refresh: 'btn.refresh',
+  buy_now: 'btn.buy_now',
+  pre_order: 'btn.pre_order',
+  redeem_referral: 'btn.redeem_referral',
+  referral_earn_buy: 'btn.referral_earn_buy',
+  convert_refers: 'btn.convert_refers',
+  topup_wallet: 'btn.topup_wallet',
+  view_note: 'btn.view_note',
+  qty_plus: 'btn.qty_plus',
+  qty_minus: 'btn.qty_minus',
+  out_of_stock: 'btn.out_of_stock',
+  my_orders: 'btn.my_orders',
+  refer: 'btn.refer',
+  notifications: 'btn.notifications',
+  toggle_stock: 'btn.toggle_stock',
+  toggle_announcements: 'btn.toggle_announcements',
+  language: 'btn.language',
+  deposit_history: 'btn.deposit_history',
+  channel: 'btn.channel',
+  reseller_api: 'btn.reseller_api',
+  force_join: 'btn.force_join',
+  force_join_done: 'btn.force_join_done',
+  force_join_skip: 'btn.force_join_skip',
+  cryptobot_open_invoice: 'btn.cryptobot_open_invoice',
+  cryptobot_check: 'btn.cryptobot_check',
+  back_to_settings: 'btn.back_to_settings',
+  stats: 'btn.stats',
+  stats_refresh: 'btn.stats_refresh',
+  stats_24h: 'btn.stats.24h',
+  stats_7d: 'btn.stats.7d',
+  stats_30d: 'btn.stats.30d',
+  stats_custom: 'btn.stats.custom',
+  set_region: 'btn.set_region',
+  set_email: 'btn.set_email',
+  currency: 'btn.currency',
+  shop_view: 'btn.shop_view',
+  shop_grouping: 'btn.shop_grouping',
+  shop_view_paged: 'btn.shop_view_paged',
+  shop_view_paged10: 'btn.shop_view_paged10',
+  shop_view_all: 'btn.shop_view_all',
+  shop_grouped: 'btn.shop_grouped',
+  shop_ungrouped: 'btn.shop_ungrouped',
+
+  // ---- Email hub & sub-screens ---------------------------------
+  email_settings: 'btn.email.settings',
+  email_set: 'btn.email.set',
+  email_change: 'btn.email.change',
+  email_delete: 'btn.email.delete',
+  email_delete_confirm: 'btn.email.delete.confirm',
+  email_delete_cancel: 'btn.email.delete.cancel',
+  email_why: 'btn.email.why',
+  email_know_more: 'btn.email.know_more',
+
+  // ---- Notifications toggles (state-aware labels) --------------
+  notify_stock_on: 'btn.notify.stock.on',
+  notify_stock_off: 'btn.notify.stock.off',
+  notify_ann_on: 'btn.notify.ann.on',
+  notify_ann_off: 'btn.notify.ann.off',
+  notify_wallet_on: 'btn.notify.wallet.on',
+  notify_wallet_off: 'btn.notify.wallet.off',
+
+  // ---- Send-PDF buttons ---------------------------------------
+  send_pdf_stats: 'btn.send_pdf.stats',
+  send_pdf_deposits: 'btn.send_pdf.deposits',
+  send_pdf_orders: 'btn.send_pdf.orders',
+
+  // ---- Refer screen --------------------------------------------
+  copy_link: 'btn.copy_link',
+  live_refers: 'btn.live_refers',
+  refer_convert: 'btn.refer_convert',
+  freebies: 'btn.freebies',
+  freebie_claim: 'btn.freebie_claim',
+  home: 'btn.home',
+
+  // ---- Redeem Gift Code ---------------------------------------
+  redeem: 'btn.redeem',
+  buy_code: 'btn.buy_code',
+
+  // ---- Order-detail screen ------------------------------------
+  orders_open_link: 'btn.orders_open_link',
+  orders_back_list: 'btn.orders_back_list',
+  // "Find by Order ID" lets the user jump straight to a specific
+  // order detail screen by typing a public Order ID (e.g.
+  // ORD67FF2G9YG) — useful when the orders list is long.
+  find_order_by_id: 'btn.find_order_by_id',
+
+  // ---- Support section ----------------------------------------
+  support_contact: 'support.btn.contact',
+  support_live: 'support.btn.live',
+  support_cancel: 'support.btn.cancel',
+  support_end_session: 'support.btn.end_session',
+  // "Send chat PDF to email" — shown under the closure message so
+  // the user can keep a copy of the just-finished Live Support
+  // transcript without contacting an admin.
+  support_email_transcript: 'support.btn.email_transcript',
+
+  // ---- Language picker ---------------------------------------
+  language_en: 'btn.language.english',
+  language_ar: 'btn.language.arabic',
+  language_vi: 'btn.language.vietnamese',
+
+  // ---- Region picker -----------------------------------------
+  region_clear: 'btn.region.clear',
+
+  // ---- Quantity editor (replaces the type-a-number prompt) ----
+  qty_max: 'btn.qty.max',
+  qty_reset: 'btn.qty.reset',
+  qty_confirm: 'btn.qty.confirm',
+  contact_admin: 'btn.contact_admin',
+  qty_dec_1: 'btn.qty.dec_1',
+  qty_dec_10: 'btn.qty.dec_10',
+  qty_dec_100: 'btn.qty.dec_100',
+  qty_inc_1: 'btn.qty.inc_1',
+  qty_inc_10: 'btn.qty.inc_10',
+  qty_inc_100: 'btn.qty.inc_100',
+  qty_display: 'btn.qty.display',
+
+  // ---- Product page extras ----
+  share_product: 'btn.share_product',
+  view_note_file: 'btn.view_note_file',
+  send_note_txt: 'btn.send_note_txt',
+
+  // ---- Custom-quantity keypad (replaces the legacy +/- adder) ---
+  custom_qty: 'btn.custom_qty',
+  qty_keypad_back: 'btn.qty_keypad_back',
+  qty_keypad_clear: 'btn.qty_keypad_clear',
+  qty_keypad_confirm: 'btn.qty_keypad_confirm',
+  // `qty_keypad_max` snaps the buffer to the user's purchasable
+  // ceiling (`min(QTY_MAX, stock)`). Sits next to Confirm so the
+  // bulk-buy gesture is one tap.
+  qty_keypad_max: 'btn.qty_keypad_max',
+  // ---- Buy-now payment-method screen ----------------------------
+  pay_wallet: 'btn.pay_wallet',
+  pay_referral: 'btn.pay_referral',
+  pay_direct: 'btn.pay_direct',
+  pay_topup: 'btn.pay_topup',
+  // "Others" + "Back" rows on the shared payment-methods keyboard
+  // (Top-Up Wallet & Direct-Pay both use this keyboard). Promoted
+  // out of the previous hard-coded `kb.text('💡 Others', …)` /
+  // `btn.back` rendering so they pick up the standard premium-emoji
+  // icon override + Bot API 9.4 button style applied by `inlineBtn`.
+  paymethod_others: 'btn.paymethod_others',
+  paymethod_back: 'btn.paymethod_back',
+  // Wallet-payment confirmation card (page 2 of the buy flow):
+  // green Confirm + red back-arrow Cancel.
+  confirm_pay: 'btn.confirm_pay',
+  cancel_pay: 'btn.cancel_pay',
+
+  // ---- Premium-shop overhaul ----------------------------------
+  // `using_method` is the post-order tutorial trigger (pic 3).
+  // `bot_tutorial` + `send_price_list` are the two new Settings
+  // entries. `tutorial_open_link` opens the admin-configured
+  // external URL. `email_reports_on/off` is the new toggle row in
+  // the notifications screen.
+  using_method: 'btn.using_method',
+  tutorial_open_link: 'btn.tutorial_open_link',
+  bot_tutorial: 'btn.bot_tutorial',
+  send_price_list: 'btn.send_price_list',
+  send_price_list_mail: 'btn.send_price_list.mail',
+  send_price_list_chat: 'btn.send_price_list.chat',
+  notify_email_on: 'btn.notify.email.on',
+  notify_email_off: 'btn.notify.email.off',
+
+  // ---- Post-purchase email follow-up --------------------------
+  // `set_email_now` is shown under the "Please add your verified
+  // email" prompt that follows an Order Delivered card when the
+  // buyer has no email on file. `view_invoice` opens the public
+  // Order detail screen on the same chat.
+  set_email_now: 'btn.set_email_now',
+  view_invoice: 'btn.view_invoice',
+
+  // ---- Per-payment-method tutorial ("Where TXID? / Where Order ID?") ----
+  // Surfaced under every chain/Binance/LTC instruction screen as
+  // an admin-editable how-to card. `where_txid` is for chain &
+  // LTC providers (TRC-20 / BEP-20 / TON / LTC); `where_order_id`
+  // for the Binance Pay flow (which collects the 18-digit Order ID
+  // instead of an on-chain hash).
+  where_txid: 'btn.where_txid',
+  where_order_id: 'btn.where_order_id',
+
+  // ---- Post-purchase delivery form ----------------------------
+  // Two buttons under the success card sent after a buyer submits
+  // their per-product details:
+  //   • `delivery_edit` reopens the form pre-filled so the buyer
+  //     can correct a typo and resubmit.
+  //   • `delivery_admin_help` is a URL button that opens the admin
+  //     DM with the auto-message already pre-filled (see
+  //     `getAdminContactUrlWithPrefill`).
+  delivery_edit: 'btn.delivery.edit',
+  delivery_admin_help: 'btn.delivery.admin_help',
+  delivery_done: 'btn.delivery.done',
+  delivery_manual_message: 'btn.delivery.manual_message',
+} as const;
+
+/**
+ * COLOR ASSIGNMENTS PER BUTTON
+ * Maps to Bot API 9.4 button styles via `colorModeToStyle()`:
+ *   blue → primary, green → success, red → danger, yellow/none → app default.
+ * The admin can override these at runtime via /setcolor <key> <mode>.
+ */
+export const DEFAULT_BUTTON_COLORS: Record<keyof typeof BUTTON_KEYS, ColorMode> = {
+  shop: 'green',
+  topup: 'blue',
+  profile: 'none',
+  support: 'blue',
+  ai_support: 'blue',
+  main_menu: 'none',
+  // 2026-05-08: rolled back to neutral. The previous bot-owner
+  // tweak made every plain `Back` look like a destructive button,
+  // but the new spec is the *opposite* — only the dedicated
+  // `Cancel` (red) on payment-instructions screens should read as
+  // dangerous; bare `Back` (qty page, picker, settings, etc.) goes
+  // back to the neutral default-style rail.
+  back: 'none',
+  next: 'none',
+  prev: 'none',
+  refresh: 'none',
+  buy_now: 'green',
+  pre_order: 'red',
+  redeem_referral: 'green',
+  referral_earn_buy: 'green',
+  convert_refers: 'blue',
+  topup_wallet: 'blue',
+  view_note: 'none',
+  qty_plus: 'none',
+  qty_minus: 'none',
+  out_of_stock: 'red',
+  my_orders: 'none',
+  refer: 'green',
+  refer_convert: 'green',
+  notifications: 'none',
+  toggle_stock: 'none',
+  toggle_announcements: 'none',
+  language: 'none',
+  deposit_history: 'none',
+  channel: 'blue',
+  reseller_api: 'blue',
+  force_join: 'blue',
+  force_join_done: 'green',
+  force_join_skip: 'none',
+  cryptobot_open_invoice: 'green',
+  cryptobot_check: 'green',
+  back_to_settings: 'none',
+  stats: 'none',
+  stats_refresh: 'none',
+  stats_24h: 'blue',
+  stats_7d: 'blue',
+  stats_30d: 'blue',
+  stats_custom: 'blue',
+  set_region: 'none',
+  set_email: 'none',
+  currency: 'blue',
+  shop_view: 'blue',
+  shop_grouping: 'blue',
+  shop_view_paged: 'blue',
+  shop_view_paged10: 'blue',
+  shop_view_all: 'blue',
+  shop_grouped: 'green',
+  shop_ungrouped: 'blue',
+
+  // Email hub: Set/Change blue, Delete red, Why neutral.
+  email_settings: 'none',
+  email_set: 'green',
+  email_change: 'blue',
+  email_delete: 'red',
+  email_delete_confirm: 'red',
+  email_delete_cancel: 'none',
+  email_why: 'none',
+  email_know_more: 'blue',
+
+  // Notification toggles: ON green, OFF neutral so the difference reads at a glance.
+  notify_stock_on: 'green',
+  notify_stock_off: 'none',
+  notify_ann_on: 'green',
+  notify_ann_off: 'none',
+  notify_wallet_on: 'green',
+  notify_wallet_off: 'none',
+
+  // Send-PDF buttons: blue (matches the existing .primary() styling).
+  send_pdf_stats: 'blue',
+  send_pdf_deposits: 'blue',
+  send_pdf_orders: 'blue',
+
+  // Refer copy-link: green (positive action).
+  copy_link: 'green',
+  live_refers: 'blue',
+  freebies: 'green',
+  freebie_claim: 'green',
+  home: 'none',
+
+  // Redeem flow.
+  redeem: 'none',
+  buy_code: 'blue',
+
+  // Order detail.
+  orders_open_link: 'blue',
+  orders_back_list: 'none',
+  // Find-by-id matches the Send-PDF blue so search-style actions
+  // read consistently across the orders screen.
+  find_order_by_id: 'blue',
+
+  // Support section.
+  support_contact: 'blue',
+  support_live: 'green',
+  support_cancel: 'red',
+  support_end_session: 'red',
+  // Email-transcript is a positive follow-up action.
+  support_email_transcript: 'blue',
+
+  // Language picker — neutral (admin can colour them per language).
+  language_en: 'none',
+  language_ar: 'none',
+  language_vi: 'none',
+
+  // Region clear: destructive.
+  region_clear: 'red',
+
+  // Quantity editor.
+  qty_max: 'green',
+  qty_reset: 'none',
+  qty_confirm: 'green',
+  contact_admin: 'blue',
+  // Increment buttons (green = positive); decrements neutral so the
+  // counter reads "add" as the visually dominant action.
+  qty_dec_1: 'none',
+  qty_dec_10: 'none',
+  qty_dec_100: 'none',
+  qty_inc_1: 'green',
+  qty_inc_10: 'green',
+  qty_inc_100: 'green',
+  qty_display: 'blue',
+
+  // Product extras.
+  share_product: 'blue',
+  view_note_file: 'none',
+  send_note_txt: 'blue',
+
+  // Custom-quantity keypad — digits stay neutral so the action
+  // buttons (Clear, Confirm, Max) read as the dominant choices.
+  custom_qty: 'blue',
+  qty_keypad_back: 'none',
+  qty_keypad_clear: 'red',
+  qty_keypad_confirm: 'green',
+  qty_keypad_max: 'green',
+
+  // Buy-now payment-method screen.
+  pay_wallet: 'green',
+  pay_referral: 'blue',
+  pay_direct: 'yellow',
+  pay_topup: 'blue',
+  // Payment-methods keyboard chrome — Others sits below the per-
+  // method buttons as the catch-all entry, Back returns to the
+  // previous screen. Others stays primary-blue; Back goes red per
+  // bot-owner spec on the picker (a separate, dedicated `cancel_pay`
+  // button on the per-method instructions screen is also red — both
+  // are exit-style controls so they share the colour).
+  paymethod_others: 'blue',
+  paymethod_back: 'red',
+  // Wallet-confirm screen.
+  confirm_pay: 'green',
+  cancel_pay: 'red',
+
+  // Premium-shop overhaul. `using_method` is the post-order
+  // tutorial CTA (blue = primary action). `out_of_stock`'s color
+  // is already declared above; the new red Buy-Now-when-OOS variant
+  // reuses that key. `email_reports_on` is green like the other
+  // notification toggles.
+  using_method: 'blue',
+  tutorial_open_link: 'blue',
+  bot_tutorial: 'blue',
+  send_price_list: 'blue',
+  send_price_list_mail: 'blue',
+  send_price_list_chat: 'green',
+  notify_email_on: 'green',
+  notify_email_off: 'none',
+  set_email_now: 'blue',
+  view_invoice: 'blue',
+
+  // Per-method tutorial CTAs ("Where TXID? / Where Order ID?")
+  // sit right above the back button on the chain/Binance/LTC
+  // instruction screens. Blue matches the rest of the help-style
+  // buttons in the app.
+  where_txid: 'blue',
+  where_order_id: 'blue',
+
+  // Post-purchase delivery form action buttons.
+  delivery_edit: 'blue',
+  delivery_admin_help: 'red',
+  delivery_done: 'green',
+  delivery_manual_message: 'blue',
+};
+
+
+export type EmojiSpec = string | { unicode: string; custom_emoji_id: string };
+
+export const EMOJI: Record<string, EmojiSpec> = {
+  fire: '🔥',
+  rocket: '🚀',
+  tiger: '🐯',
+  cart: '🛍',
+  wallet: '🪙',
+  wave: '👋',
+  bell: '🔔',
+  globe: '🌐',
+  user: '👤',
+  warranty: '🛡️',
+  stock: '📦',
+  price: '💰',
+  total: '🧮',
+  back: '◀️',
+  next: '▶️',
+  refresh: '🔄',
+  plus: '➕',
+  minus: '➖',
+  buy: '✅',
+  note: '📝',
+  star: '⭐',
+  ai: '🤖',
+  settings: '⚙️',
+  pencil: '✏️',
+  megaphone: '📣',
+  chart: '📊',
+  trash: '🗑',
+  reload: '🔁',
+  broom: '🧹',
+  package: '📦',
+  card: '💳',
+  folder: '🗂',
+  check: '✅',
+  cross: '❌',
+
+  // Premium emojis used on the Stats screen. Telegram premium users
+  // see the styled/animated glyph; everyone else sees the unicode
+  // fallback declared here.
+  stats: { unicode: '📊', custom_emoji_id: '4958506272551863292' },
+  stats_refresh: { unicode: '🔄', custom_emoji_id: '5346321684574003384' },
+  stats_back: { unicode: '◀️', custom_emoji_id: '5440509136259267820' },
+  stats_orders: { unicode: '🧾', custom_emoji_id: '5377660214096974712' },
+  stats_items: { unicode: '🛍', custom_emoji_id: '5222208236505028301' },
+  stats_spent: { unicode: '💰', custom_emoji_id: '5926961826603472005' },
+  stats_last: { unicode: '⏱', custom_emoji_id: '5226597108965993909' },
+  stats_deposits: { unicode: '💳', custom_emoji_id: '5443127283898405358' },
+
+  // ---- Profile screen (one premium emoji per row) ----------------
+  profile_header: { unicode: '⚙️', custom_emoji_id: '5904630315946611415' },
+  profile_id: { unicode: '🆔', custom_emoji_id: '5796517197308236353' },
+  profile_first_name: { unicode: '🪪', custom_emoji_id: '5800956853462504394' },
+  profile_username: { unicode: '👤', custom_emoji_id: '5370935802844946281' },
+  profile_link: { unicode: '🔗', custom_emoji_id: '4958689671950369798' },
+  profile_status: { unicode: '🚀', custom_emoji_id: '5213147006561692829' },
+  profile_email: { unicode: '📧', custom_emoji_id: '5472239203590888751' },
+  profile_balance: { unicode: '💰', custom_emoji_id: '6325416826100519483' },
+  profile_language: { unicode: '🌐', custom_emoji_id: '5364021605578071936' },
+  profile_region: { unicode: '🗺', custom_emoji_id: '5309748255637118475' },
+  profile_joined: { unicode: '📅', custom_emoji_id: '5028418466000930064' },
+  api_key: { unicode: '🔑', custom_emoji_id: '5287480366330816274' },
+
+  // ---- Welcome banner -------------------------------------------
+  welcome_banner: { unicode: '👋', custom_emoji_id: '6003746779474956178' },
+  welcome_balance: { unicode: '💳', custom_emoji_id: '6084583651738132915' },
+
+  // ---- Notifications screen (premium emojis only render in body
+  //      text — inline-keyboard buttons fall back to the unicode glyph).
+  notify_bell: { unicode: '🔔', custom_emoji_id: '5215372534060428125' },
+  notify_stock: { unicode: '📢', custom_emoji_id: '6082236434930998087' },
+  notify_info: { unicode: '💬', custom_emoji_id: '6082420431329957672' },
+  notify_wallet: { unicode: '💰', custom_emoji_id: '6084800852529258692' },
+  notify_on: { unicode: '🟢', custom_emoji_id: '5213147006561692829' },
+  notify_off: { unicode: '🔕', custom_emoji_id: '5843822645711212265' },
+
+  // ---- Refer & Earn screen -------------------------------------
+  refer_title: { unicode: '🎁', custom_emoji_id: '5053473385355412667' },
+  refer_prize_l: { unicode: '🏆', custom_emoji_id: '4909043075529048789' },
+  refer_prize_r: { unicode: '✨', custom_emoji_id: '6088990159334808217' },
+  refer_clicks: { unicode: '👁', custom_emoji_id: '5019759554234156094' },
+  refer_pending: { unicode: '⏳', custom_emoji_id: '5386367538735104399' },
+  refer_active: { unicode: '✅', custom_emoji_id: '6115971182542984044' },
+  refer_left: { unicode: '📌', custom_emoji_id: '6181467651395558500' },
+  refer_total: { unicode: '👤', custom_emoji_id: '5332724926216428039' },
+  refer_user: { unicode: '👤', custom_emoji_id: '5332724926216428039' },
+  refer_coin: { unicode: '🪙', custom_emoji_id: '5264977499363746876' },
+  refer_transferred: { unicode: '🔁', custom_emoji_id: '5832493956503442338' },
+  refer_withdrawn: { unicode: '💵', custom_emoji_id: '5201873447554145566' },
+  refer_spent: { unicode: '🧾', custom_emoji_id: '6276009124350138166' },
+  refer_paybalance: { unicode: '🎫', custom_emoji_id: '4958699241137505132' },
+
+  // ---- Freebies (Refer & Earn → Freebies) ----
+  freebie_title: { unicode: '🎁', custom_emoji_id: '6269435754213021124' },
+  freebie_button: { unicode: '🎁', custom_emoji_id: '6269358547880908450' },
+  freebie_tap: { unicode: '👉', custom_emoji_id: '6269369495752545904' },
+  freebie_default: { unicode: '🎁', custom_emoji_id: '4958699241137505132' },
+  freebie_kind: { unicode: '📦', custom_emoji_id: '6028404508843842802' },
+  freebie_stock: { unicode: '📦', custom_emoji_id: '5472170432574528133' },
+  freebie_claims: { unicode: '👤', custom_emoji_id: '5332724926216428039' },
+  freebie_refs: { unicode: '🎫', custom_emoji_id: '4958699241137505132' },
+  freebie_desc: { unicode: '📄', custom_emoji_id: '6266947228686892459' },
+  freebie_unlock: { unicode: '🔓', custom_emoji_id: '5429405838345265327' },
+  freebie_free: { unicode: '✨', custom_emoji_id: '6088990159334808217' },
+  freebie_free_end: { unicode: '✨', custom_emoji_id: '6282939930255563041' },
+  freebie_claim: { unicode: '✅', custom_emoji_id: '6267008582294705964' },
+  freebie_ok: { unicode: '✅', custom_emoji_id: '5096035317257864249' },
+  freebie_item: { unicode: '📦', custom_emoji_id: '6156809896256867448' },
+  freebie_warn: { unicode: '⚠️', custom_emoji_id: '5974083768233760323' },
+  freebie_out: { unicode: '❌', custom_emoji_id: '5095957930537124723' },
+  freebie_home: { unicode: '🛍', custom_emoji_id: '5312361253610475399' },
+
+  // ---- Public group feed ---------------------------------------
+  feed_title: { unicode: '🎉', custom_emoji_id: '6181381563071077485' },
+  feed_tap_buy: { unicode: '👉', custom_emoji_id: '6181460307001481584' },
+  feed_buy_button: { unicode: '🛒', custom_emoji_id: '5440841102871517055' },
+
+  // ---- Language picker -----------------------------------------
+  lang_left: { unicode: '🌐', custom_emoji_id: '5330422213860407355' },
+  lang_right: { unicode: '🗣', custom_emoji_id: '5818984364507139347' },
+
+  // ---- Email screens (set / change / why) -----------------------
+  email_saved_check: { unicode: '✨', custom_emoji_id: '5098088779776787441' },
+  email_bracket_l: { unicode: '📩', custom_emoji_id: '6008233706039284019' },
+  email_bracket_r: { unicode: '🔧', custom_emoji_id: '6010111371251815589' },
+  email_arrow: { unicode: '👇', custom_emoji_id: '5229212516415978792' },
+  email_invoice: { unicode: '🧾', custom_emoji_id: '5444856076954520455' },
+  email_secure: { unicode: '🔒', custom_emoji_id: '5463413771647069835' },
+  email_thanks: { unicode: '🙏', custom_emoji_id: '5465262274031659421' },
+  email_invalid: { unicode: '⚠️', custom_emoji_id: '5974083768233760323' },
+  // "Email already in use" warning — the only genuinely new id in
+  // this group; the others below were already mapped (re-aliased
+  // here for readability in the locale templates).
+  email_in_use: { unicode: '🚫', custom_emoji_id: '5098231965396501587' },
+  // "PDF sent to mail" success ribbon shown after Send-PDF buttons.
+  // Two slot emojis frame the bold copy on either side.
+  pdf_sent: { unicode: '📬', custom_emoji_id: '5096035317257864249' },
+  pdf_sent_l: { unicode: '📤', custom_emoji_id: '5926964914684957537' },
+  pdf_sent_r: { unicode: '📬', custom_emoji_id: '6179461085624536942' },
+
+  // ---- Support screen header -----------------------------------
+  // Bot owner refreshed this premium id on 2026-05-08 — the previous
+  // one (`6247041691652461368`) is no longer used. The new id is
+  // applied to the main-menu Support button, the Top-Up Others row,
+  // and the rejection / manual-review Admin Help URL button so all
+  // "reach support" entry points share the same animated glyph.
+  support_title: { unicode: '📞', custom_emoji_id: '5271619747891388291' },
+  // Alias rendered next to the Admin Help URL button on the
+  // verification-result keyboards. Same id as `support_title` so
+  // the URL button picks up the support glyph; admins can rotate
+  // it independently via `/setemoji admin_help`.
+  admin_help: { unicode: '🆘', custom_emoji_id: '5271619747891388291' },
+  // Premium-styled red "transaction cancelled" warning shown when
+  // a buyer pastes an invalid TX / Order ID into the direct-pay
+  // flow. Reuses the existing pure-red cross from the Gift-Codes
+  // screen so the cancelled state reads as visibly destructive.
+  tx_cancelled: { unicode: '❌', custom_emoji_id: '5095957930537124723' },
+
+  // ---- Live Support panel + closure messages -------------------
+  // Premium glyphs requested by the bot owner; non-premium users
+  // see the unicode fallback.
+  support_live_active: { unicode: '💬', custom_emoji_id: '5456580414254619349' },
+  support_live_closed: { unicode: '🔴', custom_emoji_id: '5803151379887297481' },
+  // Kiwi AI Support — premium glyph used in the AI greeting and
+  // anywhere the rebrand needs the kiwi avatar in front of text.
+  kiwi_ai: { unicode: '🥝', custom_emoji_id: '4956398762164487204' },
+
+  // ---- Product page (revamped) ---------------------------------
+  // Premium glyphs that prefix every line on the product detail
+  // screen. Telegram premium users see the animated/styled icon;
+  // everyone else sees the unicode fallback.
+  prod_price_base: { unicode: '💰', custom_emoji_id: '6325444137797554944' },
+  prod_stock: { unicode: '📦', custom_emoji_id: '5472170432574528133' },
+  prod_warranty: { unicode: '🛡️', custom_emoji_id: '5893365724830765382' },
+  prod_qty_selected: { unicode: '🔢', custom_emoji_id: '5363964615657017717' },
+  prod_total_amount: { unicode: '🧮', custom_emoji_id: '5366223171454278937' },
+  prod_wallet: { unicode: '👛', custom_emoji_id: '6102840685835066490' },
+  prod_referral: { unicode: '🎁', custom_emoji_id: '4958699241137505132' },
+  // Promo line (qty-threshold flat-USDT discount). Reuses the
+  // existing 🎁 premium glyph from the gift-codes screen for
+  // visual consistency.
+  prod_promo: { unicode: '🎁', custom_emoji_id: '4958699241137505132' },
+
+  // Custom-quantity prompt — pencil + keypad framing the bold body.
+  qty_prompt_pencil: { unicode: '✏️', custom_emoji_id: '5866355487255039002' },
+  qty_prompt_keypad: { unicode: '🔢', custom_emoji_id: '5926964914684957537' },
+  // Premium-styled red warning shown when the user enters an
+  // invalid quantity (0, > stock, > QTY_MAX, non-integer).
+  qty_invalid: { unicode: '⚠️', custom_emoji_id: '5974083768233760323' },
+
+  // ---- My Deposits screen --------------------------------------
+  deposits_title: { unicode: '💳', custom_emoji_id: '6102840685835066490' },
+  deposits_payments: { unicode: '💸', custom_emoji_id: '5375312095346704820' },
+  deposits_wallet: { unicode: '👛', custom_emoji_id: '4965219701572503640' },
+  deposits_empty: { unicode: '📭', custom_emoji_id: '5798937402789597866' },
+
+  // ---- Language button -----------------------------------------
+  lang_globe: { unicode: '🌐', custom_emoji_id: '5310249748903504323' },
+
+  // ---- Redeem Gift Code screen --------------------------------
+  gift_title: { unicode: '🎁', custom_emoji_id: '4958699241137505132' },
+  gift_send: { unicode: '👇', custom_emoji_id: '5287279155702936525' },
+  gift_usdt: { unicode: '💵', custom_emoji_id: '5463046637842608206' },
+  gift_balance: { unicode: '💰', custom_emoji_id: '4958926882994127612' },
+  gift_expired: { unicode: '⏰', custom_emoji_id: '5280821895711697516' },
+  gift_invalid: { unicode: '❌', custom_emoji_id: '5095957930537124723' },
+  gift_redeemed: { unicode: '✅', custom_emoji_id: '5096035317257864249' },
+
+  // ---- My Orders detail screen --------------------------------
+  orders_title: { unicode: '🧾', custom_emoji_id: '5893255507380014983' },
+  orders_id: { unicode: '🆔', custom_emoji_id: '5818885490065017876' },
+  orders_product: { unicode: '📦', custom_emoji_id: '5069075201950483359' },
+  orders_type: { unicode: '💳', custom_emoji_id: '5438496463044752972' },
+  orders_qty: { unicode: '🔢', custom_emoji_id: '5926964914684957537' },
+  orders_total: { unicode: '💰', custom_emoji_id: '4958926882994127612' },
+  orders_when: { unicode: '🗓', custom_emoji_id: '5800810214689084012' },
+  orders_status: { unicode: '🛡', custom_emoji_id: '6179461085624536942' },
+  orders_note: { unicode: '📝', custom_emoji_id: '5778299625370817409' },
+  orders_warranty: { unicode: '⏰', custom_emoji_id: '5280821895711697516' },
+  orders_received: { unicode: '✅', custom_emoji_id: '5096035317257864249' },
+  // Download TXT button icon
+  btn_download_txt: { unicode: '📥', custom_emoji_id: '5318845185348626090' },
+  // Default premium icon for the broadcast "Shop Now" / "Buy Now" button.
+  broadcast_shop_now: { unicode: '🛍', custom_emoji_id: '5312361253610475399' },
+
+  // ---- Find Order by ID prompt + invalid response --------------
+  // The two glyphs below frame the "Send Your Order ID to find"
+  // prompt shown when the user taps Find by Order ID. The invalid
+  // response uses the existing `gift_invalid` ❌ on the left and a
+  // dedicated warning glyph on the right.
+  order_id_find_l: { unicode: '🆔', custom_emoji_id: '5463424023734014980' },
+  order_id_find_r: { unicode: '🔍', custom_emoji_id: '6084844906008812139' },
+  order_id_invalid_r: { unicode: '⚠️', custom_emoji_id: '5967560851077469602' },
+
+  // ---- Premium-shop overhaul (PR: premium-shop-overhaul) -------
+  // Header glyphs for the new two-step delivery card (pic 3) and
+  // the per-product Using Method tutorial. `note_premium` is the
+  // animated note glyph used at the top of the View Note screen.
+  // All custom_emoji_ids can be overridden by the bot owner via
+  // `/setemoji <key> <unicode> <custom_emoji_id>`.
+  order_verified: { unicode: '✅', custom_emoji_id: '6325645228166353066' },
+  order_delivered: { unicode: '🚚', custom_emoji_id: '5098567638565520047' },
+  tutorial: { unicode: '📘', custom_emoji_id: '5305737159909581647' },
+  // Note section: header / Description label / Note label each get
+  // their own slot so the admin can swap them independently from
+  // `/setemoji note_premium / note_desc / note_text`. Defaults to
+  // the same notepad glyph everywhere.
+  note_premium: { unicode: '📝', custom_emoji_id: '5778299625370817409' },
+  note_desc: { unicode: '📄', custom_emoji_id: '5778299625370817409' },
+  note_text: { unicode: '📝', custom_emoji_id: '5778299625370817409' },
+  // "⏳ Delivering your order…" trailer under the Payment Verified
+  // line. Same id as `email_bracket_r` per the bot-owner spec.
+  delivering: { unicode: '⏳', custom_emoji_id: '6010111371251815589' },
+  // "Items:" label inside the Order Delivered card.
+  delivered_items: { unicode: '📦', custom_emoji_id: '6156809896256867448' },
+  // "Please add your verified email" prompt shown after delivery
+  // when the buyer has no email on file.
+  email_add_l: { unicode: '📧', custom_emoji_id: '6098324862730768475' },
+  email_add_r: { unicode: '📩', custom_emoji_id: '4929214028657460019' },
+  // "Product Details and invoice sent to your mail" follow-up shown
+  // after delivery when the buyer DOES have an email on file.
+  invoice_sent_l: { unicode: '📬', custom_emoji_id: '6005930963618501222' },
+  invoice_sent_r: { unicode: '📨', custom_emoji_id: '5454113432284446338' },
+  invoice_spam: { unicode: '📥', custom_emoji_id: '6008233706039284019' },
+  invoice_email_label: { unicode: '📧', custom_emoji_id: '5357050826412018659' },
+  invoice_link_label: { unicode: '🔗', custom_emoji_id: '4929214028657460019' },
+  cryptobot_open_invoice: { unicode: '💳', custom_emoji_id: '5445353829304387411' },
+  cryptobot_check: { unicode: '✅', custom_emoji_id: '6267008582294705964' },
+  // 12-hour email nag glyph + the Email Reports notifications row.
+  email_nag: { unicode: '📧', custom_emoji_id: '5472239203590888751' },
+  notify_email: { unicode: '📧', custom_emoji_id: '5472239203590888751' },
+  // Bot Tutorial + Send Price List row icons in Settings.
+  bot_tutorial: { unicode: '📘', custom_emoji_id: '5305737159909581647' },
+  price_list: { unicode: '📊', custom_emoji_id: '4958506272551863292' },
+  // Out-of-stock cross used on the red Buy Now button.
+  oos_cross: { unicode: '❌', custom_emoji_id: '5095957930537124723' },
+  // ---- Post-purchase delivery form (per-product detail submission) ----
+  // Used by the instruction → form → success → vendor-forward flow
+  // for products where the admin enables `delivery_form_enabled`.
+  // All four slots fall back to plain unicode until the bot owner
+  // sets a `custom_emoji_id` via `/setemoji <key> <unicode> <id>`.
+  delivery_box: { unicode: '📦', custom_emoji_id: '5069075201950483359' },
+  delivery_field: { unicode: '📝', custom_emoji_id: '5778299625370817409' },
+  delivery_check: { unicode: '✅', custom_emoji_id: '5096035317257864249' },
+  delivery_help: { unicode: '📞', custom_emoji_id: '5271619747891388291' },
+  delivery_resubmit: { unicode: '🔄', custom_emoji_id: '5346321684574003384' },
+  delivery_vendor: { unicode: '📞', custom_emoji_id: '5271619747891388291' },
+  // Wallet credit / debit notifications shown to a user when an admin
+  // adjusts their balance via /credit. Three slots so the admin can
+  // swap each independently via `/setemoji credit_emoji / balance_emoji /
+  // debit_emoji <unicode> <custom_emoji_id>`. They start as plain
+  // unicode glyphs (no premium id) so admins can drop in any premium
+  // pack they like without us guessing ids that might not resolve.
+  credit_emoji: { unicode: '💰', custom_emoji_id: '5931293928186713205' },
+  balance_emoji: { unicode: '💳', custom_emoji_id: '5926961826603472005' },
+  debit_emoji: '⚠️',
+
+  // ---- Direct-Pay "Select payment method" header (PR: direct-pay
+  //      simple). The page now shows just the title + a product line
+  //      + the total + a verification reminder, so we only need
+  //      these three premium-emoji slots. Admin can rotate any of
+  //      them via `/setemoji` (e.g. `/setemoji direct_pay_total
+  //      💰 5463046637842608206`).
+  direct_pay_title: { unicode: '💸', custom_emoji_id: '5008248651038852115' },
+  direct_pay_total: { unicode: '💳', custom_emoji_id: '5463046637842608206' },
+  direct_pay_verify: { unicode: '🔎', custom_emoji_id: '5789858554890425372' },
+
+  // ---- Buy-flow Pay screens (page 1 + page 2) -----------------
+  // `pay_summary` is the premium glyph that prefixes the *Order*
+  // header on both screens. Admin can rotate via
+  // `/setemoji pay_summary <unicode> <custom_emoji_id>`.
+  pay_summary: { unicode: '🧾', custom_emoji_id: '5893255507380014983' },
+  // Page-2 Confirm tick + Cancel back-arrow. Same defaults as the
+  // existing qty-keypad confirm / stats-back glyphs so the user
+  // gets the familiar premium animation.
+  pay_confirm: { unicode: '✅', custom_emoji_id: '5096035317257864249' },
+  pay_cancel: { unicode: '◀️', custom_emoji_id: '5440509136259267820' },
+
+  // ---- Payment-methods keyboard (Others / Back rows) -----------
+  // `paymethod_others` is the bot-owner-supplied premium glyph that
+  // replaces the legacy free 💡 unicode emoji on the Others row
+  // (premium subscribers see the animated icon, non-premium users
+  // fall back to 💡). `paymethod_back` re-uses the same animated
+  // back-arrow as the Cancel button on the wallet-confirm card so
+  // the back action reads identically across the buy / top-up flow.
+  // 2026-05-08 swap: the bot owner asked us to move the previous
+  // Support-button glyph (Santa+bottle, id `6247041691652461368`)
+  // onto the Top-Up "Others" row, freeing the new help glyph
+  // (`5271619747891388291`) to live exclusively on the main-menu
+  // Support button + Admin Help URL button. Earlier rotations:
+  //   • `5188540541922480562` (legacy)
+  //   • `5271619747891388291` (briefly applied here, now Support-only)
+  // Unicode fallback stays as 💡 so non-premium clients see the
+  // same glyph the screen used to render with before the icon.
+  paymethod_others: { unicode: '💡', custom_emoji_id: '6247041691652461368' },
+  paymethod_back: { unicode: '◀️', custom_emoji_id: '5440509136259267820' },
+  // Premium 🎯-style glyph for the Custom-Quantity Max button.
+  // Reuses the qty-numbers id (`prod_qty_selected`) so the keypad's
+  // Max + the product page's Selected Qty header read consistently.
+  // Bot owner can swap via `/setemoji qty_keypad_max <unicode> <id>`.
+  qty_keypad_max: { unicode: '🔢', custom_emoji_id: '5363964615657017717' },
+};
