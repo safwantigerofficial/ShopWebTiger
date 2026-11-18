@@ -1,6 +1,7 @@
 import { requireUserOrRedirect } from '../../lib/guard';
 import { expireStaleUserDeposits, listDeposits, listPaymentMethods } from '../../db/queries';
 import TopupPanel from './TopupPanel';
+import PendingResume from '../../components/PendingResume';
 import CE from '../../components/CE';
 
 export const dynamic = 'force-dynamic';
@@ -33,17 +34,25 @@ export default async function WalletPage() {
         <section className="mt-7">
           <h2 className="font-bold text-lg">Pending top-ups</h2>
           <div className="mt-3 space-y-2">
-            {pendingDeposits.map((d) => (
-              <div key={d.id} className="card flex items-center justify-between !py-3.5">
-                <div>
-                  <div className="text-sm font-semibold">${Number(d.amount).toFixed(2)} · {d.method}</div>
-                  <div className="text-xs mt-0.5" style={{ color: 'var(--fg3)' }}>
-                    {new Date(d.created_at).toLocaleString()}
+            {pendingDeposits.map((d) => {
+              const m = methods.find((x) => x.name === d.method);
+              return (
+              <div key={d.id} className="card !py-3.5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-sm font-semibold">${Number(d.amount).toFixed(2)} · {d.method}</div>
+                    <div className="text-xs mt-0.5" style={{ color: 'var(--fg3)' }}>
+                      {new Date(d.created_at).toLocaleString()}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {m && <PendingResume depositId={d.id} method={m} />}
+                    <span className="chip chip-amber text-xs">Pending</span>
                   </div>
                 </div>
-                <span className="chip chip-amber text-xs">Pending</span>
               </div>
-            ))}
+              );
+            })}
           </div>
         </section>
       )}

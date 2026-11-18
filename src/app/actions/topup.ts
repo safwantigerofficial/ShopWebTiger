@@ -350,6 +350,7 @@ export async function submitTopupAmount(methodId: number, text: string): Promise
     }
     try {
       await setZiniPayInvoiceId(dep.id, inv.invoice.invoice_id);
+      await setDepositNote(dep.id, `ZiniPay bKash invoice awaiting payment | url:${inv.invoice.payment_url}`).catch(() => undefined);
     } catch (err) {
       await setDepositStatus(dep.id, 'rejected').catch(() => undefined);
       logger.error({ err, depositId: dep.id }, 'ZiniPay invoice persistence failed');
@@ -550,6 +551,145 @@ export async function checkInvoiceTopup(depositId: number): Promise<CheckResult>
     }
   }
   return { ok: false, error: 'This payment is no longer pending.' };
+}
+
+/* ------------------------------------------------------------------ */
+/* Resume an in-flight payment (pending deposits list)                  */
+/* ------------------------------------------------------------------ */
+export type ResumeResult =
+  | Fail
+  | {
+      ok: true;
+      stage: 'open';
+      provider: string;
+      method: { id: number; provider: string; name: string; address: string | null };
+      screen: string;
+      input: 'amount' | 'reference' | 'none';
+      inputLabel?: string;
+      expiresAtMs?: number;
+      depositId: number;
+    }
+  | {
+      ok: true;
+      stage: 'quote';
+      method: { id: number; provider: string; name: string; address: string | null };
+      screen: string;
+      inputLabel: string;
+      expiresAtMs: number;
+      payAmount: string;
+      depositId: number;
+    }
+  | {
+      ok: true;
+      stage: 'invoice';
+      method: { id: number; provider: string; name: string; address: string | null };
+      screen: string;
+      invoiceUrl: string;
+      depositId: number;
+    };
+
+export async function resumeTopup(depositId: number): Promise<ResumeResult> {
+  const user = await requireUser();
+  if (!user) return { ok: false, error: 'Not logged in' };
+  const dep = await getDeposit(depositId).catch(() => null);
+  if (!dep || dep.user_id !== user.telegram_id) return { ok: false, error: 'Deposit not found.' };
+  if (dep.status !== 'pending') return { ok: false, error: `This top-up is ${dep.status}.` };
+  if (dep.tx_hash && !dep.tx_hash.startsWith('zinipay:') && !dep.tx_hash.startsWith('cryptopay:'))
+    return { ok: false, error: 'A payment reference was already submitted — it is waiting for verification.' };
+  const m = (await listPaymentMethods()).find((x) => x.name === dep.method);
+  if (!m) return { ok: false, error: 'Payment method no longer available — please wait for admin review.' };
+  const session = await getSession();
+  const openedAtMs = Date.parse(dep.created_at);
+  const setFlow = (expiresAtMs?: number) => {
+    session.topup = { provider: m.provider, methodId: m.id, methodName: m.name, depositId: dep.id, openedAtMs, expiresAtMs };
+    return session.save();
+  };
+  const methodLite = { id: m.id, provider: m.provider, name: m.name, address: m.address };
+
+  if (m.provider === 'binance_pay' || m.provider === 'bybit_pay') {
+    const isBinance = m.provider === 'binance_pay';
+    const expiresAtMs = openedAtMs + 30 * 60 * 1000;
+    if (Date.now() > expiresAtMs) {
+      await setDepositStatus(dep.id, 'rejected').catch(() => undefined);
+      return { ok: false, error: 'This payment window expired — please start a new one.' };
+    }
+    await setFlow(expiresAtMs);
+    return {
+      ok: true, stage: 'open', provider: m.provider, method: methodLite,
+      screen: isBinance ? S.binancePayScreen(m) : S.bybitPayScreen(m),
+      input: 'reference',
+      inputLabel: isBinance ? 'Binance Pay Order ID' : 'Bybit internal transfer TXID',
+      expiresAtMs, depositId: dep.id,
+    };
+  }
+
+  if (m.provider === 'usdt_trc20' || m.provider === 'usdt_bep20' || m.provider === 'usdt_ton' || m.provider === 'ltc') {
+    const expiresAtMs = dep.quote_expires_at ? Date.parse(dep.quote_expires_at) : NaN;
+    if (!Number.isFinite(expiresAtMs) || Date.now() > expiresAtMs) {
+      await setDepositStatus(dep.id, 'rejected').catch(() => undefined);
+      return { ok: false, error: 'This payment quote expired — please start a new one.' };
+    }
+    const expected = Number(dep.expected_amount ?? 0);
+    if (!expected) return { ok: false, error: 'Missing payment amount — please start a new top-up.' };
+    await setFlow(expiresAtMs);
+    if (m.provider === 'ltc') {
+      const rateMatch = dep.note?.match(/@ \$([0-9.]+)\/LTC/);
+      const rate = rateMatch ? Number(rateMatch[1]) : 0;
+      return {
+        ok: true, stage: 'quote', method: methodLite,
+        screen: S.ltcQuoteScreen(m.address ?? '', expected, rate || expected / Math.max(dep.amount, 0.0001), dep.amount, LTC_QUOTE_TTL_MIN),
+        inputLabel: 'Transaction hash', expiresAtMs,
+        payAmount: `${expected} LTC`, depositId: dep.id,
+      };
+    }
+    return {
+      ok: true, stage: 'quote', method: methodLite,
+      screen: S.chainQuoteScreen(m, expected),
+      inputLabel: 'Transaction Hash (TXID)', expiresAtMs,
+      payAmount: `${expected.toFixed(4)} USDT`, depositId: dep.id,
+    };
+  }
+
+  if (m.provider === 'cryptobot') {
+    if (!dep.tx_hash?.startsWith('cryptopay:')) return { ok: false, error: 'No invoice on this deposit — please start a new one.' };
+    const invoiceId = dep.tx_hash.slice('cryptopay:'.length);
+    const inv = await getInvoices([invoiceId]);
+    const url = inv.ok ? inv.invoices?.[0]?.bot_invoice_url : null;
+    if (!url) return { ok: false, error: 'Invoice not found — it may have expired. Start a new top-up.' };
+    await setFlow();
+    return {
+      ok: true, stage: 'invoice', method: methodLite,
+      screen: `${S.PE.usdt_title} *CryptoBot invoice*
+
+Amount: *${S.formatUsdtAmount(dep.amount)}*
+
+Tap *Open invoice*, complete the payment in CryptoBot, then tap *Check*.`,
+      invoiceUrl: url, depositId: dep.id,
+    };
+  }
+
+  if (m.provider === 'zinipay') {
+    const urlMatch = dep.note?.match(/url:(\S+)/);
+    const url = urlMatch?.[1];
+    if (!url) return { ok: false, error: 'Invoice link not found — please start a new top-up.' };
+    await setFlow();
+    return {
+      ok: true, stage: 'invoice', method: methodLite,
+      screen: `${S.PE.bkash_title} *bKash invoice*
+
+Wallet credit: *${S.formatUsdtAmount(dep.amount)}*
+Pay bKash: *${dep.expected_amount ?? Math.round(dep.amount * env.ZINIPAY_BDT_PER_USDT)} BDT*
+
+Open the payment page, complete bKash payment, and your wallet will be credited automatically.`,
+      invoiceUrl: url, depositId: dep.id,
+    };
+  }
+
+  if (m.provider === 'manual') {
+    await setFlow();
+    return { ok: true, stage: 'open', provider: 'manual', method: methodLite, screen: S.manualScreen(m), input: 'none', depositId: dep.id };
+  }
+  return { ok: false, error: 'This deposit cannot be resumed.' };
 }
 
 export async function myDeposits() {

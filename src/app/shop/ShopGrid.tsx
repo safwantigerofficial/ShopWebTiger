@@ -66,7 +66,37 @@ export default function ShopGrid({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
+        {/* Mobile — batman-style list rows */}
+        <div className="sm:hidden mt-4 space-y-2.5">
+          {products.map((p) => {
+            const out = !p.unlimited_stock && p.stock <= 0;
+            return (
+              <Link key={p.id} href={loggedIn ? `/product/${p.id}` : '/login'}
+                className="card !p-4 flex items-center gap-3.5">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+                  style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>
+                  <ProductIcon emojiId={p.emoji_id} emoji={p.emoji} size={30} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-bold text-[15px] leading-snug">{ceText(p.name)}</div>
+                  {out ? (
+                    <span className="chip stock-out text-[11px] mt-1 inline-block">Pre-order</span>
+                  ) : (
+                    <span className="chip stock-ok text-[11px] mt-1 inline-block">
+                      ● {p.unlimited_stock ? 'In stock' : `${p.stock} in stock`}
+                    </span>
+                  )}
+                </div>
+                <div className="text-right shrink-0">
+                  <div className="text-lg font-extrabold">${p.price.toFixed(2)}</div>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Desktop — card grid */}
+        <div className="hidden sm:grid sm:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
           {products.map((p) => {
             const out = !p.unlimited_stock && p.stock <= 0;
             return (
@@ -77,7 +107,7 @@ export default function ShopGrid({
                     <ProductIcon emojiId={p.emoji_id} emoji={p.emoji} size={32} />
                   </div>
                   {out ? (
-                    <span className="chip stock-out text-xs">Out of stock</span>
+                    <span className="chip stock-out text-xs">Pre-order</span>
                   ) : (
                     <span className="chip stock-ok text-xs">
                       ● {p.unlimited_stock ? 'In stock' : `${p.stock} in stock`}

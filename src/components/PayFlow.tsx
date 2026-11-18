@@ -2,7 +2,7 @@
 import { useEffect, useState, useTransition } from 'react';
 import BotText from './BotText';
 import {
-  openTopupMethod, submitTopupAmount, submitTopupReference, requestManualTopup, checkInvoiceTopup,
+  openTopupMethod, submitTopupAmount, submitTopupReference, requestManualTopup, checkInvoiceTopup, resumeTopup,
   type OpenResult, type SubmitResult,
 } from '../app/actions/topup';
 import type { DBPaymentMethod } from '../types';
@@ -28,8 +28,9 @@ function Countdown({ until }: { until: number }) {
  * Bot-identical payment flow for one method. `presetAmount` pre-fills the
  * amount step (product checkout). `onCredited` fires once the wallet is credited.
  */
-export default function PayFlow({ method, presetAmount, onCredited }: {
-  method: DBPaymentMethod; presetAmount?: number; onCredited?: (newBalance: number | null) => void;
+export default function PayFlow({ method, presetAmount, onCredited, resumeDepositId }: {
+  method: { id: number; provider: string; name: string; address?: string | null };
+  presetAmount?: number; onCredited?: (newBalance: number | null) => void; resumeDepositId?: number;
 }) {
   const [stage, setStage] = useState<Stage>({ k: 'loading' });
   const [value, setValue] = useState(presetAmount ? presetAmount.toFixed(2) : '');
@@ -38,8 +39,18 @@ export default function PayFlow({ method, presetAmount, onCredited }: {
 
   useEffect(() => {
     setStage({ k: 'loading' }); setMsg('');
-    openTopupMethod(method.id).then((o) => setStage(o.ok ? { k: 'open', o } : { k: 'error', error: o.error }));
-  }, [method.id]);
+    if (resumeDepositId) {
+      resumeTopup(resumeDepositId).then((o) => {
+        if (!o.ok) return setStage({ k: 'error', error: o.error });
+        if (o.stage === 'invoice') setStage({ k: 'invoice', screen: o.screen, url: o.invoiceUrl, depositId: o.depositId });
+        else if (o.stage === 'quote') setStage({ k: 'quote', screen: o.screen, label: o.inputLabel, expiresAtMs: o.expiresAtMs, payAmount: o.payAmount });
+        else if (o.input === 'none') setStage({ k: 'manual', message: o.screen });
+        else setStage({ k: 'open', o: { ok: true, provider: o.provider, screen: o.screen, input: o.input, inputLabel: o.inputLabel, expiresAtMs: o.expiresAtMs } });
+      });
+    } else {
+      openTopupMethod(method.id).then((o) => setStage(o.ok ? { k: 'open', o } : { k: 'error', error: o.error }));
+    }
+  }, [method.id, resumeDepositId]);
 
   function submitAmount() {
     setMsg('');
