@@ -11,7 +11,7 @@ export default function UsingMethod({ t }: { t: Tutorial | null | undefined }) {
   return (
     <div>
       <button type="button" className="btn-ghost w-full !py-2.5 text-sm" onClick={(e) => { e.preventDefault(); setOpen((v) => !v); }}>
-        <CE id="5794085322400733645" /> Using method
+        <CE id="6338935574967098253" /> Using method
       </button>
       {open && (
         <div className="mt-2 rounded-xl p-3.5 text-sm whitespace-pre-wrap leading-relaxed text-left"

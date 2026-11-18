@@ -2,14 +2,14 @@
 import { useEffect, useState } from 'react';
 
 export const BUILTIN_AVATARS: { id: string; bg: string; emojiId?: string; img?: string }[] = [
-  { id: 'tiger', bg: '#fff7ed', img: '/logo.jpg' },
-  { id: 'shop', bg: '#dbeafe', emojiId: '5312361253610475399' },
-  { id: 'wallet', bg: '#dcfce7', emojiId: '6267068789146260253' },
-  { id: 'gem', bg: '#ede9fe', emojiId: '5265151230790884988' },
-  { id: 'shield', bg: '#fee2e2', emojiId: '6052869252447215120' },
-  { id: 'gear', bg: '#e0f2fe', emojiId: '5798678738384195183' },
-  { id: 'star', bg: '#fef9c3', emojiId: '5854985398857503237' },
-  { id: 'binance', bg: '#fef3c7', emojiId: '5875443023873053217' },
+  { id: 'tiger', bg: '#fff7ed', img: '/avatars/tiger.jpg' },
+  { id: 'robot', bg: '#dbeafe', img: '/avatars/robot.jpg' },
+  { id: 'astronaut', bg: '#ede9fe', img: '/avatars/astronaut.jpg' },
+  { id: 'gamer', bg: '#dcfce7', img: '/avatars/gamer.jpg' },
+  { id: 'ninja', bg: '#1f2937', img: '/avatars/ninja.jpg' },
+  { id: 'fox', bg: '#ffedd5', img: '/avatars/fox.jpg' },
+  { id: 'alien', bg: '#dcfce7', img: '/avatars/alien.jpg' },
+  { id: 'king', bg: '#fef3c7', img: '/avatars/king.jpg' },
 ];
 
 const KEY = 'stw_avatar';

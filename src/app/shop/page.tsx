@@ -1,5 +1,6 @@
 import { currentUser } from '../../lib/session';
 import { listCategories, listProducts } from '../../db/queries';
+import type { DBCategory } from '../../types';
 import { applyUserPriceToProducts } from '../../lib/services/pricing';
 import ShopGrid from './ShopGrid';
 
@@ -15,7 +16,22 @@ export default async function ShopPage() {
       };
     }),
   );
+  // Same global order as the bot shop: pinned → in-stock → sort_order → id.
+  const flat = sections
+    .flatMap((s) => s.products)
+    .sort((a, b) => {
+      if (Boolean(a.is_pinned) !== Boolean(b.is_pinned)) return a.is_pinned ? -1 : 1;
+      const aIn = a.unlimited_stock || a.stock > 0;
+      const bIn = b.unlimited_stock || b.stock > 0;
+      if (aIn !== bIn) return aIn ? -1 : 1;
+      if (a.sort_order !== b.sort_order) return a.sort_order - b.sort_order;
+      return a.id - b.id;
+    });
   const visible = sections.filter((s) => s.products.length > 0);
+  if (flat.length > 0) {
+    visible.length = 0;
+    visible.push({ category: categories[0] ?? ({} as DBCategory), products: flat });
+  }
   const total = visible.reduce((n, s) => n + s.products.length, 0);
 
   return (

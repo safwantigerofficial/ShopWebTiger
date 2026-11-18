@@ -69,7 +69,7 @@ export default function CheckoutPanel({
             </div>
             <button className="btn-ghost w-full"
               onClick={() => downloadTxt(`${result.orderPublicId}.txt`, `${productName} — order ${result.orderPublicId}\n\n${result.items.join('\n')}`)}>
-              <CE id="5794085322400733645" /> Download .txt
+              <CE id="5318845185348626090" /> Download .txt
             </button>
           </>
         ) : (

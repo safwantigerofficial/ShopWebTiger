@@ -28,54 +28,19 @@ export default async function ProductPage({ params }: { params: { id: string } }
       </Link>
 
       <div className="grid lg:grid-cols-2 gap-5 mt-4">
-        {/* Left — media + details */}
-        <div className="space-y-5">
-          <div className="card !p-0 overflow-hidden">
-            <div className="h-28 lg:h-56 flex items-center justify-center"
-              style={{ background: 'var(--surface2)' }}>
-              <div className="w-16 h-16 lg:w-24 lg:h-24 rounded-2xl flex items-center justify-center text-3xl lg:text-5xl"
-                style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
-                <ProductIcon emojiId={p.emoji_id} emoji={p.emoji} size={40} />
-              </div>
+        {/* Media — top on mobile, left column on desktop */}
+        <div className="card !p-0 overflow-hidden h-fit">
+          <div className="h-28 lg:h-56 flex items-center justify-center"
+            style={{ background: 'var(--surface2)' }}>
+            <div className="w-16 h-16 lg:w-24 lg:h-24 rounded-2xl flex items-center justify-center text-3xl lg:text-5xl"
+              style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
+              <ProductIcon emojiId={p.emoji_id} emoji={p.emoji} size={40} />
             </div>
-          </div>
-          <div className="card">
-            <h2 className="font-bold text-lg">View product</h2>
-            {p.warranty && (
-              <div className="mt-3">
-                <div className="text-xs font-semibold" style={{ color: 'var(--fg3)' }}>WARRANTY</div>
-                <div className="text-[15px] whitespace-pre-wrap leading-relaxed mt-1" style={{ color: 'var(--fg2)' }}>
-                  <CEText text={p.warranty} />
-                </div>
-              </div>
-            )}
-            {p.description && (
-              <div className="mt-4">
-                <div className="text-xs font-semibold" style={{ color: 'var(--fg3)' }}>DESCRIPTION</div>
-                <div className="text-[15px] whitespace-pre-wrap leading-relaxed mt-1" style={{ color: 'var(--fg2)' }}>
-                  <CEText text={p.description} />
-                </div>
-              </div>
-            )}
-            {p.note && (
-              <div className="mt-4">
-                <div className="text-xs font-semibold" style={{ color: 'var(--fg3)' }}>NOTE</div>
-                <div className="text-[15px] whitespace-pre-wrap leading-relaxed mt-1" style={{ color: 'var(--fg2)' }}>
-                  <CEText text={p.note} />
-                </div>
-              </div>
-            )}
-            {p.note_file_id && (
-              <a href={`/api/tgfile?file=${encodeURIComponent(p.note_file_id)}&name=${encodeURIComponent(p.note_file_name ?? 'note')}`}
-                className="btn-ghost w-full mt-3 text-sm">
-                <CE id="5794085322400733645" /> Download {p.note_file_name ?? 'note file'}
-              </a>
-            )}
           </div>
         </div>
 
-        {/* Right — buy box (first on mobile) */}
-        <div className="order-first lg:order-none">
+        {/* Buy box — second on mobile, right column on desktop */}
+        <div>
           <div className="card !p-6">
             <div className="flex justify-end">
               {out ? (
@@ -116,6 +81,41 @@ export default async function ProductPage({ params }: { params: { id: string } }
               Price and availability are checked again before ordering.
             </div>
           </div>
+        </div>
+
+        {/* Details — below buy box on mobile, under media on desktop */}
+        <div className="card">
+          <h2 className="font-bold text-lg">View product</h2>
+            {p.warranty && (
+              <div className="mt-3">
+                <div className="text-xs font-semibold" style={{ color: 'var(--fg3)' }}>WARRANTY</div>
+                <div className="text-[15px] whitespace-pre-wrap leading-relaxed mt-1" style={{ color: 'var(--fg2)' }}>
+                  <CEText text={p.warranty} />
+                </div>
+              </div>
+            )}
+            {p.description && (
+              <div className="mt-4">
+                <div className="text-xs font-semibold" style={{ color: 'var(--fg3)' }}>DESCRIPTION</div>
+                <div className="text-[15px] whitespace-pre-wrap leading-relaxed mt-1" style={{ color: 'var(--fg2)' }}>
+                  <CEText text={p.description} />
+                </div>
+              </div>
+            )}
+            {p.note && (
+              <div className="mt-4">
+                <div className="text-xs font-semibold" style={{ color: 'var(--fg3)' }}>NOTE</div>
+                <div className="text-[15px] whitespace-pre-wrap leading-relaxed mt-1" style={{ color: 'var(--fg2)' }}>
+                  <CEText text={p.note} />
+                </div>
+              </div>
+            )}
+            {p.note_file_id && (
+              <a href={`/api/tgfile?file=${encodeURIComponent(p.note_file_id)}&name=${encodeURIComponent(p.note_file_name ?? 'note')}`}
+                className="btn-ghost w-full mt-3 text-sm">
+                <CE id="5794085322400733645" /> Download {p.note_file_name ?? 'note file'}
+              </a>
+            )}
         </div>
       </div>
     </div>

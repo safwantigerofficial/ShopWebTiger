@@ -5,6 +5,7 @@ import type { DBOrder } from '../../types';
 import { publicOrderId } from '../../lib/services/orderId';
 import { downloadTxt } from '../../lib/downloadTxt';
 import UsingMethod, { type Tutorial } from '../../components/UsingMethod';
+import CE from '../../components/CE';
 
 const tabs = ['Finished', 'Pending', 'Cancelled'] as const;
 
@@ -75,7 +76,7 @@ export default function OrdersList({ orders, tutorials }: { orders: DBOrder[]; t
                     );
                   }}
                 >
-                  ⬇ Download .txt
+                  <CE id="5318845185348626090" /> Download .txt
                 </button>
               )}
               {o.delivered_items && (
