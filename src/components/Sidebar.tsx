@@ -3,10 +3,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const items = [
-  { href: '/shop', label: 'Shop', icon: '🏪' },
-  { href: '/orders', label: 'My orders', icon: '📋' },
-  { href: '/wallet', label: 'Wallet', icon: '💰' },
-  { href: '/profile', label: 'My account', icon: '👤' },
+  { href: '/shop', label: 'Shop', emojiId: '5312361253610475399' },
+  { href: '/orders', label: 'My orders', emojiId: '5893255507380014983' },
+  { href: '/wallet', label: 'Wallet', emojiId: '6267068789146260253' },
+  { href: '/profile', label: 'My account', emojiId: '5904630315946611415' },
 ];
 
 export default function Sidebar({ loggedIn, balance }: { loggedIn: boolean; balance: number | null }) {
@@ -27,11 +27,15 @@ export default function Sidebar({ loggedIn, balance }: { loggedIn: boolean; bala
       <div className="px-5">
         {loggedIn && balance !== null ? (
           <div className="rounded-xl p-4 text-white" style={{ background: 'linear-gradient(135deg,#2563eb,#1d4ed8)' }}>
-            <div className="flex items-center gap-1.5 text-[13px] font-medium opacity-90">💰 Balance</div>
+            <div className="flex items-center gap-1.5 text-[13px] font-medium opacity-90">
+              <img src="/api/emoji?id=6267068789146260253" alt="" width={15} height={15} className="w-[15px] h-[15px]" />
+              Balance
+            </div>
             <div className="text-2xl font-extrabold mt-0.5">${balance.toFixed(2)}</div>
             <Link href="/wallet"
               className="mt-3 flex items-center justify-between rounded-lg bg-white text-blue-700 font-semibold text-sm px-3.5 py-2.5">
-              💲 Top up <span className="text-lg leading-none">+</span>
+              <img src="/api/emoji?id=6267068789146260253" alt="" width={15} height={15} className="w-[15px] h-[15px]" />
+              Top up <span className="text-lg leading-none">+</span>
             </Link>
           </div>
         ) : (
@@ -60,7 +64,7 @@ export default function Sidebar({ loggedIn, balance }: { loggedIn: boolean; bala
                   color: active ? 'var(--primary)' : 'var(--fg2)',
                   background: active ? 'rgba(37,99,235,.09)' : 'transparent',
                 }}>
-                <span className="text-lg leading-none">{it.icon}</span>
+                <img src={`/api/emoji?id=${it.emojiId}`} alt="" width={20} height={20} className="w-5 h-5" />
                 {it.label}
               </Link>
             );

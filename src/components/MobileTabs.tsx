@@ -3,10 +3,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const items = [
-  { href: '/shop', label: 'Shop', icon: '🏪' },
-  { href: '/orders', label: 'My orders', icon: '📎' },
-  { href: '/wallet', label: 'Wallet', icon: '💰' },
-  { href: '/profile', label: 'My account', icon: '👤' },
+  { href: '/shop', label: 'Shop', emojiId: '5312361253610475399' },
+  { href: '/orders', label: 'My orders', emojiId: '5893255507380014983' },
+  { href: '/wallet', label: 'Wallet', emojiId: '6267068789146260253' },
+  { href: '/profile', label: 'My account', emojiId: '5904630315946611415' },
 ];
 
 export default function MobileTabs() {
@@ -20,7 +20,7 @@ export default function MobileTabs() {
           <Link key={it.href} href={it.href}
             className="flex-1 flex flex-col items-center gap-0.5 py-2 text-[11px] font-semibold"
             style={{ color: active ? 'var(--primary)' : 'var(--fg3)' }}>
-            <span className="text-xl leading-none">{it.icon}</span>
+            <img src={`/api/emoji?id=${it.emojiId}`} alt="" width={22} height={22} className="w-[22px] h-[22px]" />
             {it.label}
           </Link>
         );
