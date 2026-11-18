@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import CE from '../../components/CE';
 
 export default function CopyLink({ link }: { link: string }) {
   const [copied, setCopied] = useState(false);
@@ -14,7 +15,7 @@ export default function CopyLink({ link }: { link: string }) {
           setTimeout(() => setCopied(false), 1500);
         }}
       >
-        {copied ? '✅' : '📋 Copy'}
+        {copied ? '<CE id="5854985398857503237" /> ' : '<CE id="5794085322400733645" />  Copy'}
       </button>
     </div>
   );

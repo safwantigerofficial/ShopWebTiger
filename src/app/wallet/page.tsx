@@ -1,6 +1,7 @@
 import { requireUserOrRedirect } from '../../lib/guard';
 import { listDeposits, listPaymentMethods } from '../../db/queries';
 import TopupPanel from './TopupPanel';
+import CE from '../../components/CE';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,7 +21,7 @@ export default async function WalletPage() {
           <div className="text-sm" style={{ color: 'var(--fg2)' }}>Balance</div>
           <div className="text-3xl font-extrabold mt-1">{user.balance.toFixed(2)} USD</div>
         </div>
-        <a href="#topup" className="btn-primary !px-6 !py-3 text-[15px]">💲 Top up</a>
+        <a href="#topup" className="btn-primary !px-6 !py-3 text-[15px]"><CE id="6043882458582095360" />  Top up</a>
       </div>
 
       <div id="topup" className="mt-6">

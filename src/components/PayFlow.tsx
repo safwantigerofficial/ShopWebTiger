@@ -6,6 +6,7 @@ import {
   type OpenResult, type SubmitResult,
 } from '../app/actions/topup';
 import type { DBPaymentMethod } from '../types';
+import CE from './CE';
 
 type Stage =
   | { k: 'loading' }
@@ -78,7 +79,7 @@ export default function PayFlow({ method, presetAmount, onCredited }: {
     });
   }
 
-  const copy = (s: string) => navigator.clipboard?.writeText(s).then(() => setMsg('Copied ✓')).catch(() => undefined);
+  const copy = (s: string) => navigator.clipboard?.writeText(s).then(() => setMsg('Copied <CE id="5854985398857503237" /> ')).catch(() => undefined);
   const box = 'rounded-xl border px-4 py-3';
   const boxStyle = { borderColor: 'var(--border)', background: 'var(--surface2)' } as const;
 
@@ -101,8 +102,8 @@ export default function PayFlow({ method, presetAmount, onCredited }: {
     return (
       <div className="space-y-3">
         <div className={box} style={boxStyle}><BotText text={stage.screen} /></div>
-        <a href={stage.url} target="_blank" rel="noreferrer" className="btn-primary w-full block text-center !py-3">💳 Open invoice</a>
-        <button className="btn-ghost w-full" disabled={busy} onClick={() => check(stage.depositId)}>✅ I’ve paid / Check</button>
+        <a href={stage.url} target="_blank" rel="noreferrer" className="btn-primary w-full block text-center !py-3"><CE id="5386367538735104399" />  Open invoice</a>
+        <button className="btn-ghost w-full" disabled={busy} onClick={() => check(stage.depositId)}><CE id="5854985398857503237" />  I’ve paid / Check</button>
         {msg && <p className="text-sm" style={{ color: 'var(--fg2)' }}>{msg}</p>}
       </div>
     );

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { requireUserOrRedirect } from '../../lib/guard';
 import LogoutButton from './LogoutButton';
+import CE from '../../components/CE';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,9 +18,9 @@ export default async function ProfilePage() {
 
       <div className="grid sm:grid-cols-3 gap-4 mt-6">
         {[
-          { href: '/orders', icon: '📎', title: 'My orders', sub: 'Order history' },
-          { href: '/wallet', icon: '💰', title: 'Wallet', sub: `$${user.balance.toFixed(2)}` },
-          { href: '/wallet#topup', icon: '💲', title: 'Top up', sub: 'Add funds' },
+          { href: '/orders', icon: '<CE id="5794085322400733645" /> ', title: 'My orders', sub: 'Order history' },
+          { href: '/wallet', icon: '<CE id="6267068789146260253" /> ', title: 'Wallet', sub: `$${user.balance.toFixed(2)}` },
+          { href: '/wallet#topup', icon: '<CE id="6043882458582095360" /> ', title: 'Top up', sub: 'Add funds' },
         ].map((c) => (
           <Link key={c.href} href={c.href} className="card card-hover !p-5 flex items-center justify-between">
             <div>

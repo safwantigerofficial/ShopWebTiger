@@ -5,6 +5,7 @@ import { getProduct, listPaymentMethods } from '../../../db/queries';
 import ProductIcon from '../../../components/ProductIcon';
 import { ceText } from '../../../lib/premiumEmoji';
 import CEText from '../../../components/CEText';
+import CE from '../../../components/CE';
 import { applyUserPriceToProduct } from '../../../lib/services/pricing';
 import { resolvePromo, nextPromoTeaser } from '../../../lib/services/promo';
 import BuyPanel from './BuyPanel';
@@ -57,13 +58,19 @@ export default async function ProductPage({ params }: { params: { id: string } }
                 </div>
               </div>
             )}
-            {p.tutorial_text && (
+            {p.note && (
               <div className="mt-4">
                 <div className="text-xs font-semibold" style={{ color: 'var(--fg3)' }}>NOTE</div>
                 <div className="text-[15px] whitespace-pre-wrap leading-relaxed mt-1" style={{ color: 'var(--fg2)' }}>
-                  <CEText text={p.tutorial_text} />
+                  <CEText text={p.note} />
                 </div>
               </div>
+            )}
+            {p.note_file_id && (
+              <a href={`/api/tgfile?file=${encodeURIComponent(p.note_file_id)}&name=${encodeURIComponent(p.note_file_name ?? 'note')}`}
+                className="btn-ghost w-full mt-3 text-sm">
+                <CE id="5794085322400733645" /> Download {p.note_file_name ?? 'note file'}
+              </a>
             )}
           </div>
         </div>
@@ -84,11 +91,11 @@ export default async function ProductPage({ params }: { params: { id: string } }
             <div className="text-3xl font-extrabold mt-3">${p.price.toFixed(2)}</div>
             <div className="text-sm mt-0.5" style={{ color: 'var(--fg2)' }}>per unit</div>
             <div className="text-sm mt-4 flex items-center gap-2" style={{ color: 'var(--fg2)' }}>
-              📎 Your delivery will be available in My orders.
+              <CE id="5794085322400733645" /> Your delivery will be available in My orders.
             </div>
             {promo && (
               <div className="mt-3 rounded-xl p-3 text-sm" style={{ background: 'rgba(22,163,106,.1)', border: '1px solid rgba(22,163,106,.3)' }}>
-                🎉 Promo <b>{promo.promo.name}</b> applied — ${promo.discount.toFixed(2)} off.
+                <CE id="5854985398857503237" /> Promo <b>{promo.promo.name}</b> applied — ${promo.discount.toFixed(2)} off.
               </div>
             )}
             {teaser && (

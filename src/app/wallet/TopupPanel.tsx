@@ -3,17 +3,19 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import PayFlow from '../../components/PayFlow';
 import CEText from '../../components/CEText';
+import CE from '../../components/CE';
 import type { DBPaymentMethod } from '../../types';
 
 const PROVIDER_ICON: Record<string, string> = {
-  manual: '🧾', binance_pay: '🟡', bybit_pay: '🟠', usdt_trc20: '💵', usdt_bep20: '💵',
-  usdt_ton: '💎', ltc: '⚪', cryptobot: '💠', zinipay: '🇧🇩',
+  manual: '5794085322400733645', binance_pay: '5875443023873053217', bybit_pay: '5884161133174067365',
+  usdt_trc20: '5431647832748612816', usdt_bep20: '5431647832748612816', usdt_ton: '5265151230790884988',
+  ltc: '6052869252447215120', cryptobot: '5386367538735104399', zinipay: '4913863819836523928',
 };
 
 export function MethodIcon({ m }: { m: DBPaymentMethod }) {
   const id = (m as { emoji_id?: string | null }).emoji_id;
   if (id) return <img src={`/api/emoji?id=${id}`} alt="" width={22} height={22} />;
-  return <span className="text-lg">{m.emoji_unicode || PROVIDER_ICON[m.provider] || '💳'}</span>;
+  return <CE id={PROVIDER_ICON[m.provider] ?? '5386367538735104399'} size={22} />;
 }
 
 export default function TopupPanel({ methods }: { methods: DBPaymentMethod[] }) {

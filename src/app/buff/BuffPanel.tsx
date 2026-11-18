@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { buffQuote, buffBuy } from '../actions/buff';
+import CE from '../../components/CE';
 
 type Quote = { ordersText: string; lines: { code: string; qty: number }[]; totalQty: number; priceUsdt: number };
 
@@ -32,7 +33,7 @@ export default function BuffPanel({ balance }: { balance: number }) {
   if (done) {
     return (
       <div className="card space-y-3">
-        <h2 className="font-bold text-green-400">✅ Buff order #B{done} placed</h2>
+        <h2 className="font-bold text-green-400"><CE id="5854985398857503237" />  Buff order #B{done} placed</h2>
         <p className="text-sm text-slate-300">Tokens are on the way — usually ~1-2 minutes. Track it below under My buff orders.</p>
         <button className="btn-ghost w-full" onClick={() => setDone(null)}>Place another order</button>
       </div>
@@ -53,7 +54,7 @@ export default function BuffPanel({ balance }: { balance: number }) {
             onChange={(e) => setText(e.target.value)}
           />
           <button className="btn-primary w-full" disabled={busy || !text.trim()} onClick={doQuote}>
-            {busy ? 'Checking…' : '💎 Get price'}
+            {busy ? 'Checking…' : '<CE id="5265151230790884988" />  Get price'}
           </button>
         </>
       ) : (
@@ -74,7 +75,7 @@ export default function BuffPanel({ balance }: { balance: number }) {
             <Link href="/wallet" className="btn-primary w-full block text-center">Top up wallet first</Link>
           ) : (
             <button className="btn-primary w-full" disabled={busy} onClick={buy}>
-              {busy ? 'Placing order…' : `✅ Confirm & Pay $${quote.priceUsdt.toFixed(2)}`}
+              {busy ? 'Placing order…' : `<CE id="5854985398857503237" />  Confirm & Pay $${quote.priceUsdt.toFixed(2)}`}
             </button>
           )}
           <button className="btn-ghost w-full" onClick={() => setQuote(null)}>← Edit codes</button>

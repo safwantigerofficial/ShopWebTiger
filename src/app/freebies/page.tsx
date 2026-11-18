@@ -2,6 +2,7 @@ import { requireUserOrRedirect } from '../../lib/guard';
 import { listFreebies, freebieRemaining, countFreebieClaims } from '../../db/freebies';
 import { countReferralsAfter } from '../../db/queries';
 import FreebieCard from './FreebieCard';
+import CE from '../../components/CE';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,7 +20,7 @@ export default async function FreebiesPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-bold">🎁 Freebies</h1>
+      <h1 className="text-xl font-bold"><CE id="5854985398857503237" />  Freebies</h1>
       {rows.length === 0 && <p className="text-slate-400">No freebies live right now — check back soon.</p>}
       {rows.map(({ f, remaining, used, refs }) => (
         <FreebieCard

@@ -1,3 +1,4 @@
+import CE from './CE';
 // Renders a product icon: premium Telegram custom emoji image when
 // `emoji_id` is set (same artwork the bot shows), else the unicode emoji.
 export default function ProductIcon({
@@ -20,5 +21,5 @@ export default function ProductIcon({
       />
     );
   }
-  return <span style={{ fontSize: size * 0.75, lineHeight: 1 }}>{emoji || '🛒'}</span>;
+  return <span style={{ fontSize: size * 0.75, lineHeight: 1 }}>{emoji || '<CE id="5312361253610475399" /> '}</span>;
 }

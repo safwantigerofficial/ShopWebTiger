@@ -12,8 +12,9 @@ import type { DBPaymentMethod } from '../../../types';
 type Step = 'qty' | 'review' | 'method' | 'pay' | 'done';
 
 const PROVIDER_ICON: Record<string, string> = {
-  manual: '🧾', binance_pay: '🟡', bybit_pay: '🟠', usdt_trc20: '🔗',
-  usdt_bep20: '🔗', usdt_ton: '💎', ltc: 'Ł', cryptobot: '💠', zinipay: '💳',
+  manual: '5794085322400733645', binance_pay: '5875443023873053217', bybit_pay: '5884161133174067365',
+  usdt_trc20: '5431647832748612816', usdt_bep20: '5431647832748612816', usdt_ton: '5265151230790884988',
+  ltc: '6052869252447215120', cryptobot: '5386367538735104399', zinipay: '4913863819836523928',
 };
 const WALLET_EMOJI_ID = '6267068789146260253';
 

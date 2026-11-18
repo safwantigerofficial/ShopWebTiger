@@ -3,6 +3,7 @@ import { getReferralEarnings, getReferralValueSummary } from '../../db/queries';
 import { env } from '../../env';
 import ConvertButton from './ConvertButton';
 import CopyLink from './CopyLink';
+import CE from '../../components/CE';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,7 +23,7 @@ export default async function ReferPage() {
 
   return (
     <div className="space-y-5">
-      <h1 className="text-xl font-bold">🤝 Refer & Earn</h1>
+      <h1 className="text-xl font-bold"><CE id="5854985398857503237" />  Refer & Earn</h1>
       <div className="card">
         <div className="text-sm text-slate-400 mb-1">Your referral link</div>
         <CopyLink link={link} />

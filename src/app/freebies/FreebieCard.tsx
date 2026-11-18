@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { claimFreebieAction, quoteBuffFreebieAction, claimBuffFreebieAction } from '../actions/freebies';
+import CE from '../../components/CE';
 
 type F = {
   id: number; name: string; kind: string; description: string | null;
@@ -86,20 +87,20 @@ export default function FreebieCard({ freebie: f }: { freebie: F }) {
           <p className="text-amber-300 text-xs">⚠️ Make sure the code is yours — tokens go straight to that account.</p>
           <div className="flex gap-2">
             <button className="btn-primary flex-1" disabled={busy} onClick={confirmClaim}>
-              {busy ? 'Placing…' : '✅ Confirm'}
+              {busy ? 'Placing…' : '<CE id="5854985398857503237" />  Confirm'}
             </button>
-            <button className="btn-ghost flex-1" onClick={() => setConfirm(null)}>❌ Cancel</button>
+            <button className="btn-ghost flex-1" onClick={() => setConfirm(null)}><CE id="6052869226677410910" />  Cancel</button>
           </div>
         </div>
       )}
       {!f.buffQty && (
         <button className="btn-primary w-full" disabled={busy || locked || out || limitHit} onClick={claim}>
-          {locked ? `🔒 Invite ${f.minRefs - f.userRefs} more friend(s)` : out ? 'Out of stock' : limitHit ? 'Limit reached' : busy ? 'Claiming…' : '🎉 Claim free'}
+          {locked ? `<CE id="6052869252447215120" />  Invite ${f.minRefs - f.userRefs} more friend(s)` : out ? 'Out of stock' : limitHit ? 'Limit reached' : busy ? 'Claiming…' : '<CE id="5854985398857503237" />  Claim free'}
         </button>
       )}
       {f.buffQty && (locked || out || limitHit) && (
         <button className="btn-primary w-full" disabled>
-          {locked ? `🔒 Invite ${f.minRefs - f.userRefs} more friend(s)` : out ? 'Out of stock' : 'Limit reached'}
+          {locked ? `<CE id="6052869252447215120" />  Invite ${f.minRefs - f.userRefs} more friend(s)` : out ? 'Out of stock' : 'Limit reached'}
         </button>
       )}
       {err && <p className="text-red-400 text-sm">{err}</p>}
