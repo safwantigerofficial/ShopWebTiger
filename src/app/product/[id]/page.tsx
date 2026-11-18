@@ -1,8 +1,9 @@
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import { requireUserOrRedirect } from '../../../lib/guard';
 import { getProduct } from '../../../db/queries';
 import { applyUserPriceToProduct } from '../../../lib/services/pricing';
-import { resolvePromo, priceBreakdown, nextPromoTeaser } from '../../../lib/services/promo';
+import { resolvePromo, nextPromoTeaser } from '../../../lib/services/promo';
 import BuyPanel from './BuyPanel';
 
 export const dynamic = 'force-dynamic';
@@ -14,37 +15,84 @@ export default async function ProductPage({ params }: { params: { id: string } }
   const p = await applyUserPriceToProduct(user.telegram_id, raw);
   const promo = await resolvePromo(user.telegram_id, p.id, 1, p.price);
   const teaser = await nextPromoTeaser(user.telegram_id, p.id, 1, p.price);
+  const out = !p.unlimited_stock && p.stock <= 0;
 
   return (
-    <div className="space-y-4">
-      <div className="card">
-        <div className="text-3xl mb-1">{p.emoji && p.emoji !== '🛒' ? p.emoji : '🛒'}</div>
-        <h1 className="text-xl font-bold">{p.name}</h1>
-        {p.description && <p className="text-slate-300 mt-2 whitespace-pre-wrap">{p.description}</p>}
-        {p.warranty && <p className="text-xs text-amber-300/80 mt-2">🛡 {p.warranty}</p>}
-        <div className="mt-3 flex items-center justify-between text-sm">
-          <span className="text-brand font-bold text-lg">${p.price.toFixed(2)}</span>
-          <span className="text-slate-400">
-            {p.unlimited_stock ? 'Unlimited stock' : p.stock > 0 ? `${p.stock} in stock` : 'Out of stock — pre-order available'}
-          </span>
+    <div>
+      <Link href="/shop" className="text-sm inline-flex items-center gap-1" style={{ color: 'var(--fg2)' }}>
+        ← Back
+      </Link>
+
+      <div className="grid lg:grid-cols-2 gap-5 mt-4">
+        {/* Left — media + details */}
+        <div className="space-y-5">
+          <div className="card !p-0 overflow-hidden">
+            <div className="h-56 flex items-center justify-center"
+              style={{ background: 'var(--surface2)' }}>
+              <div className="w-24 h-24 rounded-2xl flex items-center justify-center text-5xl"
+                style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
+                {p.emoji || '🛒'}
+              </div>
+            </div>
+          </div>
+          <div className="card">
+            <h2 className="font-bold text-lg">View product</h2>
+            {p.warranty && <p className="text-sm mt-2" style={{ color: 'var(--fg2)' }}>🛡 {p.warranty}</p>}
+            {p.description && (
+              <div className="mt-3 text-[15px] whitespace-pre-wrap leading-relaxed" style={{ color: 'var(--fg2)' }}>
+                {p.description}
+              </div>
+            )}
+            {p.tutorial_text && (
+              <div className="mt-3 text-[15px] whitespace-pre-wrap leading-relaxed" style={{ color: 'var(--fg2)' }}>
+                {p.tutorial_text}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Right — buy box */}
+        <div>
+          <div className="card !p-6">
+            <div className="flex justify-end">
+              {out ? (
+                <span className="chip stock-out">Out of stock</span>
+              ) : (
+                <span className="chip stock-ok">
+                  ● {p.unlimited_stock ? 'In stock' : `${p.stock} in stock`}
+                </span>
+              )}
+            </div>
+            <h1 className="text-2xl font-extrabold tracking-tight mt-2">{p.name}</h1>
+            <div className="text-3xl font-extrabold mt-3">${p.price.toFixed(2)}</div>
+            <div className="text-sm mt-0.5" style={{ color: 'var(--fg2)' }}>per unit</div>
+            <div className="text-sm mt-4 flex items-center gap-2" style={{ color: 'var(--fg2)' }}>
+              📎 Your delivery will be available in My orders.
+            </div>
+            {promo && (
+              <div className="mt-3 rounded-xl p-3 text-sm" style={{ background: 'rgba(22,163,106,.1)', border: '1px solid rgba(22,163,106,.3)' }}>
+                🎉 Promo <b>{promo.promo.name}</b> applied — ${promo.discount.toFixed(2)} off.
+              </div>
+            )}
+            {teaser && (
+              <div className="text-xs mt-2" style={{ color: 'var(--fg3)' }}>
+                Tip: buy {teaser.min_qty}+ to save ${Number(teaser.discount_amount).toFixed(2)}.
+              </div>
+            )}
+            <div className="mt-5">
+              <BuyPanel
+                productId={p.id}
+                unitPrice={p.price}
+                maxQty={p.unlimited_stock ? 100 : Math.max(p.stock, 1)}
+                balance={user.balance}
+              />
+            </div>
+            <div className="text-xs mt-3" style={{ color: 'var(--fg3)' }}>
+              Price and availability are checked again before ordering.
+            </div>
+          </div>
         </div>
       </div>
-      {promo && (
-        <div className="card border-brand/50 text-sm">
-          🎉 Promo <b>{promo.promo.name}</b> applied — for ${promo.discount.toFixed(2)} off.
-        </div>
-      )}
-      {teaser && (
-        <div className="text-xs text-slate-400">
-          Tip: buy {teaser.min_qty}+ to save ${Number(teaser.discount_amount).toFixed(2)}.
-        </div>
-      )}
-      <BuyPanel
-        productId={p.id}
-        unitPrice={p.price}
-        maxQty={p.unlimited_stock ? 100 : Math.max(p.stock, 1)}
-        balance={user.balance}
-      />
     </div>
   );
 }

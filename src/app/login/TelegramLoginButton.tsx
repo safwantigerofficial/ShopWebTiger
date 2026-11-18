@@ -32,15 +32,7 @@ export default function TelegramLoginButton({
       if (res.ok) router.push('/shop');
       else setError('Login failed — please try again.');
     };
-    const script = document.createElement('script');
-    script.src = 'https://telegram.org/js/telegram-widget.js?22';
-    script.async = true;
-    script.setAttribute('data-telegram-login', botUsername);
-    script.setAttribute('data-size', 'large');
-    script.setAttribute('data-onauth', 'onTelegramAuth(user)');
-    script.setAttribute('data-request-access', 'write');
-    ref.current?.appendChild(script);
-  }, [botUsername, router, refCode]);
+  }, [router, refCode]);
 
   return (
     <div className="flex flex-col items-center gap-3">
@@ -51,7 +43,7 @@ export default function TelegramLoginButton({
         Sign in with Telegram
       </a>
       {/* Official one-tap widget — appears when telegram.org is reachable */}
-      <div ref={ref} />
+      {botUsername && <div ref={ref} />}
       {error && <p className="text-red-400 text-sm mt-1">{error}</p>}
     </div>
   );

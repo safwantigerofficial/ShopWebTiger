@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { startCryptoTopup, checkCryptoTopup } from '../actions/topup';
 
 export default function TopupPanel() {
-  const [amount, setAmount] = useState('10');
+  const [amount, setAmount] = useState('');
+  const [method, setMethod] = useState('cryptobot');
   const [busy, setBusy] = useState(false);
   const [invoice, setInvoice] = useState<{ depositId: number; url: string } | null>(null);
   const [msg, setMsg] = useState('');
@@ -27,30 +28,47 @@ export default function TopupPanel() {
   }
 
   return (
-    <div className="card space-y-3">
-      <h2 className="font-semibold">💳 Top up — CryptoBot (USDT)</h2>
+    <div className="card !p-6">
+      <h2 className="font-bold text-lg">Choose an amount</h2>
       {!invoice ? (
         <>
-          <div className="flex gap-2">
-            <input className="input" type="number" min="0.5" step="0.5" value={amount}
-              onChange={(e) => setAmount(e.target.value)} placeholder="Amount in USD" />
-            <button className="btn-primary shrink-0" disabled={busy} onClick={create}>
-              {busy ? '…' : 'Create invoice'}
-            </button>
+          <label className="text-sm font-semibold mt-4 block" style={{ color: 'var(--fg2)' }}>
+            Amount (USD)
+          </label>
+          <div className="relative mt-1.5">
+            <input className="input !py-3 pr-14" type="number" min="0.5" step="0.5" value={amount}
+              onChange={(e) => setAmount(e.target.value)} placeholder="0.00" />
+            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold"
+              style={{ color: 'var(--fg3)' }}>USD</span>
           </div>
-          <p className="text-xs text-slate-500">Pays via CryptoBot — USDT, instant credit after payment.</p>
+
+          <div className="text-sm font-semibold mt-4" style={{ color: 'var(--fg2)' }}>Payment method</div>
+          <label className="mt-2 flex items-center gap-3 rounded-xl px-4 py-3.5 cursor-pointer"
+            style={{ border: '1px solid var(--border2)' }}>
+            <input type="radio" name="paymethod" value="cryptobot" checked={method === 'cryptobot'}
+              onChange={() => setMethod('cryptobot')} className="w-4 h-4 accent-blue-600" />
+            <span className="text-lg">💠</span>
+            <span className="font-semibold text-[15px]">CryptoPay (CryptoBot)</span>
+          </label>
+
+          <p className="text-sm mt-3" style={{ color: 'var(--fg3)' }}>
+            Payment details appear after you confirm your method.
+          </p>
+          <button className="btn-primary w-full !py-3.5 mt-3 text-[15px]" disabled={busy || !Number(amount)} onClick={create}>
+            {busy ? 'Creating…' : 'Confirm payment method'}
+          </button>
         </>
       ) : (
-        <div className="space-y-2">
-          <a className="btn-primary w-full" href={invoice.url} target="_blank" rel="noreferrer">
+        <div className="space-y-3 mt-4">
+          <a className="btn-primary w-full !py-3" href={invoice.url} target="_blank" rel="noreferrer">
             💎 Open invoice in CryptoBot
           </a>
-          <button className="btn-ghost w-full" disabled={busy} onClick={check}>
+          <button className="btn-ghost w-full !py-3" disabled={busy} onClick={check}>
             {busy ? 'Checking…' : '🔄 I paid — check'}
           </button>
         </div>
       )}
-      {msg && <p className="text-sm text-amber-300">{msg}</p>}
+      {msg && <p className="text-sm mt-3" style={{ color: 'var(--tiger)' }}>{msg}</p>}
     </div>
   );
 }

@@ -29,17 +29,20 @@ export default function BuyPanel({
 
   if (result?.ok) {
     return (
-      <div className="card space-y-3">
-        <h2 className="font-bold text-green-400">✅ Order {result.orderPublicId}</h2>
+      <div className="space-y-3">
+        <h2 className="font-bold" style={{ color: 'var(--brand)' }}>✅ Order {result.orderPublicId}</h2>
         {result.items.length > 0 ? (
-          <div className="bg-night-700 rounded-xl p-3 text-sm font-mono whitespace-pre-wrap break-all">
+          <div className="rounded-xl p-3 text-sm font-mono whitespace-pre-wrap break-all"
+            style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>
             {result.items.join('\n')}
           </div>
         ) : (
-          <p className="text-sm text-amber-300">{result.pending && 'Your order is queued — items will appear in My Orders once delivered.'}</p>
+          <p className="text-sm" style={{ color: 'var(--tiger)' }}>
+            {result.pending && 'Your order is queued — items will appear in My Orders once delivered.'}
+          </p>
         )}
         <div className="flex gap-2">
-          <Link href="/orders" className="btn-primary flex-1">My Orders</Link>
+          <Link href="/orders" className="btn-primary flex-1">My orders</Link>
           <Link href="/shop" className="btn-ghost flex-1">Keep shopping</Link>
         </div>
       </div>
@@ -47,30 +50,21 @@ export default function BuyPanel({
   }
 
   return (
-    <div className="card space-y-3">
-      <div className="flex items-center justify-between">
-        <span className="text-sm text-slate-400">Quantity</span>
-        <div className="flex items-center gap-2">
-          <button className="btn-ghost px-3" onClick={() => setQty((q) => Math.max(1, q - 1))}>−</button>
-          <input
-            className="input w-20 text-center"
-            type="number" min={1} max={maxQty} value={qty}
-            onChange={(e) => setQty(Math.max(1, Math.min(maxQty, Number(e.target.value) || 1)))}
-          />
-          <button className="btn-ghost px-3" onClick={() => setQty((q) => Math.min(maxQty, q + 1))}>+</button>
-        </div>
+    <div className="space-y-4">
+      <div>
+        <label className="text-sm font-semibold" style={{ color: 'var(--fg2)' }}>Quantity</label>
+        <input
+          className="input mt-1.5"
+          type="number" min={1} max={maxQty} value={qty}
+          onChange={(e) => setQty(Math.max(1, Math.min(maxQty, Number(e.target.value) || 1)))}
+        />
       </div>
-      <div className="flex items-center justify-between text-sm">
-        <span className="text-slate-400">Total</span>
-        <span className="text-brand font-bold text-lg">${total.toFixed(2)}</span>
-      </div>
-      <div className="text-xs text-slate-500">Wallet balance: ${balance.toFixed(2)}</div>
-      {result && !result.ok && <p className="text-red-400 text-sm">{result.error}</p>}
+      {result && !result.ok && <p className="text-red-500 text-sm">{result.error}</p>}
       {balance < total ? (
-        <Link href="/wallet" className="btn-primary w-full">Top up wallet first</Link>
+        <Link href="/wallet" className="btn-primary w-full !py-3">Top up wallet first</Link>
       ) : (
-        <button className="btn-primary w-full" disabled={busy} onClick={buy}>
-          {busy ? 'Processing…' : `💎 Buy now — $${total.toFixed(2)}`}
+        <button className="btn-primary w-full !py-3" disabled={busy} onClick={buy}>
+          {busy ? 'Processing…' : `Continue  →  $${total.toFixed(2)}`}
         </button>
       )}
     </div>

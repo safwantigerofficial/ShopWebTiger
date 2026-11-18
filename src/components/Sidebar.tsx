@@ -9,7 +9,7 @@ const items = [
   { href: '/profile', label: 'My account', icon: '👤' },
 ];
 
-export default function Sidebar({ loggedIn }: { loggedIn: boolean }) {
+export default function Sidebar({ loggedIn, balance }: { loggedIn: boolean; balance: number | null }) {
   const path = usePathname();
   return (
     <aside className="w-64 shrink-0 border-r flex flex-col min-h-screen sticky top-0 hidden md:flex"
@@ -25,16 +25,25 @@ export default function Sidebar({ loggedIn }: { loggedIn: boolean }) {
       </div>
 
       <div className="px-5">
-        <div className="rounded-xl p-4" style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>
-          <p className="text-sm leading-snug" style={{ color: 'var(--fg2)' }}>
-            {loggedIn
-              ? 'Connected — your wallet and orders are synced with the bot.'
-              : 'Connect your Telegram account to access your wallet and orders.'}
-          </p>
-          <Link href={loggedIn ? '/profile' : '/login'} className="btn-primary w-full mt-3 !py-2.5 text-[15px]">
-            {loggedIn ? 'My account' : 'Sign in'}
-          </Link>
-        </div>
+        {loggedIn && balance !== null ? (
+          <div className="rounded-xl p-4 text-white" style={{ background: 'linear-gradient(135deg,#2563eb,#1d4ed8)' }}>
+            <div className="flex items-center gap-1.5 text-[13px] font-medium opacity-90">💰 Balance</div>
+            <div className="text-2xl font-extrabold mt-0.5">${balance.toFixed(2)}</div>
+            <Link href="/wallet"
+              className="mt-3 flex items-center justify-between rounded-lg bg-white text-blue-700 font-semibold text-sm px-3.5 py-2.5">
+              💲 Top up <span className="text-lg leading-none">+</span>
+            </Link>
+          </div>
+        ) : (
+          <div className="rounded-xl p-4" style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>
+            <p className="text-sm leading-snug" style={{ color: 'var(--fg2)' }}>
+              Connect your Telegram account to access your wallet and orders.
+            </p>
+            <Link href="/login" className="btn-primary w-full mt-3 !py-2.5 text-[15px]">
+              My account
+            </Link>
+          </div>
+        )}
       </div>
 
       <div className="mt-5 px-3">

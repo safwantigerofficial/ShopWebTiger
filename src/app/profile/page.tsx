@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { requireUserOrRedirect } from '../../lib/guard';
 import LogoutButton from './LogoutButton';
 
@@ -5,27 +6,52 @@ export const dynamic = 'force-dynamic';
 
 export default async function ProfilePage() {
   const user = await requireUserOrRedirect();
-  return (
-    <div className="space-y-5">
-      <h1 className="text-xl font-bold">👤 Profile</h1>
-      <div className="card space-y-2">
-        <Row label="Name" value={[user.first_name, user.last_name].filter(Boolean).join(' ') || '—'} />
-        <Row label="Username" value={user.username ? `@${user.username}` : '—'} />
-        <Row label="Telegram ID" value={String(user.telegram_id)} />
-        <Row label="Balance" value={`$${user.balance.toFixed(2)}`} />
-        <Row label="Referral code" value={user.ref_code ?? '—'} />
-        <Row label="Email" value={user.email ?? '—'} />
-      </div>
-      <LogoutButton />
-    </div>
-  );
-}
+  const name = [user.first_name, user.last_name].filter(Boolean).join(' ') || (user.username ? `@${user.username}` : 'My account');
 
-function Row({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex justify-between text-sm">
-      <span className="text-slate-400">{label}</span>
-      <span className="font-medium">{value}</span>
+    <div>
+      <h1 className="text-3xl font-extrabold tracking-tight">{name}</h1>
+      <p className="mt-1.5 text-[15px]" style={{ color: 'var(--fg2)' }}>
+        Your orders, wallet and next steps, in one place.
+      </p>
+
+      <div className="grid sm:grid-cols-3 gap-4 mt-6">
+        {[
+          { href: '/orders', icon: '📎', title: 'My orders', sub: 'Order history' },
+          { href: '/wallet', icon: '💰', title: 'Wallet', sub: `$${user.balance.toFixed(2)}` },
+          { href: '/wallet#topup', icon: '💲', title: 'Top up', sub: 'Add funds' },
+        ].map((c) => (
+          <Link key={c.href} href={c.href} className="card card-hover !p-5 flex items-center justify-between">
+            <div>
+              <div className="font-semibold text-[15px]">
+                <span className="mr-2">{c.icon}</span>{c.title}
+              </div>
+              <div className="text-sm mt-1" style={{ color: 'var(--fg2)' }}>{c.sub}</div>
+            </div>
+            <span style={{ color: 'var(--fg3)' }}>↗</span>
+          </Link>
+        ))}
+      </div>
+
+      <h2 className="font-bold text-lg mt-8">Pending activity</h2>
+      <div className="mt-3 rounded-2xl p-6 text-[15px] text-center"
+        style={{ border: '1.5px dashed var(--border2)', color: 'var(--fg2)' }}>
+        You have no pending activity.
+      </div>
+      <Link href="/orders" className="text-sm font-semibold mt-3 inline-block" style={{ color: 'var(--primary)' }}>
+        View my orders
+      </Link>
+
+      <div className="border-t mt-8 pt-4 flex items-center justify-between" style={{ borderColor: 'var(--border)' }}>
+        <div>
+          <div className="text-sm font-semibold">My account</div>
+          <div className="text-xs mt-0.5" style={{ color: 'var(--fg3)' }}>
+            {user.username ? `@${user.username} · ` : ''}ID {user.telegram_id}
+            {user.ref_code ? ` · Ref ${user.ref_code}` : ''}
+          </div>
+        </div>
+        <LogoutButton />
+      </div>
     </div>
   );
 }
