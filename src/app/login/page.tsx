@@ -22,9 +22,9 @@ export default async function LoginPage() {
       </a>
       <div className="card !p-10 max-w-xl w-full mx-auto text-center">
         <img src="/logo.jpg" alt="SafwanTiger" className="w-16 h-16 rounded-2xl object-cover mx-auto mb-4" />
-        <h1 className="text-3xl font-extrabold tracking-tight">My account</h1>
+        <h1 className="text-3xl font-extrabold tracking-tight">Login options</h1>
         <p className="mt-2 text-[15px]" style={{ color: 'var(--fg2)' }}>
-          Connect your Telegram account to access your wallet and orders.
+          Choose how you'd like to log in to SafwanTiger.
         </p>
         <div className="mt-6">
           <Suspense>
