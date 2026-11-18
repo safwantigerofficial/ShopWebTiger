@@ -2,11 +2,13 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { buyProduct } from '../../actions/shop';
+import { downloadTxt } from '../../../lib/downloadTxt';
 
 export default function BuyPanel({
-  productId, unitPrice, maxQty, balance,
-}: { productId: number; unitPrice: number; maxQty: number; balance: number }) {
+  productId, unitPrice, maxQty, balance, productName,
+}: { productId: number; unitPrice: number; maxQty: number; balance: number; productName: string }) {
   const [qty, setQty] = useState(1);
+  const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<
     | { ok: true; orderPublicId: string; items: string[]; pending: boolean; newBalance: number }
@@ -24,6 +26,7 @@ export default function BuyPanel({
       setResult({ ok: false, error: e instanceof Error ? e.message : 'Purchase failed' });
     } finally {
       setBusy(false);
+      setConfirming(false);
     }
   }
 
@@ -32,10 +35,16 @@ export default function BuyPanel({
       <div className="space-y-3">
         <h2 className="font-bold" style={{ color: 'var(--brand)' }}>✅ Order {result.orderPublicId}</h2>
         {result.items.length > 0 ? (
-          <div className="rounded-xl p-3 text-sm font-mono whitespace-pre-wrap break-all"
-            style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>
-            {result.items.join('\n')}
-          </div>
+          <>
+            <div className="rounded-xl p-3 text-sm font-mono whitespace-pre-wrap break-all"
+              style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>
+              {result.items.join('\n')}
+            </div>
+            <button className="btn-ghost w-full"
+              onClick={() => downloadTxt(`${result.orderPublicId}.txt`, `${productName} — order ${result.orderPublicId}\n\n${result.items.join('\n')}`)}>
+              ⬇ Download .txt
+            </button>
+          </>
         ) : (
           <p className="text-sm" style={{ color: 'var(--tiger)' }}>
             {result.pending && 'Your order is queued — items will appear in My Orders once delivered.'}
@@ -45,6 +54,27 @@ export default function BuyPanel({
           <Link href="/orders" className="btn-primary flex-1">My orders</Link>
           <Link href="/shop" className="btn-ghost flex-1">Keep shopping</Link>
         </div>
+      </div>
+    );
+  }
+
+  if (confirming) {
+    return (
+      <div className="space-y-4">
+        <div className="rounded-xl p-4 text-sm space-y-1.5"
+          style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>
+          <div className="flex justify-between"><span style={{ color: 'var(--fg2)' }}>Payment method</span><b>Wallet balance</b></div>
+          <div className="flex justify-between"><span style={{ color: 'var(--fg2)' }}>Quantity</span><b>×{qty}</b></div>
+          <div className="flex justify-between"><span style={{ color: 'var(--fg2)' }}>Total</span><b>${total.toFixed(2)}</b></div>
+          <div className="flex justify-between"><span style={{ color: 'var(--fg2)' }}>Balance after</span><b>${(balance - total).toFixed(2)}</b></div>
+        </div>
+        <button className="btn-primary w-full !py-3" disabled={busy} onClick={buy}>
+          {busy ? 'Processing…' : `Confirm payment — $${total.toFixed(2)}`}
+        </button>
+        <button className="btn-ghost w-full" disabled={busy} onClick={() => setConfirming(false)}>
+          Back
+        </button>
+        {result && !result.ok && <p className="text-red-500 text-sm">{result.error}</p>}
       </div>
     );
   }
@@ -63,8 +93,8 @@ export default function BuyPanel({
       {balance < total ? (
         <Link href="/wallet" className="btn-primary w-full !py-3">Top up wallet first</Link>
       ) : (
-        <button className="btn-primary w-full !py-3" disabled={busy} onClick={buy}>
-          {busy ? 'Processing…' : `Continue  →  $${total.toFixed(2)}`}
+        <button className="btn-primary w-full !py-3" disabled={busy} onClick={() => setConfirming(true)}>
+          Continue  →  ${total.toFixed(2)}
         </button>
       )}
     </div>

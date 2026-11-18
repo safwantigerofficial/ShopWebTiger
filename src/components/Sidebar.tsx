@@ -12,7 +12,7 @@ const items = [
 export default function Sidebar({ loggedIn, balance }: { loggedIn: boolean; balance: number | null }) {
   const path = usePathname();
   return (
-    <aside className="w-64 shrink-0 border-r flex flex-col min-h-screen sticky top-0 hidden md:flex"
+    <aside className="w-64 shrink-0 border-r flex-col h-screen fixed top-0 left-0 hidden md:flex"
       style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}>
       <div className="p-6 pb-5">
         <Link href="/" className="flex items-center gap-3">

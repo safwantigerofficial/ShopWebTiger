@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { requireUserOrRedirect } from '../../../lib/guard';
 import { getProduct } from '../../../db/queries';
 import ProductIcon from '../../../components/ProductIcon';
-import { ceText } from '../../../lib/premiumEmoji';
+import { ceText, plainText } from '../../../lib/premiumEmoji';
 import { applyUserPriceToProduct } from '../../../lib/services/pricing';
 import { resolvePromo, nextPromoTeaser } from '../../../lib/services/promo';
 import BuyPanel from './BuyPanel';
@@ -39,15 +39,28 @@ export default async function ProductPage({ params }: { params: { id: string } }
           </div>
           <div className="card">
             <h2 className="font-bold text-lg">View product</h2>
-            {p.warranty && <p className="text-sm mt-2" style={{ color: 'var(--fg2)' }}>🛡 {ceText(p.warranty)}</p>}
+            {p.warranty && (
+              <div className="mt-3">
+                <div className="text-xs font-semibold" style={{ color: 'var(--fg3)' }}>WARRANTY</div>
+                <div className="text-[15px] whitespace-pre-wrap leading-relaxed mt-1" style={{ color: 'var(--fg2)' }}>
+                  {plainText(p.warranty)}
+                </div>
+              </div>
+            )}
             {p.description && (
-              <div className="mt-3 text-[15px] whitespace-pre-wrap leading-relaxed" style={{ color: 'var(--fg2)' }}>
-                {ceText(p.description)}
+              <div className="mt-4">
+                <div className="text-xs font-semibold" style={{ color: 'var(--fg3)' }}>DESCRIPTION</div>
+                <div className="text-[15px] whitespace-pre-wrap leading-relaxed mt-1" style={{ color: 'var(--fg2)' }}>
+                  {plainText(p.description)}
+                </div>
               </div>
             )}
             {p.tutorial_text && (
-              <div className="mt-3 text-[15px] whitespace-pre-wrap leading-relaxed" style={{ color: 'var(--fg2)' }}>
-                {ceText(p.tutorial_text)}
+              <div className="mt-4">
+                <div className="text-xs font-semibold" style={{ color: 'var(--fg3)' }}>NOTE</div>
+                <div className="text-[15px] whitespace-pre-wrap leading-relaxed mt-1" style={{ color: 'var(--fg2)' }}>
+                  {plainText(p.tutorial_text)}
+                </div>
               </div>
             )}
           </div>
@@ -87,6 +100,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
                 unitPrice={p.price}
                 maxQty={p.unlimited_stock ? 100 : Math.max(p.stock, 1)}
                 balance={user.balance}
+                productName={p.name}
               />
             </div>
             <div className="text-xs mt-3" style={{ color: 'var(--fg3)' }}>

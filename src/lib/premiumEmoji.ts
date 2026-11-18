@@ -9,3 +9,9 @@ const CE_MARKER_RX = /\{\{ce:([^|}\n]+)\|([^}\n]+)\}\}/g;
 export function ceText(s: string): string {
   return s.replace(CE_MARKER_RX, (_m, _id, glyph) => glyph);
 }
+
+/** Strips leftover Telegram-HTML tags (`<blockquote>`, `<b>`…) while
+ * keeping the text content — product descriptions store them raw. */
+export function plainText(s: string): string {
+  return ceText(s).replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/\n{3,}/g, '\n\n').trim();
+}

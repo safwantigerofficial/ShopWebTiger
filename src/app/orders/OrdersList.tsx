@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import type { DBOrder } from '../../types';
 import { publicOrderId } from '../../lib/services/orderId';
+import { downloadTxt } from '../../lib/downloadTxt';
 
 const tabs = ['Finished', 'Pending', 'Cancelled'] as const;
 
@@ -62,6 +63,20 @@ export default function OrdersList({ orders }: { orders: DBOrder[] }) {
                 style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>
                 {o.delivered_items ?? 'Processing…'}
               </div>
+              {o.delivered_items && (
+                <button
+                  className="mx-4 mb-4 btn-ghost !w-auto !py-2 !px-4 text-sm"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    downloadTxt(
+                      `${publicOrderId(o)}.txt`,
+                      `${o.product_name} x${o.qty} — order ${publicOrderId(o)}\n\n${o.delivered_items}`,
+                    );
+                  }}
+                >
+                  ⬇ Download .txt
+                </button>
+              )}
             </details>
           ))}
         </div>
