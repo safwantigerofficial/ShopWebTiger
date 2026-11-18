@@ -3946,3 +3946,20 @@ export async function claimPendingDeposit(id: number, tx_hash: string): Promise<
   if (error) return false;
   return Array.isArray(data) && data.length === 1;
 }
+
+/**
+ * Auto-cancel a user's stale pending deposits: provider/invoice top-ups
+ * with no payment reference submitted within 15 minutes. Manual deposits
+ * (admin-handled, bank/cash instructions) are excluded.
+ */
+export async function expireStaleUserDeposits(telegramId: number): Promise<void> {
+  const cutoff = new Date(Date.now() - 15 * 60 * 1000).toISOString();
+  await supabase
+    .from('deposits')
+    .update({ status: 'rejected', note: 'expired — no payment submitted within 15 minutes' })
+    .eq('telegram_id', telegramId)
+    .eq('status', 'pending')
+    .is('tx_hash', null)
+    .neq('method', 'manual')
+    .lt('created_at', cutoff);
+}

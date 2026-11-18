@@ -108,7 +108,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
               <BuyPanel
                 productId={p.id}
                 unitPrice={p.price}
-                maxQty={p.unlimited_stock ? 100 : Math.max(p.stock, 1)}
+                maxQty={p.unlimited_stock || out ? 100 : Math.max(p.stock, 1)}
                 preorder={out}
               />
             </div>

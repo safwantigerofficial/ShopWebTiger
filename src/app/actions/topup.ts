@@ -10,6 +10,7 @@ import {
   listDeposits,
   listPaymentMethods,
   setDepositStatus,
+  expireStaleUserDeposits,
   setDepositNote,
   setZiniPayInvoiceId,
   findDepositByTxHash,
@@ -554,5 +555,6 @@ export async function checkInvoiceTopup(depositId: number): Promise<CheckResult>
 export async function myDeposits() {
   const user = await requireUser();
   if (!user) return [];
+  await expireStaleUserDeposits(user.telegram_id).catch(() => undefined);
   return listDeposits(user.telegram_id, 20);
 }

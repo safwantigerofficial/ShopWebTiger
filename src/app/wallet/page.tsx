@@ -1,5 +1,5 @@
 import { requireUserOrRedirect } from '../../lib/guard';
-import { listDeposits, listPaymentMethods } from '../../db/queries';
+import { expireStaleUserDeposits, listDeposits, listPaymentMethods } from '../../db/queries';
 import TopupPanel from './TopupPanel';
 import CE from '../../components/CE';
 
@@ -7,6 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function WalletPage() {
   const user = await requireUserOrRedirect();
+  await expireStaleUserDeposits(user.telegram_id).catch(() => undefined);
   const deposits = await listDeposits(user.telegram_id, 20);
   const methods = await listPaymentMethods();
   const pendingDeposits = deposits.filter((d) => d.status === 'pending');
