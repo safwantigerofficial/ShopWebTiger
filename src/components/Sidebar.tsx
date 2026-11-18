@@ -61,12 +61,12 @@ export default function Sidebar({ loggedIn, balance }: { loggedIn: boolean; bala
             const active = path.startsWith(it.href);
             return (
               <Link key={it.href} href={it.href}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] font-semibold transition"
+                className="flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-base font-semibold transition"
                 style={{
                   color: active ? 'var(--primary)' : 'var(--fg2)',
                   background: active ? 'rgba(37,99,235,.09)' : 'transparent',
                 }}>
-                <img src={`/api/emoji?id=${it.emojiId}`} alt="" width={20} height={20} className="w-5 h-5" />
+                <img src={`/api/emoji?id=${it.emojiId}`} alt="" width={24} height={24} className="w-6 h-6" />
                 {t(it.key)}
               </Link>
             );

@@ -67,29 +67,27 @@ export default function ShopGrid({
         </div>
 
         {/* Mobile — batman-style list rows */}
-        <div className="sm:hidden mt-4 space-y-2.5">
+        <div className="sm:hidden mt-4 space-y-2">
           {products.map((p) => {
             const out = !p.unlimited_stock && p.stock <= 0;
             return (
               <Link key={p.id} href={loggedIn ? `/product/${p.id}` : '/login'}
-                className="card !p-4 flex items-center gap-3.5">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+                className="card !py-3 !px-4 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
                   style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>
-                  <ProductIcon emojiId={p.emoji_id} emoji={p.emoji} size={30} />
+                  <ProductIcon emojiId={p.emoji_id} emoji={p.emoji} size={24} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-bold text-[15px] leading-snug">{ceText(p.name)}</div>
+                  <div className="font-semibold text-sm leading-snug">{ceText(p.name)}</div>
                   {out ? (
-                    <span className="chip stock-out text-[11px] mt-1 inline-block">Pre-order</span>
+                    <span className="chip stock-out !text-[10px] !py-0.5 !px-2 mt-0.5 inline-block">Pre-order</span>
                   ) : (
-                    <span className="chip stock-ok text-[11px] mt-1 inline-block">
+                    <span className="chip stock-ok !text-[10px] !py-0.5 !px-2 mt-0.5 inline-block">
                       ● {p.unlimited_stock ? 'In stock' : `${p.stock} in stock`}
                     </span>
                   )}
                 </div>
-                <div className="text-right shrink-0">
-                  <div className="text-lg font-extrabold">${p.price.toFixed(2)}</div>
-                </div>
+                <div className="text-base font-extrabold shrink-0">${p.price.toFixed(2)}</div>
               </Link>
             );
           })}
