@@ -96,7 +96,9 @@ export default function ShopGrid({
                 {p.name}
               </div>
               {p.warranty && (
-                <div className="text-xs mt-1" style={{ color: 'var(--fg3)' }}>{p.warranty}</div>
+                <div className="text-xs mt-1 line-clamp-1" title={p.warranty} style={{ color: 'var(--fg3)' }}>
+                  {p.warranty}
+                </div>
               )}
               <div className="text-sm mt-3" style={{ color: 'var(--fg2)' }}>per unit</div>
               <div className="text-xl font-extrabold mt-0.5" style={{ color: 'var(--fg)' }}>
