@@ -1,36 +1,13 @@
 import { NextResponse } from 'next/server';
 import { env } from '../../../../env';
 import { verifyTelegramLogin } from '../../../../lib/tgLogin';
-import { getOrCreateUser, getUserByRefCode } from '../../../../db/queries';
-import { getSession } from '../../../../lib/session';
+import { loginVerifiedUser } from '../../../../lib/loginUser';
 
 async function finishLogin(data: Record<string, string>, ref: string) {
   if (!verifyTelegramLogin(data, env.TELEGRAM_LOGIN_BOT_TOKEN)) {
     return { status: 401, body: { ok: false, error: 'invalid_signature' } };
   }
-  const telegramId = Number(data.id);
-  if (!Number.isFinite(telegramId)) {
-    return { status: 400, body: { ok: false, error: 'bad_id' } };
-  }
-  // Referral: resolve the ?ref= code to the referrer's telegram_id.
-  // getOrCreateUser validates it (not self, must exist) via resolveValidReferrer.
-  let referredBy: number | null = null;
-  if (ref) {
-    const referrer = await getUserByRefCode(String(ref).trim()).catch(() => null);
-    referredBy = referrer?.telegram_id ?? null;
-  }
-  await getOrCreateUser({
-    telegram_id: telegramId,
-    username: data.username ?? null,
-    first_name: data.first_name ?? null,
-    last_name: data.last_name ?? null,
-    language: 'en',
-    referred_by: referredBy,
-  });
-  const session = await getSession();
-  session.telegramId = telegramId;
-  await session.save();
-  return { status: 200, body: { ok: true } };
+  return loginVerifiedUser(data, ref);
 }
 
 // Widget onauth POST.

@@ -15,6 +15,29 @@ export default function TelegramLoginButton({
   const router = useRouter();
   const params = useSearchParams();
   const [error, setError] = useState('');
+  const [waiting, setWaiting] = useState(false);
+
+  async function appLogin() {
+    setError('');
+    const res = await fetch('/api/auth/tg-bot/start', {
+      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ref: refCode }),
+    }).catch(() => null);
+    const j = res ? await res.json().catch(() => null) : null;
+    if (!j?.ok) return setError('Telegram app login is unavailable right now.');
+    window.open(j.link, '_blank');
+    setWaiting(true);
+    const until = Date.now() + 5 * 60 * 1000;
+    while (Date.now() < until) {
+      await new Promise((r) => setTimeout(r, 2000));
+      const p = await fetch(`/api/auth/tg-bot/poll?nonce=${j.nonce}`).catch(() => null);
+      if (!p) continue;
+      const pj = await p.json().catch(() => null);
+      if (pj?.ok) { router.push(params.get('next') || '/shop'); router.refresh(); return; }
+      if (p.status === 410 || p.status >= 500) break;
+    }
+    setWaiting(false);
+    setError('Login timed out — please try again.');
+  }
 
   const refCode = params.get('ref') ?? '';
   const oauthUrl =
@@ -42,6 +65,12 @@ export default function TelegramLoginButton({
         </svg>
         Sign in with Telegram
       </a>
+      <button type="button" onClick={appLogin} disabled={waiting} className="btn-ghost w-64 !py-3 text-base">
+        {waiting ? 'Waiting for confirmation in Telegram…' : 'Open in Telegram app'}
+      </button>
+      <p className="text-xs max-w-xs" style={{ color: 'var(--fg3)' }}>
+        Works even if telegram.org is blocked: tap, then press <b>Start</b> in the bot.
+      </p>
       {/* Official one-tap widget — appears when telegram.org is reachable */}
       {botUsername && <div ref={ref} />}
       {error && <p className="text-red-400 text-sm mt-1">{error}</p>}

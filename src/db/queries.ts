@@ -3930,3 +3930,19 @@ export async function getUserByRefCode(ref_code: string): Promise<DBUser | null>
     .maybeSingle();
   return (data as DBUser) ?? null;
 }
+
+/**
+ * Atomically flip a pending deposit to approved and stamp its tx_hash.
+ * Returns false when another request already resolved it (or the
+ * tx_hash unique index rejected a duplicate) — caller must not credit.
+ */
+export async function claimPendingDeposit(id: number, tx_hash: string): Promise<boolean> {
+  const { data, error } = await supabase
+    .from('deposits')
+    .update({ status: 'approved', tx_hash })
+    .eq('id', id)
+    .eq('status', 'pending')
+    .select('id');
+  if (error) return false;
+  return Array.isArray(data) && data.length === 1;
+}

@@ -5,3 +5,4 @@ export async function logBuffOrder(..._a: unknown[]): Promise<void> {}
 export async function logBuffLowBalance(..._a: unknown[]): Promise<void> {}
 export async function notifyAdmins(..._a: unknown[]): Promise<void> {}
 export async function logBuffEvent(..._a: unknown[]): Promise<void> {}
+export async function logTopupResolved(..._a: unknown[]): Promise<void> {}

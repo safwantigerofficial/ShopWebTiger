@@ -2,7 +2,9 @@
 import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { buyProduct } from '../../actions/shop';
-import { startReferenceTopup } from '../../actions/topup';
+import PayFlow from '../../../components/PayFlow';
+import { MethodIcon } from '../../wallet/TopupPanel';
+import CEText from '../../../components/CEText';
 import { downloadTxt } from '../../../lib/downloadTxt';
 import { ceText } from '../../../lib/premiumEmoji';
 import type { DBPaymentMethod } from '../../../types';
@@ -24,7 +26,6 @@ export default function BuyPanel({
   const [step, setStep] = useState<Step>('qty');
   const [qty, setQty] = useState(1);
   const [method, setMethod] = useState<'wallet' | DBPaymentMethod | null>(null);
-  const [reference, setReference] = useState('');
   const [busy, start] = useTransition();
   const [msg, setMsg] = useState('');
   const [result, setResult] = useState<
@@ -48,22 +49,13 @@ export default function BuyPanel({
     });
   }
 
-  function submitExternal() {
-    if (method === 'wallet' || !method) return;
-    const m = method;
-    start(async () => {
-      const r = await startReferenceTopup({
-        methodName: m.name,
-        amount: total,
-        reference,
-        providerLabel: m.provider,
-      });
-      if (!r.ok) return setMsg(r.error);
-      setMsg('Payment submitted — once it is credited to your wallet, come back and confirm with Wallet.');
-      setStep('qty');
-      setMethod(null);
-      setReference('');
-    });
+  function onCredited(newBalance: number | null) {
+    if (newBalance !== null && newBalance + 0.0001 < total) {
+      setMsg(`Payment credited to your wallet (balance $${newBalance.toFixed(2)}), but it is less than the order total $${total.toFixed(2)}. Top up the difference, then pay with Wallet.`);
+      return;
+    }
+    setMsg('Payment received — delivering your order…');
+    buyWallet();
   }
 
   /* ---------- done ---------- */
@@ -180,8 +172,8 @@ export default function BuyPanel({
             }}
             onClick={() => setMethod(m)}
           >
-            <span className="text-lg">{m.emoji_unicode || PROVIDER_ICON[m.provider] || '💳'}</span>
-            <span className="flex-1 font-semibold">{ceText(m.name)}</span>
+            <MethodIcon m={m} />
+            <span className="flex-1 font-semibold"><CEText text={m.name} /></span>
             <b>${total.toFixed(2)}</b>
           </button>
         ))}
@@ -198,39 +190,18 @@ export default function BuyPanel({
     );
   }
 
-  /* ---------- step 4: external pay instructions ---------- */
+  /* ---------- step 4: bot-identical payment flow ---------- */
   const m = method !== 'wallet' && method ? method : null;
   if (!m) return null;
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3">
-        <span className="text-xl">{m.emoji_unicode || PROVIDER_ICON[m.provider] || '💳'}</span>
-        <h3 className="font-bold">{ceText(m.name)}</h3>
+        <MethodIcon m={m} />
+        <h3 className="font-bold"><CEText text={m.name} /></h3>
       </div>
-      {m.instructions && (
-        <p className="text-sm whitespace-pre-wrap" style={{ color: 'var(--fg2)' }}>{ceText(m.instructions)}</p>
-      )}
-      {m.address && (
-        <div className="rounded-xl border px-4 py-3" style={{ borderColor: 'var(--border)', background: 'var(--surface2)' }}>
-          <div className="text-xs" style={{ color: 'var(--fg3)' }}>
-            {m.pay_name ? `Pay ${m.pay_name} — ID` : 'Pay to'}
-          </div>
-          <div className="font-mono text-sm break-all">{m.address}</div>
-          <div className="text-xs mt-1.5 font-semibold" style={{ color: 'var(--fg2)' }}>
-            Send exactly ${total.toFixed(2)}
-          </div>
-        </div>
-      )}
-      <div>
-        <label className="text-sm font-semibold block mb-1">Transaction hash / order ID</label>
-        <input className="input" value={reference} onChange={(e) => setReference(e.target.value)}
-          placeholder="Paste it here after paying" />
-      </div>
-      {msg && <p className="text-red-500 text-sm">{msg}</p>}
-      <button className="btn-primary w-full !py-3" disabled={!reference.trim() || busy} onClick={submitExternal}>
-        {busy ? 'Submitting…' : 'Submit payment'}
-      </button>
-      <button className="btn-ghost w-full" onClick={() => { setStep('method'); setMsg(''); }}>Back</button>
+      <PayFlow key={m.id} method={m} presetAmount={total} onCredited={onCredited} />
+      {msg && <p className="text-sm" style={{ color: 'var(--fg2)' }}>{msg}</p>}
+      <button className="btn-ghost w-full" disabled={busy} onClick={() => { setStep('method'); setMsg(''); }}>Back</button>
     </div>
   );
 }

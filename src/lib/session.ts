@@ -4,7 +4,15 @@ import { env } from '../env';
 import { getUserByTelegramId } from '../db/queries';
 import type { DBUser } from '../types';
 
-export type SessionData = { telegramId?: number };
+export type TopupFlow = {
+  provider: string;
+  methodId: number;
+  methodName: string;
+  depositId: number;
+  openedAtMs: number;
+  expiresAtMs?: number;
+};
+export type SessionData = { telegramId?: number; topup?: TopupFlow };
 export type Session = IronSession<SessionData>;
 
 export async function getSession(): Promise<Session> {
