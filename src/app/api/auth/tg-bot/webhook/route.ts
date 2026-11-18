@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { timingSafeEqual } from 'node:crypto';
-import { confirmNonce, loginBotApi, webhookSecret } from '../../../../../lib/tgBotLogin';
+import { loginBotApi, webhookSecret } from '../../../../../lib/tgBotLogin';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,12 +17,26 @@ export async function POST(req: Request) {
   const from = msg?.from;
   if (!msg?.text || !from || from.is_bot || msg.chat?.type !== 'private') return NextResponse.json({ ok: true });
   const m = msg.text.trim().match(/^\/start(?:@\w+)?\s+login_([0-9a-f]{32})$/);
-  let reply = 'Open the website and tap “Open in Telegram app” to log in.';
-  if (m) {
-    reply = confirmNonce(m[1], { id: from.id, first_name: from.first_name, last_name: from.last_name, username: from.username })
-      ? "✅ You're logged in to SafwanTiger web — go back to your browser."
-      : '⚠️ This login link expired. Go back to the website and try again.';
+  const host = req.headers.get('x-forwarded-host') ?? req.headers.get('host') ?? '';
+  const proto = req.headers.get('x-forwarded-proto') ?? 'https';
+  const origin = host ? `${proto}://${host}` : '';
+  if (m && origin) {
+    const nonce = m[1];
+    await loginBotApi('sendMessage', {
+      chat_id: msg.chat!.id,
+      text: 'Tap the button to log in to SafwanTiger web:',
+      reply_markup: {
+        inline_keyboard: [[
+          { text: '✅ Log in to SafwanTiger', login_url: { url: `${origin}/api/auth/tg-link?nonce=${nonce}` } },
+        ]],
+      },
+    }).catch(() => undefined);
+  } else {
+    await loginBotApi('sendMessage', {
+      chat_id: msg.chat!.id,
+      text: m ? '⚠️ This login link expired. Go back to the website and try again.'
+              : 'Open the website and tap “Use Telegram on this device” to log in.',
+    }).catch(() => undefined);
   }
-  await loginBotApi('sendMessage', { chat_id: msg.chat!.id, text: reply }).catch(() => undefined);
   return NextResponse.json({ ok: true });
 }

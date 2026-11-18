@@ -54,12 +54,12 @@ export default function TelegramLoginButton({
   const refCode = params.get('ref') ?? '';
   const oauthUrl =
     `https://oauth.telegram.org/auth?bot_id=${encodeURIComponent(botId)}` +
-    `&origin=${encodeURIComponent(siteUrl)}&embed=0&quick_auth=new` +
+    `&origin=${encodeURIComponent(siteUrl)}&embed=0` +
     `&return_to=${encodeURIComponent(`${siteUrl}/api/auth/telegram${refCode ? `?ref=${refCode}` : ''}`)}`;
 
   async function cont() {
     setError('');
-    if (opt === 'phone' || opt === 'device') {
+    if (opt === 'phone') {
       window.location.href = oauthUrl;
       return;
     }
@@ -128,7 +128,7 @@ export default function TelegramLoginButton({
       </button>
       {opt === 'device' && (
         <p className="text-xs max-w-xs" style={{ color: 'var(--fg3)' }}>
-          Telegram opens and asks you to confirm the login.
+          Telegram opens — tap <b>Start</b>, then tap <b>Log in</b> to confirm.
         </p>
       )}
       {error && <p className="text-red-400 text-sm mt-1">{error}</p>}
