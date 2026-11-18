@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { requireUserOrRedirect } from '../../../lib/guard';
-import { getProduct, listPaymentMethods } from '../../../db/queries';
+import { getProduct } from '../../../db/queries';
 import ProductIcon from '../../../components/ProductIcon';
 import { ceText } from '../../../lib/premiumEmoji';
 import CEText from '../../../components/CEText';
@@ -19,7 +19,6 @@ export default async function ProductPage({ params }: { params: { id: string } }
   const p = await applyUserPriceToProduct(user.telegram_id, raw);
   const promo = await resolvePromo(user.telegram_id, p.id, 1, p.price);
   const teaser = await nextPromoTeaser(user.telegram_id, p.id, 1, p.price);
-  const methods = await listPaymentMethods();
   const out = !p.unlimited_stock && p.stock <= 0;
 
   return (
@@ -80,7 +79,9 @@ export default async function ProductPage({ params }: { params: { id: string } }
           <div className="card !p-6">
             <div className="flex justify-end">
               {out ? (
-                <span className="chip stock-out">Out of stock</span>
+                <span className="chip" style={{ background: 'rgba(234,179,8,.15)', color: '#a16207', border: '1px solid rgba(234,179,8,.4)' }}>
+                  <CE id="4990412201614378299" size={12} /> Pre-order
+                </span>
               ) : (
                 <span className="chip stock-ok">
                   ● {p.unlimited_stock ? 'In stock' : `${p.stock} in stock`}
@@ -108,9 +109,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
                 productId={p.id}
                 unitPrice={p.price}
                 maxQty={p.unlimited_stock ? 100 : Math.max(p.stock, 1)}
-                balance={user.balance}
-                productName={p.name}
-                methods={methods}
+                preorder={out}
               />
             </div>
             <div className="text-xs mt-3" style={{ color: 'var(--fg3)' }}>

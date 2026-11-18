@@ -6,7 +6,7 @@ const items = [
   { href: '/shop', label: 'Shop', emojiId: '5312361253610475399' },
   { href: '/orders', label: 'My orders', emojiId: '5893255507380014983' },
   { href: '/wallet', label: 'Wallet', emojiId: '6267068789146260253' },
-  { href: '/profile', label: 'My account', emojiId: '5904630315946611415' },
+  { href: '/profile', label: 'My account', emojiId: '5798678738384195183' },
 ];
 
 export default function MobileTabs() {

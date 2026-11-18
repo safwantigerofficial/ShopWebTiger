@@ -6,7 +6,7 @@ const items = [
   { href: '/shop', label: 'Shop', emojiId: '5312361253610475399' },
   { href: '/orders', label: 'My orders', emojiId: '5893255507380014983' },
   { href: '/wallet', label: 'Wallet', emojiId: '6267068789146260253' },
-  { href: '/profile', label: 'My account', emojiId: '5904630315946611415' },
+  { href: '/profile', label: 'My account', emojiId: '5798678738384195183' },
 ];
 
 export default function Sidebar({ loggedIn, balance }: { loggedIn: boolean; balance: number | null }) {
@@ -34,7 +34,7 @@ export default function Sidebar({ loggedIn, balance }: { loggedIn: boolean; bala
             <div className="text-2xl font-extrabold mt-0.5">${balance.toFixed(2)}</div>
             <Link href="/wallet"
               className="mt-3 flex items-center justify-between rounded-lg bg-white text-blue-700 font-semibold text-sm px-3.5 py-2.5">
-              <img src="/api/emoji?id=6267068789146260253" alt="" width={15} height={15} className="w-[15px] h-[15px]" />
+              <img src="/api/emoji?id=5197434882321567830" alt="" width={15} height={15} className="w-[15px] h-[15px]" />
               Top up <span className="text-lg leading-none">+</span>
             </Link>
           </div>
