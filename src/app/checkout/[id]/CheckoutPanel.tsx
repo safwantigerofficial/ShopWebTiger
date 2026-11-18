@@ -9,14 +9,15 @@ import CE from '../../../components/CE';
 import { downloadTxt } from '../../../lib/downloadTxt';
 import { ceText } from '../../../lib/premiumEmoji';
 import type { DBPaymentMethod } from '../../../types';
+import UsingMethod, { type Tutorial } from '../../../components/UsingMethod';
 
 const WALLET_EMOJI_ID = '6267068789146260253';
 
 export default function CheckoutPanel({
-  productId, unitPrice, maxQty, balance, productName, methods, preorder, qty: initQty,
+  productId, unitPrice, maxQty, balance, productName, methods, preorder, qty: initQty, tutorial,
 }: {
   productId: number; unitPrice: number; maxQty: number; balance: number;
-  productName: string; methods: DBPaymentMethod[]; preorder: boolean; qty: number;
+  productName: string; methods: DBPaymentMethod[]; preorder: boolean; qty: number; tutorial: Tutorial;
 }) {
   const [step, setStep] = useState<'review' | 'method' | 'pay' | 'done'>('review');
   const [qty] = useState(initQty);
@@ -76,6 +77,7 @@ export default function CheckoutPanel({
             Your order is queued — items will appear in My Orders once delivered.
           </p>
         )}
+        <UsingMethod t={tutorial} />
         <div className="flex gap-2">
           <Link href="/orders" className="btn-primary flex-1">My orders</Link>
           <Link href="/shop" className="btn-ghost flex-1">Keep shopping</Link>

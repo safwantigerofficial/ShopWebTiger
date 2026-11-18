@@ -4,10 +4,11 @@ import Link from 'next/link';
 import type { DBOrder } from '../../types';
 import { publicOrderId } from '../../lib/services/orderId';
 import { downloadTxt } from '../../lib/downloadTxt';
+import UsingMethod, { type Tutorial } from '../../components/UsingMethod';
 
 const tabs = ['Finished', 'Pending', 'Cancelled'] as const;
 
-export default function OrdersList({ orders }: { orders: DBOrder[] }) {
+export default function OrdersList({ orders, tutorials }: { orders: DBOrder[]; tutorials: Record<number, Tutorial> }) {
   const [tab, setTab] = useState<(typeof tabs)[number]>('Finished');
 
   const filtered = useMemo(() => {
@@ -76,6 +77,9 @@ export default function OrdersList({ orders }: { orders: DBOrder[] }) {
                 >
                   ⬇ Download .txt
                 </button>
+              )}
+              {o.delivered_items && (
+                <div className="mx-4 mb-4"><UsingMethod t={o.product_id != null ? tutorials[o.product_id] : null} /></div>
               )}
             </details>
           ))}

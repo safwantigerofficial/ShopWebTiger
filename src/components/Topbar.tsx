@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import ThemeToggle from './ThemeToggle';
 import LanguageSelect from './LanguageSelect';
+import Avatar from './Avatar';
 import { useLang } from './useLang';
 
 export default function Topbar({ loggedIn, balance }: { loggedIn: boolean; balance: number | null }) {
@@ -24,11 +25,8 @@ export default function Topbar({ loggedIn, balance }: { loggedIn: boolean; balan
           <ThemeToggle />
           <Link href={loggedIn ? '/profile' : '/login'} className="flex items-center gap-1.5 text-sm font-semibold"
             style={{ color: 'var(--fg)' }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-              <circle cx="12" cy="7" r="4" />
-            </svg>
-            <span className="hidden xs:inline">{t(loggedIn ? 'account' : 'sign_in')}</span>
+            {loggedIn ? <Avatar size={30} /> : (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>)}
+            {!loggedIn && <span className="hidden xs:inline">{t('sign_in')}</span>}
           </Link>
         </div>
       </div>

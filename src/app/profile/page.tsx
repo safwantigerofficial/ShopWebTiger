@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { requireUserOrRedirect } from '../../lib/guard';
 import LogoutButton from './LogoutButton';
+import AvatarPicker from './AvatarPicker';
 import CE from '../../components/CE';
 
 export const dynamic = 'force-dynamic';
@@ -12,6 +13,7 @@ export default async function ProfilePage() {
   return (
     <div>
       <h1 className="text-3xl font-extrabold tracking-tight">{name}</h1>
+      <AvatarPicker name={name} />
       <p className="mt-1.5 text-[15px]" style={{ color: 'var(--fg2)' }}>
         Your orders, wallet and next steps, in one place.
       </p>

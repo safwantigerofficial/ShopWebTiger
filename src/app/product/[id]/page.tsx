@@ -31,11 +31,11 @@ export default async function ProductPage({ params }: { params: { id: string } }
         {/* Left — media + details */}
         <div className="space-y-5">
           <div className="card !p-0 overflow-hidden">
-            <div className="h-56 flex items-center justify-center"
+            <div className="h-28 lg:h-56 flex items-center justify-center"
               style={{ background: 'var(--surface2)' }}>
-              <div className="w-24 h-24 rounded-2xl flex items-center justify-center text-5xl"
+              <div className="w-16 h-16 lg:w-24 lg:h-24 rounded-2xl flex items-center justify-center text-3xl lg:text-5xl"
                 style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
-                <ProductIcon emojiId={p.emoji_id} emoji={p.emoji} size={52} />
+                <ProductIcon emojiId={p.emoji_id} emoji={p.emoji} size={40} />
               </div>
             </div>
           </div>
@@ -74,8 +74,8 @@ export default async function ProductPage({ params }: { params: { id: string } }
           </div>
         </div>
 
-        {/* Right — buy box */}
-        <div>
+        {/* Right — buy box (first on mobile) */}
+        <div className="order-first lg:order-none">
           <div className="card !p-6">
             <div className="flex justify-end">
               {out ? (
