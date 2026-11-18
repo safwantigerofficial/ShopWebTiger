@@ -14,9 +14,7 @@ export default function Cursor() {
     const el = ref.current!;
     let raf = 0;
     const move = (e: MouseEvent) => {
-      raf = requestAnimationFrame(() => {
-        el.style.transform = `translate(${e.clientX}px,${e.clientY}px)`;
-      });
+      el.style.transform = `translate(${e.clientX}px,${e.clientY}px)`;
       const t = e.target as HTMLElement;
       setHover(!!t.closest('a,button,input,textarea,select,label,[role=button]'));
     };
@@ -37,7 +35,7 @@ export default function Cursor() {
     <div
       ref={ref}
       className="fixed top-0 left-0 z-[9999] pointer-events-none"
-      style={{ transition: 'transform 0.06s linear' }}
+      style={{ willChange: 'transform' }}
     >
       {hover ? (
         // hand pointer — white fill, blue outline (like heygen)

@@ -35,7 +35,12 @@ export default function Topbar({ loggedIn }: { loggedIn: boolean }) {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex items-center gap-4 shrink-0">
+          <select className="text-sm font-medium bg-transparent border rounded-lg px-2 py-1.5 hidden sm:block"
+            style={{ color: 'var(--fg2)', borderColor: 'var(--border2)' }} defaultValue="en" aria-label="Language">
+            <option value="en">English</option>
+            <option value="ur">اردو</option>
+          </select>
           <ThemeToggle />
           <Link href={loggedIn ? '/profile' : '/login'} className="flex items-center gap-1.5 text-sm font-semibold"
             style={{ color: 'var(--fg)' }}>
