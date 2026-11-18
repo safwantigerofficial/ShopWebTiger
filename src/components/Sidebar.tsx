@@ -6,7 +6,7 @@ import { useLang } from './useLang';
 const items = [
   { href: '/shop', key: 'shop', emojiId: '5312361253610475399' },
   { href: '/orders', key: 'orders', emojiId: '5893255507380014983' },
-  { href: '/wallet', key: 'wallet', emojiId: '6267068789146260253' },
+  { href: '/wallet', key: 'wallet', emojiId: '6028517788606272241' },
   { href: '/profile', key: 'account', emojiId: '5798678738384195183' },
 ];
 
@@ -30,7 +30,7 @@ export default function Sidebar({ loggedIn, balance }: { loggedIn: boolean; bala
         {loggedIn && balance !== null ? (
           <div className="rounded-xl p-4 text-white" style={{ background: 'linear-gradient(135deg,#2563eb,#1d4ed8)' }}>
             <div className="flex items-center gap-1.5 text-[13px] font-medium opacity-90">
-              <img src="/api/emoji?id=6267068789146260253" alt="" width={15} height={15} className="w-[15px] h-[15px]" />
+              <img src="/api/emoji?id=6028517788606272241" alt="" width={15} height={15} className="w-[15px] h-[15px]" />
               {t('balance')}
             </div>
             <div className="text-2xl font-extrabold mt-0.5">${balance.toFixed(2)}</div>

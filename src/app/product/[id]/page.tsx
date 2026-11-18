@@ -40,7 +40,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
         </div>
 
         {/* Buy box — second on mobile, right column on desktop */}
-        <div>
+        <div className="lg:row-span-2">
           <div className="card !p-6">
             <div className="flex justify-end">
               {out ? (

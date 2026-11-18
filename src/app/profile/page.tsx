@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { requireUserOrRedirect } from '../../lib/guard';
 import LogoutButton from './LogoutButton';
 import AvatarPicker from './AvatarPicker';
+import EmailSettings from './EmailSettings';
+import SupportLink from '../../components/SupportLink';
 import CE from '../../components/CE';
 
 export const dynamic = 'force-dynamic';
@@ -18,10 +20,20 @@ export default async function ProfilePage() {
         Your orders, wallet and next steps, in one place.
       </p>
 
+      <EmailSettings
+        initialEmail={user.email}
+        toggles={{
+          announcements: user.announcements,
+          stock_alert: user.stock_alert,
+          wallet_alert: user.wallet_alert,
+          email_reports: !user.email_nag_disabled,
+        }}
+      />
+
       <div className="grid sm:grid-cols-3 gap-4 mt-6">
         {[
           { href: '/orders', icon: '5893255507380014983', title: 'My orders', sub: 'Order history' },
-          { href: '/wallet', icon: '6267068789146260253', title: 'Wallet', sub: `$${user.balance.toFixed(2)}` },
+          { href: '/wallet', icon: '6028517788606272241', title: 'Wallet', sub: `$${user.balance.toFixed(2)}` },
           { href: '/wallet#topup', icon: '6043882458582095360', title: 'Top up', sub: 'Add funds' },
         ].map((c) => (
           <Link key={c.href} href={c.href} className="card card-hover !p-5 flex items-center justify-between">
@@ -44,6 +56,10 @@ export default async function ProfilePage() {
       <Link href="/orders" className="text-sm font-semibold mt-3 inline-block" style={{ color: 'var(--primary)' }}>
         View my orders
       </Link>
+
+      <div className="mt-6">
+        <SupportLink issue={`Hi, I need help with my SafwanTiger account (ID ${user.telegram_id}).`} label="Contact support" />
+      </div>
 
       <div className="border-t mt-8 pt-4 flex items-center justify-between" style={{ borderColor: 'var(--border)' }}>
         <div>

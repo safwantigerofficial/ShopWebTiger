@@ -5,6 +5,7 @@ import type { DBOrder } from '../../types';
 import { publicOrderId } from '../../lib/services/orderId';
 import { downloadTxt } from '../../lib/downloadTxt';
 import UsingMethod, { type Tutorial } from '../../components/UsingMethod';
+import SupportLink from '../../components/SupportLink';
 import CE from '../../components/CE';
 
 const tabs = ['Finished', 'Pending', 'Cancelled'] as const;
@@ -82,6 +83,12 @@ export default function OrdersList({ orders, tutorials }: { orders: DBOrder[]; t
               {o.delivered_items && (
                 <div className="mx-4 mb-4"><UsingMethod t={o.product_id != null ? tutorials[o.product_id] : null} /></div>
               )}
+              <div className="mx-4 mb-4">
+                <SupportLink
+                  issue={`Hi, I have an issue with order ${publicOrderId(o)} (${o.product_name} ×${o.qty}, $${Number(o.total).toFixed(2)}).`}
+                  label="Report an issue with this order"
+                />
+              </div>
             </details>
           ))}
         </div>

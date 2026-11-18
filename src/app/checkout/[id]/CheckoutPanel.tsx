@@ -11,7 +11,7 @@ import { ceText } from '../../../lib/premiumEmoji';
 import type { DBPaymentMethod } from '../../../types';
 import UsingMethod, { type Tutorial } from '../../../components/UsingMethod';
 
-const WALLET_EMOJI_ID = '6267068789146260253';
+const WALLET_EMOJI_ID = '6028517788606272241';
 
 export default function CheckoutPanel({
   productId, unitPrice, maxQty, balance, productName, methods, preorder, qty: initQty, tutorial,

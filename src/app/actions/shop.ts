@@ -15,6 +15,7 @@ import { resolvePromo, priceBreakdown } from '../../lib/services/promo';
 import { charge } from '../../lib/services/wallet';
 import { trySupplierAutoOrder } from '../../lib/services/supplierApi';
 import { publicOrderId } from '../../lib/services/orderId';
+import { sendInvoiceEmail } from '../../lib/mailer';
 import type { DBProduct } from '../../types';
 
 const QTY_MIN = 1;
@@ -91,6 +92,19 @@ export async function buyProduct(productId: number, rawQty: number): Promise<Buy
       ? 'Pre-order — your order is queued and will be delivered as soon as restock arrives.'
       : 'Delivery pending — our team will deliver shortly.';
   await setOrderDeliveredItems(order.id, items.length > 0 ? items.join('\n') : pendingText);
+
+  if (user.email) {
+    const name = [user.first_name, user.last_name].filter(Boolean).join(' ') || (user.username ? `@${user.username}` : 'there');
+    void sendInvoiceEmail({
+      to: user.email,
+      name,
+      orderId: publicOrderId(order),
+      product: p.name,
+      qty,
+      total,
+      items: items.length > 0 ? items : undefined,
+    });
+  }
 
   revalidatePath('/orders');
   revalidatePath('/wallet');

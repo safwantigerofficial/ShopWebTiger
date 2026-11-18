@@ -6,7 +6,7 @@ import { useLang } from './useLang';
 const items = [
   { href: '/shop', key: 'shop', emojiId: '5312361253610475399' },
   { href: '/orders', key: 'orders', emojiId: '5893255507380014983' },
-  { href: '/wallet', key: 'wallet', emojiId: '6267068789146260253' },
+  { href: '/wallet', key: 'wallet', emojiId: '6028517788606272241' },
   { href: '/profile', key: 'account', emojiId: '5798678738384195183' },
 ];
 

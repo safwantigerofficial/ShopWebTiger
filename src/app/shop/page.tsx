@@ -2,10 +2,13 @@ import { currentUser } from '../../lib/session';
 import { listCategories, listProducts } from '../../db/queries';
 import type { DBCategory } from '../../types';
 import { applyUserPriceToProducts } from '../../lib/services/pricing';
+import Link from 'next/link';
+import ProductIcon from '../../components/ProductIcon';
 import ShopGrid from './ShopGrid';
 
 export default async function ShopPage() {
   const user = await currentUser();
+  const loggedIn = !!user;
   const categories = await listCategories();
   const sections = await Promise.all(
     categories.map(async (c) => {
@@ -33,6 +36,9 @@ export default async function ShopPage() {
     visible.push({ category: categories[0] ?? ({} as DBCategory), products: flat });
   }
   const total = visible.reduce((n, s) => n + s.products.length, 0);
+  // Newest products by id — the web equivalent of the bot's
+  // "new stock added" announcements.
+  const arrivals = [...flat].sort((a, b) => b.id - a.id).slice(0, 8);
 
   return (
     <div>
@@ -46,7 +52,29 @@ export default async function ShopPage() {
         </div>
       </div>
       {visible.length === 0 && <p className="mt-8" style={{ color: 'var(--fg2)' }}>No products available right now.</p>}
-      <ShopGrid sections={JSON.parse(JSON.stringify(visible))} total={total} loggedIn={!!user} />
+
+      {arrivals.length > 0 && (
+        <div className="mt-5">
+          <div className="text-sm font-bold" style={{ color: 'var(--fg)' }}>New arrivals</div>
+          <div className="flex gap-3 mt-3 overflow-x-auto pb-2 -mx-1 px-1">
+            {arrivals.map((p) => (
+              <Link key={p.id} href={loggedIn ? `/product/${p.id}` : '/login'}
+                className="card card-hover !py-3 !px-4 flex items-center gap-3 shrink-0 min-w-[220px]">
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+                  style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>
+                  <ProductIcon emojiId={p.emoji_id} emoji={p.emoji} size={24} />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-sm font-semibold truncate">{p.name}</div>
+                  <div className="text-xs font-bold mt-0.5" style={{ color: 'var(--primary)' }}>${p.price.toFixed(2)}</div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <ShopGrid sections={JSON.parse(JSON.stringify(visible))} total={total} loggedIn={loggedIn} />
     </div>
   );
 }
