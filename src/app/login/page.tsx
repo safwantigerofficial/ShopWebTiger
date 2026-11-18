@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { getSession } from '../../lib/session';
 import { env } from '../../env';
+import { oidcEnabled } from '../../lib/oidc';
 import { headers } from 'next/headers';
 import TelegramLoginButton from './TelegramLoginButton';
 import { Suspense } from 'react';
@@ -28,7 +29,7 @@ export default async function LoginPage() {
         </p>
         <div className="mt-6">
           <Suspense>
-            <TelegramLoginButton botUsername={env.TELEGRAM_LOGIN_BOT_USERNAME} botId={botId} siteUrl={siteUrl} />
+            <TelegramLoginButton botUsername={env.TELEGRAM_LOGIN_BOT_USERNAME} botId={botId} siteUrl={siteUrl} oidc={oidcEnabled()} />
           </Suspense>
         </div>
       </div>

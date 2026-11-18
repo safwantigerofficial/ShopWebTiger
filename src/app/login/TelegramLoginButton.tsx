@@ -39,10 +39,12 @@ const OPTS: { id: Opt; label: string; icon: React.ReactNode }[] = [
 export default function TelegramLoginButton({
   botId,
   siteUrl,
+  oidc,
 }: {
   botUsername: string;
   botId: string;
   siteUrl: string;
+  oidc: boolean;
 }) {
   const router = useRouter();
   const params = useSearchParams();
@@ -59,8 +61,11 @@ export default function TelegramLoginButton({
 
   async function cont() {
     setError('');
-    if (opt === 'phone') {
-      window.location.href = oauthUrl;
+    if (opt === 'device' || opt === 'phone' || oidc) {
+      const q = new URLSearchParams();
+      if (refCode) q.set('ref', refCode);
+      if (params.get('next')) q.set('next', params.get('next')!);
+      window.location.href = oidc ? `/api/auth/oidc/start?${q}` : oauthUrl;
       return;
     }
     const res = await fetch('/api/auth/tg-bot/start', {
@@ -128,7 +133,7 @@ export default function TelegramLoginButton({
       </button>
       {opt === 'device' && (
         <p className="text-xs max-w-xs" style={{ color: 'var(--fg3)' }}>
-          Telegram opens — tap <b>Start</b>, then tap <b>Log in</b> to confirm.
+          Telegram asks you to confirm the login in the app.
         </p>
       )}
       {error && <p className="text-red-400 text-sm mt-1">{error}</p>}

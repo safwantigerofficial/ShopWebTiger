@@ -12,7 +12,8 @@ export type TopupFlow = {
   openedAtMs: number;
   expiresAtMs?: number;
 };
-export type SessionData = { telegramId?: number; topup?: TopupFlow };
+export type OidcPending = { state: string; verifier: string; nonce: string; ref: string; next: string; redirectUri: string; at: number };
+export type SessionData = { telegramId?: number; topup?: TopupFlow; oidc?: OidcPending };
 export type Session = IronSession<SessionData>;
 
 export async function getSession(): Promise<Session> {
