@@ -1,32 +1,36 @@
-import { requireUserOrRedirect } from '../../lib/guard';
+import { currentUser } from '../../lib/session';
 import { listCategories, listProducts } from '../../db/queries';
 import { applyUserPriceToProducts } from '../../lib/services/pricing';
 import ShopGrid from './ShopGrid';
 
-export const dynamic = 'force-dynamic';
-
 export default async function ShopPage() {
-  const user = await requireUserOrRedirect();
+  const user = await currentUser();
   const categories = await listCategories();
   const sections = await Promise.all(
     categories.map(async (c) => {
-      const { rows } = await listProducts(c.id, 0, 100);
-      return { category: c, products: await applyUserPriceToProducts(user.telegram_id, rows) };
+      const { rows } = await listProducts(c.id, 0, 500);
+      return {
+        category: c,
+        products: user ? await applyUserPriceToProducts(user.telegram_id, rows) : rows,
+      };
     }),
   );
   const visible = sections.filter((s) => s.products.length > 0);
+  const total = visible.reduce((n, s) => n + s.products.length, 0);
 
   return (
-    <div className="space-y-8">
-      <section className="pt-2 pb-1">
-        <p className="text-xs uppercase tracking-[0.2em] text-brand font-semibold">Digital goods store</p>
-        <h1 className="serif text-3xl sm:text-4xl font-medium mt-1">Shop</h1>
-        <p className="text-sm text-slate-400 mt-1">
-          Instant delivery after payment · Balance <b className="text-brand">${user.balance.toFixed(2)}</b>
-        </p>
-      </section>
-      {visible.length === 0 && <p className="text-slate-400">No products available right now.</p>}
-      <ShopGrid sections={JSON.parse(JSON.stringify(visible))} />
+    <div>
+      <div className="text-sm font-semibold" style={{ color: 'var(--fg2)' }}>SafwanTiger</div>
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mt-1">
+        <div>
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">The shop</h1>
+          <p className="mt-1.5 text-[15px]" style={{ color: 'var(--fg2)' }}>
+            Your favourite tools, in one place.
+          </p>
+        </div>
+      </div>
+      {visible.length === 0 && <p className="mt-8" style={{ color: 'var(--fg2)' }}>No products available right now.</p>}
+      <ShopGrid sections={JSON.parse(JSON.stringify(visible))} total={total} loggedIn={!!user} />
     </div>
   );
 }

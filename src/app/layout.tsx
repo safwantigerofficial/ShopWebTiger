@@ -1,43 +1,41 @@
 import './globals.css';
-import Link from 'next/link';
-import Nav from '../components/Nav';
-import Footer from '../components/Footer';
+import Sidebar from '../components/Sidebar';
+import Topbar from '../components/Topbar';
 import ThemeToggle from '../components/ThemeToggle';
 import Cursor from '../components/Cursor';
-import LiveBg from '../components/LiveBg';
+import { getSession } from '../lib/session';
 
-export const metadata = { title: 'SafwanTiger Shop', description: 'Premium digital goods — instant delivery' };
+export const metadata = { title: 'SafwanTiger Shop', description: 'Your digital store' };
 
-const themeInit = `(function(){var t=localStorage.getItem('st-theme')||'dark';document.documentElement.dataset.theme=t})()`;
+const themeInit = `(function(){var t=localStorage.getItem('st-theme')||'light';document.documentElement.dataset.theme=t})()`;
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const session = await getSession();
   return (
-    <html lang="en" data-theme="dark" suppressHydrationWarning>
+    <html lang="en" data-theme="light" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
         <link rel="icon" href="/logo.jpg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap"
           rel="stylesheet"
         />
       </head>
       <body>
-        <LiveBg />
         <Cursor />
-        <header className="sticky top-0 z-40 border-b" style={{ borderColor: 'var(--border)', background: 'var(--nav)', backdropFilter: 'blur(10px)' }}>
-          <div className="mx-auto max-w-5xl px-4 h-16 flex items-center justify-between gap-4">
-            <Link href="/" className="flex items-center gap-2.5 font-semibold tracking-tight shrink-0">
-              <img src="/logo.jpg" alt="SafwanTiger" className="w-9 h-9 rounded-xl object-cover" />
-              <span className="hidden xs:inline">SafwanTiger <span style={{ color: 'var(--brand)' }}>Shop</span></span>
-            </Link>
-            <Nav />
-            <ThemeToggle />
+        <div className="flex min-h-screen">
+          <Sidebar loggedIn={!!session.telegramId} />
+          <div className="flex-1 min-w-0 flex flex-col">
+            <Topbar loggedIn={!!session.telegramId} />
+            <main className="flex-1 px-5 sm:px-8 py-6 max-w-[1100px] w-full mx-auto">{children}</main>
+            <footer className="px-8 py-5 text-xs flex justify-between" style={{ color: 'var(--fg3)' }}>
+              <span>SafwanTiger</span>
+              <span>Your digital store</span>
+            </footer>
           </div>
-        </header>
-        <main className="mx-auto max-w-5xl px-4 pt-6 pb-10 min-h-[70vh]">{children}</main>
-        <Footer />
+        </div>
       </body>
     </html>
   );

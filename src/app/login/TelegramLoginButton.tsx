@@ -48,7 +48,7 @@ export default function TelegramLoginButton({
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
           <path d="M9.04 15.31l-.38 5.35c.54 0 .78-.23 1.06-.5l2.55-2.44 5.28 3.87c.97.54 1.66.26 1.92-.9L22.94 4.86c.31-1.4-.51-1.95-1.45-1.6L2.4 9.9c-1.37.53-1.35 1.29-.23 1.64l4.87 1.52 11.3-7.12c.53-.35 1.02-.16.62.19L9.04 15.31z" />
         </svg>
-        Continue with Telegram
+        Sign in with Telegram
       </a>
       {/* Official one-tap widget — appears when telegram.org is reachable */}
       <div ref={ref} />
