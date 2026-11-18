@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import type { DBCategory, DBProduct } from '../../types';
 import ProductIcon from '../../components/ProductIcon';
-import { ceText, plainText } from '../../lib/premiumEmoji';
+import { ceText } from '../../lib/premiumEmoji';
 
 type Section = { category: DBCategory; products: DBProduct[] };
 
@@ -86,11 +86,6 @@ export default function ShopGrid({
                 </div>
                 <div className="mt-3 font-bold text-[15px] leading-snug" style={{ color: 'var(--fg)' }}>
                   {ceText(p.name)}
-                </div>
-                <div className="text-xs mt-1 line-clamp-1"
-                  title={p.warranty ? plainText(p.warranty) : undefined}
-                  style={{ color: 'var(--fg3)' }}>
-                  WARRANTY: {p.warranty ? plainText(p.warranty) : '—'}
                 </div>
                 <div className="text-sm mt-3" style={{ color: 'var(--fg2)' }}>per unit</div>
                 <div className="text-xl font-extrabold mt-0.5" style={{ color: 'var(--fg)' }}>

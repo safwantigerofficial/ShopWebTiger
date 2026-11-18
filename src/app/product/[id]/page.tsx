@@ -1,9 +1,10 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { requireUserOrRedirect } from '../../../lib/guard';
-import { getProduct } from '../../../db/queries';
+import { getProduct, listPaymentMethods } from '../../../db/queries';
 import ProductIcon from '../../../components/ProductIcon';
-import { ceText, plainText } from '../../../lib/premiumEmoji';
+import { ceText } from '../../../lib/premiumEmoji';
+import CEText from '../../../components/CEText';
 import { applyUserPriceToProduct } from '../../../lib/services/pricing';
 import { resolvePromo, nextPromoTeaser } from '../../../lib/services/promo';
 import BuyPanel from './BuyPanel';
@@ -17,6 +18,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
   const p = await applyUserPriceToProduct(user.telegram_id, raw);
   const promo = await resolvePromo(user.telegram_id, p.id, 1, p.price);
   const teaser = await nextPromoTeaser(user.telegram_id, p.id, 1, p.price);
+  const methods = await listPaymentMethods();
   const out = !p.unlimited_stock && p.stock <= 0;
 
   return (
@@ -43,7 +45,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
               <div className="mt-3">
                 <div className="text-xs font-semibold" style={{ color: 'var(--fg3)' }}>WARRANTY</div>
                 <div className="text-[15px] whitespace-pre-wrap leading-relaxed mt-1" style={{ color: 'var(--fg2)' }}>
-                  {plainText(p.warranty)}
+                  <CEText text={p.warranty} />
                 </div>
               </div>
             )}
@@ -51,7 +53,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
               <div className="mt-4">
                 <div className="text-xs font-semibold" style={{ color: 'var(--fg3)' }}>DESCRIPTION</div>
                 <div className="text-[15px] whitespace-pre-wrap leading-relaxed mt-1" style={{ color: 'var(--fg2)' }}>
-                  {plainText(p.description)}
+                  <CEText text={p.description} />
                 </div>
               </div>
             )}
@@ -59,7 +61,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
               <div className="mt-4">
                 <div className="text-xs font-semibold" style={{ color: 'var(--fg3)' }}>NOTE</div>
                 <div className="text-[15px] whitespace-pre-wrap leading-relaxed mt-1" style={{ color: 'var(--fg2)' }}>
-                  {plainText(p.tutorial_text)}
+                  <CEText text={p.tutorial_text} />
                 </div>
               </div>
             )}
@@ -78,7 +80,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
                 </span>
               )}
             </div>
-            <h1 className="text-2xl font-extrabold tracking-tight mt-2">{ceText(p.name)}</h1>
+            <h1 className="text-2xl font-extrabold tracking-tight mt-2"><CEText text={p.name} size={24} /></h1>
             <div className="text-3xl font-extrabold mt-3">${p.price.toFixed(2)}</div>
             <div className="text-sm mt-0.5" style={{ color: 'var(--fg2)' }}>per unit</div>
             <div className="text-sm mt-4 flex items-center gap-2" style={{ color: 'var(--fg2)' }}>
@@ -101,6 +103,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
                 maxQty={p.unlimited_stock ? 100 : Math.max(p.stock, 1)}
                 balance={user.balance}
                 productName={p.name}
+                methods={methods}
               />
             </div>
             <div className="text-xs mt-3" style={{ color: 'var(--fg3)' }}>
