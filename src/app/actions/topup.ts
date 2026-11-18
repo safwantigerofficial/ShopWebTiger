@@ -77,6 +77,36 @@ export async function checkCryptoTopup(depositId: number): Promise<
   return { ok: true, credited: credited.credited, amount: credited.amount ?? undefined };
 }
 
+/** Manual / reference-based top-ups (Binance Pay, Bybit, chains, LTC,
+ * bKash, manual) — creates a pending deposit the admin reviews, same
+ * as the bot's manual-review path. */
+export async function startReferenceTopup(input: {
+  methodName: string;
+  amount: number;
+  reference: string;
+  providerLabel?: string;
+}): Promise<{ ok: true; depositId: number } | { ok: false; error: string }> {
+  const user = await requireUser();
+  if (!user) return { ok: false, error: 'Not logged in' };
+  const amount = Math.round(Number(input.amount) * 100) / 100;
+  if (!Number.isFinite(amount) || amount <= 0) return { ok: false, error: 'Enter a valid amount' };
+  if (amount > 100000) return { ok: false, error: 'Amount too large' };
+  const ref = String(input.reference ?? '').trim();
+  if (ref.length < 4 || ref.length > 200) return { ok: false, error: 'Enter a valid payment reference' };
+  try {
+    const dep = await createDeposit({
+      user_id: user.telegram_id,
+      method: input.methodName,
+      amount,
+      note: `Website top-up submitted — reference: ${ref}`,
+    });
+    revalidatePath('/wallet');
+    return { ok: true, depositId: dep.id };
+  } catch {
+    return { ok: false, error: 'Could not submit — try again.' };
+  }
+}
+
 export async function myDeposits() {
   const user = await requireUser();
   if (!user) return [];

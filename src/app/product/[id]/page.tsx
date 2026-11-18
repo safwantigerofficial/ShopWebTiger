@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { requireUserOrRedirect } from '../../../lib/guard';
 import { getProduct } from '../../../db/queries';
+import ProductIcon from '../../../components/ProductIcon';
+import { ceText } from '../../../lib/premiumEmoji';
 import { applyUserPriceToProduct } from '../../../lib/services/pricing';
 import { resolvePromo, nextPromoTeaser } from '../../../lib/services/promo';
 import BuyPanel from './BuyPanel';
@@ -31,21 +33,21 @@ export default async function ProductPage({ params }: { params: { id: string } }
               style={{ background: 'var(--surface2)' }}>
               <div className="w-24 h-24 rounded-2xl flex items-center justify-center text-5xl"
                 style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
-                {p.emoji || '🛒'}
+                <ProductIcon emojiId={p.emoji_id} emoji={p.emoji} size={52} />
               </div>
             </div>
           </div>
           <div className="card">
             <h2 className="font-bold text-lg">View product</h2>
-            {p.warranty && <p className="text-sm mt-2" style={{ color: 'var(--fg2)' }}>🛡 {p.warranty}</p>}
+            {p.warranty && <p className="text-sm mt-2" style={{ color: 'var(--fg2)' }}>🛡 {ceText(p.warranty)}</p>}
             {p.description && (
               <div className="mt-3 text-[15px] whitespace-pre-wrap leading-relaxed" style={{ color: 'var(--fg2)' }}>
-                {p.description}
+                {ceText(p.description)}
               </div>
             )}
             {p.tutorial_text && (
               <div className="mt-3 text-[15px] whitespace-pre-wrap leading-relaxed" style={{ color: 'var(--fg2)' }}>
-                {p.tutorial_text}
+                {ceText(p.tutorial_text)}
               </div>
             )}
           </div>
@@ -63,7 +65,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
                 </span>
               )}
             </div>
-            <h1 className="text-2xl font-extrabold tracking-tight mt-2">{p.name}</h1>
+            <h1 className="text-2xl font-extrabold tracking-tight mt-2">{ceText(p.name)}</h1>
             <div className="text-3xl font-extrabold mt-3">${p.price.toFixed(2)}</div>
             <div className="text-sm mt-0.5" style={{ color: 'var(--fg2)' }}>per unit</div>
             <div className="text-sm mt-4 flex items-center gap-2" style={{ color: 'var(--fg2)' }}>

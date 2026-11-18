@@ -1,7 +1,7 @@
 import './globals.css';
 import Sidebar from '../components/Sidebar';
 import Topbar from '../components/Topbar';
-import ThemeToggle from '../components/ThemeToggle';
+import MobileTabs from '../components/MobileTabs';
 import { getSession, currentUser } from '../lib/session';
 
 export const metadata = { title: 'SafwanTiger Shop', description: 'Your digital store' };
@@ -27,14 +27,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <div className="flex min-h-screen">
           <Sidebar loggedIn={!!session.telegramId} balance={user?.balance ?? null} />
           <div className="flex-1 min-w-0 flex flex-col">
-            <Topbar loggedIn={!!session.telegramId} />
-            <main className="flex-1 px-5 sm:px-8 py-6 max-w-[1100px] w-full mx-auto">{children}</main>
-            <footer className="px-8 py-5 text-xs flex justify-between" style={{ color: 'var(--fg3)' }}>
+            <Topbar loggedIn={!!session.telegramId} balance={user?.balance ?? null} />
+            <main className="flex-1 px-5 sm:px-8 py-6 pb-24 md:pb-6 max-w-[1100px] w-full mx-auto">{children}</main>
+            <footer className="px-8 py-5 pb-20 md:pb-5 text-xs flex justify-between" style={{ color: 'var(--fg3)' }}>
               <span>SafwanTiger</span>
               <span>Your digital store</span>
             </footer>
           </div>
         </div>
+        <MobileTabs />
       </body>
     </html>
   );

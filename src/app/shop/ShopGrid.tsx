@@ -2,6 +2,8 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import type { DBCategory, DBProduct } from '../../types';
+import ProductIcon from '../../components/ProductIcon';
+import { ceText } from '../../lib/premiumEmoji';
 
 type Section = { category: DBCategory; products: DBProduct[] };
 
@@ -15,42 +17,21 @@ export default function ShopGrid({
   loggedIn: boolean;
 }) {
   const [q, setQ] = useState('');
-  const [cat, setCat] = useState('all');
   const [inStock, setInStock] = useState(false);
 
   const products = useMemo(() => {
     const needle = q.trim().toLowerCase();
     return sections
-      .filter((s) => cat === 'all' || String(s.category.id) === cat)
       .flatMap((s) => s.products)
       .filter(
         (p) =>
           (!needle || p.name.toLowerCase().includes(needle)) &&
           (!inStock || p.unlimited_stock || p.stock > 0),
       );
-  }, [sections, q, cat, inStock]);
+  }, [sections, q, inStock]);
 
   return (
-    <div className="mt-5 flex gap-6 items-start">
-      {/* Folders — left column */}
-      <div className="w-40 shrink-0">
-        <div className="text-sm font-semibold mb-2" style={{ color: 'var(--fg2)' }}>Folders</div>
-        <div className="space-y-0.5">
-          <button onClick={() => setCat('all')}
-            className="block w-full text-left px-2 py-1.5 rounded-lg text-sm font-medium"
-            style={{ color: cat === 'all' ? 'var(--primary)' : 'var(--fg2)' }}>
-            All products
-          </button>
-          {sections.map((s) => (
-            <button key={s.category.id} onClick={() => setCat(String(s.category.id))}
-              className="block w-full text-left px-2 py-1.5 rounded-lg text-sm"
-              style={{ color: cat === String(s.category.id) ? 'var(--primary)' : 'var(--fg2)' }}>
-              🗂️ {s.category.name}
-            </button>
-          ))}
-        </div>
-      </div>
-
+    <div className="mt-5">
       {/* Main column */}
       <div className="flex-1 min-w-0">
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 justify-between">
@@ -93,7 +74,7 @@ export default function ShopGrid({
                 <div className="flex items-start justify-between">
                   <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
                     style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>
-                    {p.emoji || '🛒'}
+                    <ProductIcon emojiId={p.emoji_id} emoji={p.emoji} size={32} />
                   </div>
                   {out ? (
                     <span className="chip stock-out text-xs">Out of stock</span>
@@ -104,11 +85,11 @@ export default function ShopGrid({
                   )}
                 </div>
                 <div className="mt-3 font-bold text-[15px] leading-snug" style={{ color: 'var(--fg)' }}>
-                  {p.name}
+                  {ceText(p.name)}
                 </div>
                 {p.warranty && (
                   <div className="text-xs mt-1 line-clamp-1" title={p.warranty} style={{ color: 'var(--fg3)' }}>
-                    {p.warranty}
+                    {ceText(p.warranty)}
                   </div>
                 )}
                 <div className="text-sm mt-3" style={{ color: 'var(--fg2)' }}>per unit</div>

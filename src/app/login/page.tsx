@@ -1,14 +1,20 @@
 import { redirect } from 'next/navigation';
 import { getSession } from '../../lib/session';
 import { env } from '../../env';
+import { headers } from 'next/headers';
 import TelegramLoginButton from './TelegramLoginButton';
 import { Suspense } from 'react';
+
+export const dynamic = 'force-dynamic';
 
 export default async function LoginPage() {
   const session = await getSession();
   if (session.telegramId) redirect('/shop');
   const botId = (env.TELEGRAM_LOGIN_BOT_TOKEN ?? '').split(':')[0] ?? '';
-  const siteUrl = env.SITE_URL ? `https://${env.SITE_URL.replace(/^https?:\/\//, '')}` : '';
+  const host = env.SITE_URL
+    ? env.SITE_URL.replace(/^https?:\/\//, '')
+    : (headers().get('x-forwarded-host') ?? headers().get('host') ?? '');
+  const siteUrl = host ? `https://${host}` : '';
   return (
     <div className="min-h-[70vh] flex flex-col justify-center">
       <a href="/shop" className="text-sm mb-6 inline-flex items-center gap-1 w-fit" style={{ color: 'var(--fg2)' }}>

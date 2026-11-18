@@ -1,5 +1,5 @@
 import { requireUserOrRedirect } from '../../lib/guard';
-import { listDeposits } from '../../db/queries';
+import { listDeposits, listPaymentMethods } from '../../db/queries';
 import TopupPanel from './TopupPanel';
 
 export const dynamic = 'force-dynamic';
@@ -7,6 +7,8 @@ export const dynamic = 'force-dynamic';
 export default async function WalletPage() {
   const user = await requireUserOrRedirect();
   const deposits = await listDeposits(user.telegram_id, 20);
+  const methods = await listPaymentMethods();
+  const pendingDeposits = deposits.filter((d) => d.status === 'pending');
 
   return (
     <div>
@@ -22,8 +24,27 @@ export default async function WalletPage() {
       </div>
 
       <div id="topup" className="mt-6">
-        <TopupPanel />
+        <TopupPanel methods={methods} />
       </div>
+
+      {pendingDeposits.length > 0 && (
+        <section className="mt-7">
+          <h2 className="font-bold text-lg">Pending top-ups</h2>
+          <div className="mt-3 space-y-2">
+            {pendingDeposits.map((d) => (
+              <div key={d.id} className="card flex items-center justify-between !py-3.5">
+                <div>
+                  <div className="text-sm font-semibold">${Number(d.amount).toFixed(2)} · {d.method}</div>
+                  <div className="text-xs mt-0.5" style={{ color: 'var(--fg3)' }}>
+                    {new Date(d.created_at).toLocaleString()}
+                  </div>
+                </div>
+                <span className="chip chip-amber text-xs">Pending</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="mt-7">
         <h2 className="font-bold text-lg">Recent top-ups</h2>
