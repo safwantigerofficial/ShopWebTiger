@@ -22,10 +22,9 @@ export async function POST(req: NextRequest) {
 
   await addSupportMessage({ user_id: user.telegram_id, from_admin: false, body: text });
 
-  const name =
-    [user.first_name, user.last_name].filter(Boolean).join(' ') ||
-    (user.username ? `@${user.username}` : `User ${user.telegram_id}`);
-  await supportBotSend(adminChatId(), `💬 ${name} (UID ${user.telegram_id}):\n${text}`);
+  const display = [user.first_name, user.last_name].filter(Boolean).join(' ') || 'Customer';
+  const handle = user.username ? ` @${user.username}` : '';
+  await supportBotSend(adminChatId(), `💬 ${display}${handle} (UID ${user.telegram_id}):\n${text}`);
 
   return NextResponse.json({ ok: true });
 }

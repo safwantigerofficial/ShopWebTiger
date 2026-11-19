@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import CE from './CE';
+
 
 type Msg = { id: number; from_admin: boolean; body: string; created_at: string };
 
@@ -41,7 +41,11 @@ export default function SupportChat() {
           const newer: Msg[] = d?.messages ?? [];
           if (newer.length) {
             lastId.current = newer[newer.length - 1].id;
-            setMsgs((m) => [...m, ...newer]);
+            setMsgs((m) => {
+              // Drop optimistic copies now that the server version arrived.
+              const kept = m.filter((o) => !(o.id < 0 && newer.some((n) => n.body === o.body && n.from_admin === o.from_admin)));
+              return [...kept, ...newer];
+            });
           }
         })
         .catch(() => {});
@@ -82,6 +86,7 @@ export default function SupportChat() {
               <div>Support chat</div>
               <div className="text-[10px] font-medium opacity-80">We usually reply in minutes</div>
             </div>
+            <button onClick={() => setOpen(false)} className="ml-auto text-white/80 text-lg leading-none px-1" aria-label="Close">×</button>
           </div>
           <div ref={box} className="flex-1 overflow-y-auto p-3 space-y-2">
             {msgs.length === 0 && (
@@ -115,14 +120,7 @@ export default function SupportChat() {
           </div>
         </div>
       )}
-      <button
-        onClick={() => setOpen((v) => !v)}
-        className="fixed bottom-20 md:bottom-6 right-4 z-50 w-12 h-12 rounded-full flex items-center justify-center"
-        style={{ background: 'var(--primary)', color: '#fff', boxShadow: '0 6px 20px rgba(0,0,0,.2)' }}
-        aria-label="Support chat"
-      >
-        <CE id="5904630315946611415" size={24} />
-      </button>
+
     </>
   );
 }
