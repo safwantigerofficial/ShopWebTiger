@@ -2,6 +2,7 @@ import './globals.css';
 import Sidebar from '../components/Sidebar';
 import Topbar from '../components/Topbar';
 import MobileTabs from '../components/MobileTabs';
+import SupportChat from '../components/SupportChat';
 import { getSession, currentUser } from '../lib/session';
 
 export const metadata = { title: 'SafwanTiger Shop', description: 'Your digital store' };
@@ -36,6 +37,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           </div>
         </div>
         <MobileTabs />
+        <SupportChat />
       </body>
     </html>
   );

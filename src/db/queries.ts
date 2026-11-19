@@ -3963,3 +3963,55 @@ export async function expireStaleUserDeposits(telegramId: number): Promise<void>
     .neq('method', 'manual')
     .lt('created_at', cutoff);
 }
+
+/* -------------------- Live support chat (web) -------------------- */
+/**
+ * support_messages schema (run once in Supabase SQL editor — additive only):
+ *   create table if not exists support_messages (
+ *     id bigint generated always as identity primary key,
+ *     user_id bigint not null,
+ *     from_admin boolean not null default false,
+ *     body text not null,
+ *     tg_message_id bigint,
+ *     created_at timestamptz not null default now()
+ *   );
+ *   create unique index if not exists support_messages_tg_msg
+ *     on support_messages(tg_message_id) where tg_message_id is not null;
+ */
+export type DBSupportMessage = {
+  id: number;
+  user_id: number;
+  from_admin: boolean;
+  body: string;
+  tg_message_id: number | null;
+  created_at: string;
+};
+
+export async function listSupportMessages(userId: number, afterId = 0): Promise<DBSupportMessage[]> {
+  const { data, error } = await supabase
+    .from('support_messages')
+    .select('id,user_id,from_admin,body,tg_message_id,created_at')
+    .eq('user_id', userId)
+    .gt('id', afterId)
+    .order('id', { ascending: true })
+    .limit(200);
+  if (error) return [];
+  return (data ?? []) as DBSupportMessage[];
+}
+
+export async function addSupportMessage(msg: {
+  user_id: number;
+  from_admin: boolean;
+  body: string;
+  tg_message_id?: number | null;
+}): Promise<void> {
+  if (msg.tg_message_id != null) {
+    const { data } = await supabase
+      .from('support_messages')
+      .select('id')
+      .eq('tg_message_id', msg.tg_message_id)
+      .maybeSingle();
+    if (data) return; // dedupe
+  }
+  await supabase.from('support_messages').insert({ ...msg });
+}

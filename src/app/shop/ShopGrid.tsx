@@ -9,15 +9,18 @@ type Section = { category: DBCategory; products: DBProduct[] };
 
 export default function ShopGrid({
   sections,
+  categories,
   total: _total,
   loggedIn,
 }: {
   sections: Section[];
+  categories: { id: number; name: string; emoji: string | null; count: number }[];
   total: number;
   loggedIn: boolean;
 }) {
   const [q, setQ] = useState('');
   const [inStock, setInStock] = useState(false);
+  const [cat, setCat] = useState<number | null>(null);
 
   const products = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -25,13 +28,35 @@ export default function ShopGrid({
       .flatMap((s) => s.products)
       .filter(
         (p) =>
+          (cat === null || p.category_id === cat) &&
           (!needle || p.name.toLowerCase().includes(needle)) &&
           (!inStock || p.unlimited_stock || p.stock > 0),
       );
-  }, [sections, q, inStock]);
+  }, [sections, q, inStock, cat]);
 
   return (
     <div className="mt-5">
+      {/* Category chips — horizontally scrollable on mobile */}
+      {categories.length > 0 && (
+        <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1" style={{ scrollbarWidth: 'none' }}>
+          <button
+            onClick={() => setCat(null)}
+            className={`chip shrink-0 !py-2 !px-4 !text-sm ${cat === null ? 'chip-active' : 'chip-grey'}`}
+          >
+            All <span className="ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-bold" style={{ background: 'var(--surface2)' }}>{sections.flatMap((s) => s.products).length}</span>
+          </button>
+          {categories.map((c) => (
+            <button
+              key={c.id}
+              onClick={() => setCat(cat === c.id ? null : c.id)}
+              className={`chip shrink-0 !py-2 !px-4 !text-sm font-semibold ${cat === c.id ? 'chip-active' : 'chip-grey'}`}
+            >
+              {c.emoji && <span className="mr-1.5">{c.emoji}</span>}{c.name}
+              <span className="ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-bold" style={{ background: 'var(--surface2)' }}>{c.count}</span>
+            </button>
+          ))}
+        </div>
+      )}
       {/* Main column */}
       <div className="flex-1 min-w-0">
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 justify-between">

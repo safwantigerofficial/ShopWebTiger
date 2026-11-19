@@ -66,23 +66,23 @@ export default function OrdersList({ orders, tutorials }: { orders: DBOrder[]; t
                 style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>
                 {o.delivered_items ?? 'Processing…'}
               </div>
-              {o.delivered_items && (
-                <button
-                  className="mx-4 mb-4 btn-ghost !w-auto !py-2 !px-4 text-sm"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    downloadTxt(
-                      `${publicOrderId(o)}.txt`,
-                      `${o.product_name} x${o.qty} — order ${publicOrderId(o)}\n\n${o.delivered_items}`,
-                    );
-                  }}
-                >
-                  <CE id="5318845185348626090" /> Download .txt
-                </button>
-              )}
-              {o.delivered_items && (
-                <div className="mx-4 mb-4"><UsingMethod t={o.product_id != null ? tutorials[o.product_id] : null} /></div>
-              )}
+              <div className="mx-4 mb-4 flex gap-2">
+                {o.delivered_items && (
+                  <button
+                    className="btn-ghost flex-1 !py-2.5 text-sm"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      downloadTxt(
+                        `${publicOrderId(o)}.txt`,
+                        `${o.product_name} x${o.qty} — order ${publicOrderId(o)}\n\n${o.delivered_items}`,
+                      );
+                    }}
+                  >
+                    <CE id="5318845185348626090" /> Download .txt
+                  </button>
+                )}
+                <div className="flex-1"><UsingMethod t={o.product_id != null ? tutorials[o.product_id] : null} /></div>
+              </div>
               <div className="mx-4 mb-4">
                 <SupportLink
                   issue={`Hi, I have an issue with order ${publicOrderId(o)} (${o.product_name} ×${o.qty}, $${Number(o.total).toFixed(2)}).`}
