@@ -204,16 +204,16 @@ export default function CheckoutPanel({
       <div className="flex items-center">
         {steps.map((s, i) => (
           <div key={s} className="flex items-center flex-1 last:flex-none">
-            <span className="flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center"
+            <span className="flex items-center gap-1.5">
+              <span className="w-5 h-5 sm:w-6 sm:h-6 rounded-full text-[10px] sm:text-xs font-bold flex items-center justify-center shrink-0"
                 style={i === 1
                   ? { background: 'var(--primary)', color: '#fff' }
                   : { border: '1.5px solid var(--border2)', color: 'var(--fg3)' }}>
                 {i + 1}
               </span>
-              <span className="text-sm whitespace-nowrap" style={{ color: i === 1 ? 'var(--primary)' : 'var(--fg3)', fontWeight: i === 1 ? 700 : 500 }}>{s}</span>
+              <span className="text-[11px] sm:text-sm whitespace-nowrap" style={{ color: i === 1 ? 'var(--primary)' : 'var(--fg3)', fontWeight: i === 1 ? 700 : 500 }}>{s}</span>
             </span>
-            {i < steps.length - 1 && <span className="flex-1 h-px mx-3" style={{ background: i === 0 ? 'var(--primary)' : 'var(--border)' }} />}
+            {i < steps.length - 1 && <span className="flex-1 h-px mx-1.5 sm:mx-3" style={{ background: i === 0 ? 'var(--primary)' : 'var(--border)' }} />}
           </div>
         ))}
       </div>

@@ -1,6 +1,7 @@
 'use client';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import type { DBCategory, DBProduct } from '../../types';
 import ProductIcon from '../../components/ProductIcon';
 import { ceText } from '../../lib/premiumEmoji';
@@ -28,7 +29,14 @@ export default function ShopGrid({
 }) {
   const [q, setQ] = useState('');
   const [inStock, setInStock] = useState(false);
-  const [bucket, setBucket] = useState<string | null>(null);
+  const params = useSearchParams();
+  const [bucket, setBucketState] = useState<string | null>(params.get('b'));
+  // Sidebar folder links drive ?b=…; keep chip taps in the URL too.
+  useEffect(() => setBucketState(params.get('b')), [params]);
+  const setBucket = (b: string | null) => {
+    setBucketState(b);
+    window.history.pushState(null, '', b ? `/shop?b=${encodeURIComponent(b)}` : '/shop');
+  };
 
   const activeKeys = buckets.find((b) => b.key === bucket)?.keys;
   const products = useMemo(() => {
@@ -56,34 +64,8 @@ export default function ShopGrid({
     );
   };
 
-  const folders = (
-    <>
-      <button onClick={() => setBucket(null)}
-        className={`w-full flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-semibold text-left transition ${bucket === null ? '' : 'opacity-80 hover:opacity-100'}`}
-        style={bucket === null ? { background: 'var(--surface2)', color: 'var(--primary)' } : { color: 'var(--fg2)' }}>
-        <span className="w-4 h-4 rounded-sm border" style={{ borderColor: 'var(--primary)', background: 'var(--surface)' }} />
-        All products
-      </button>
-      {buckets.map((b) => (
-        <button key={b.key} onClick={() => setBucket(bucket === b.key ? null : b.key)}
-          className={`w-full flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-semibold text-left transition ${bucket === b.key ? '' : 'opacity-80 hover:opacity-100'}`}
-          style={bucket === b.key ? { background: 'var(--surface2)', color: 'var(--primary)' } : { color: 'var(--fg2)' }}>
-          {bucketIcon(b)}
-          {b.label}
-          <span className="ml-auto text-[11px] font-normal" style={{ color: 'var(--fg3)' }}>{b.count}</span>
-        </button>
-      ))}
-    </>
-  );
-
   return (
-    <div className="mt-5 lg:flex lg:gap-8">
-      {/* Desktop — folders sidebar */}
-      <aside className="hidden lg:block w-56 shrink-0">
-        <div className="text-[11px] font-bold uppercase tracking-wider mb-2 px-3" style={{ color: 'var(--fg3)' }}>Folders</div>
-        <nav className="space-y-0.5 sticky top-24">{folders}</nav>
-      </aside>
-
+    <div className="mt-5">
       <div className="flex-1 min-w-0">
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 justify-between">
           <span className="text-[15px]" style={{ color: 'var(--fg2)' }}>
@@ -146,7 +128,11 @@ export default function ShopGrid({
               return (
                 <Link key={p.id} href={loggedIn ? `/product/${p.id}` : '/login'}
                   className="card !py-3 !px-4 flex items-center gap-3"
-                  style={{ borderColor: out ? 'rgba(220,38,38,.45)' : 'rgba(22,163,106,.35)' }}>
+                  style={out
+                    ? { borderColor: 'rgba(220,38,38,.45)' }
+                    : p.is_pinned
+                      ? { borderColor: 'rgba(22,163,106,.5)', background: 'rgba(22,163,106,.06)' }
+                      : undefined}>
                   <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
                     style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>
                     <ProductIcon emojiId={p.emoji_id} emoji={p.emoji} size={24} />
@@ -169,10 +155,11 @@ export default function ShopGrid({
             return (
               <Link key={p.id} href={loggedIn ? `/product/${p.id}` : '/login'}
                 className="card card-hover !p-4 flex flex-col"
-                style={{
-                  borderColor: out ? 'rgba(220,38,38,.45)' : 'rgba(22,163,106,.35)',
-                  background: out ? 'rgba(220,38,38,.04)' : 'rgba(22,163,106,.05)',
-                }}>
+                style={out
+                  ? { borderColor: 'rgba(220,38,38,.45)', background: 'rgba(220,38,38,.04)' }
+                  : p.is_pinned
+                    ? { borderColor: 'rgba(22,163,106,.5)', background: 'rgba(22,163,106,.06)' }
+                    : undefined}>
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
                     style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>

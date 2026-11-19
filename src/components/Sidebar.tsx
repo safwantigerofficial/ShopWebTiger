@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useLang } from './useLang';
+import SidebarFolders from './SidebarFolders';
 
 const items = [
   { href: '/shop', key: 'shop', emojiId: '5312361253610475399' },
@@ -73,6 +74,8 @@ export default function Sidebar({ loggedIn, balance }: { loggedIn: boolean; bala
           })}
         </nav>
       </div>
+
+      <SidebarFolders />
 
       <div className="mt-auto p-6 border-t" style={{ borderColor: 'var(--border)' }}>
         <div className="text-[15px] font-semibold">SafwanTiger</div>
