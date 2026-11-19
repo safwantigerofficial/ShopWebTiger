@@ -1,5 +1,5 @@
 import { currentUser } from '../../lib/session';
-import { getProductSales, listCategories, listProducts } from '../../db/queries';
+import { getAllSettings, listCategories, listProducts } from '../../db/queries';
 import type { DBCategory } from '../../types';
 import { applyUserPriceToProducts } from '../../lib/services/pricing';
 import ShopGrid from './ShopGrid';
@@ -29,8 +29,29 @@ export default async function ShopPage() {
       if (a.sort_order !== b.sort_order) return a.sort_order - b.sort_order;
       return a.id - b.id;
     });
-  const sales = await getProductSales(500).catch(() => []);
-  const sold = Object.fromEntries(sales.filter((s) => s.product_id != null).map((s) => [s.product_id!, s.units_sold]));
+  // Same button-color rule as the bot shop: product override →
+  // category color → category default → global in_stock color
+  // (out-of-stock always uses the OOS warning color).
+  const settings = await getAllSettings().catch(() => new Map<string, unknown>());
+  const MODES = new Set(['none', 'blue', 'green', 'red', 'yellow']);
+  const modeOf = (k: string) => {
+    const v = settings.get(k);
+    return typeof v === 'string' && MODES.has(v) ? (v as string) : undefined;
+  };
+  const inStockColor = modeOf('color.in_stock') ?? 'blue';
+  const oosColor = modeOf('color.out_of_stock') ?? 'red';
+  const catDefault = modeOf('color.category.default');
+  const tintOf = (p: (typeof flat)[number]): string => {
+    const inStock = p.unlimited_stock || p.stock > 0;
+    if (!inStock) return oosColor;
+    return (
+      modeOf(`color.product.${p.id}`) ??
+      (p.category_id != null ? modeOf(`color.category.${p.category_id}`) : undefined) ??
+      catDefault ??
+      inStockColor
+    );
+  };
+  const tints = Object.fromEntries(flat.map((p) => [p.id, tintOf(p)]));
   const visible = sections.filter((s) => s.products.length > 0);
   if (flat.length > 0) {
     visible.length = 0;
@@ -54,7 +75,7 @@ export default async function ShopPage() {
       <ShopGrid
         sections={JSON.parse(JSON.stringify(visible))}
         buckets={buckets}
-        sold={sold}
+        tints={tints}
         loggedIn={loggedIn}
       />
     </div>

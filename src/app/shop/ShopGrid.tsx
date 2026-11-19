@@ -10,21 +10,22 @@ import CE from '../../components/CE';
 type Section = { category: DBCategory; products: DBProduct[] };
 type Bucket = { key: string; label: string; emojiId: string | null; emoji: string | null; keys: string[]; count: number };
 
-function bucketIcon(b: Bucket) {
-  if (b.emojiId) return <CE id={b.emojiId} size={16} />;
-  if (b.emoji) return <span>{b.emoji}</span>;
-  return <span className="w-4" />;
-}
+const TINTS: Record<string, { border: string; bg: string } | undefined> = {
+  green: { border: 'rgba(22,163,106,.5)', bg: 'rgba(22,163,106,.07)' },
+  red: { border: 'rgba(220,38,38,.5)', bg: 'rgba(220,38,38,.06)' },
+  blue: { border: 'rgba(99,102,241,.4)', bg: 'rgba(99,102,241,.07)' },
+  yellow: { border: 'rgba(234,179,8,.45)', bg: 'rgba(234,179,8,.07)' },
+};
 
 export default function ShopGrid({
   sections,
   buckets,
-  sold,
+  tints,
   loggedIn,
 }: {
   sections: Section[];
   buckets: Bucket[];
-  sold: Record<number, number>;
+  tints: Record<number, string>;
   loggedIn: boolean;
 }) {
   const [q, setQ] = useState('');
@@ -55,13 +56,16 @@ export default function ShopGrid({
 
   const stockLine = (p: DBProduct) => {
     const out = !p.unlimited_stock && p.stock <= 0;
-    const s = sold[p.id];
     return (
       <span className="text-xs" style={{ color: out ? '#dc2626' : 'var(--ok, #16a36a)' }}>
         ● {out ? 'Pre-order' : p.unlimited_stock ? 'In stock' : `${p.stock} in stock`}
-        {s != null && s > 0 && <span style={{ color: 'var(--fg3)' }}>&nbsp;&nbsp;{s.toLocaleString()} sold</span>}
       </span>
     );
+  };
+
+  const cardStyle = (p: DBProduct) => {
+    const t = TINTS[tints[p.id]];
+    return t ? { borderColor: t.border, background: t.bg } : undefined;
   };
 
   return (
@@ -128,11 +132,7 @@ export default function ShopGrid({
               return (
                 <Link key={p.id} href={loggedIn ? `/product/${p.id}` : '/login'}
                   className="card !py-3 !px-4 flex items-center gap-3"
-                  style={out
-                    ? { borderColor: 'rgba(220,38,38,.45)' }
-                    : p.is_pinned
-                      ? { borderColor: 'rgba(22,163,106,.5)', background: 'rgba(22,163,106,.06)' }
-                      : undefined}>
+                  style={cardStyle(p)}>
                   <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
                     style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>
                     <ProductIcon emojiId={p.emoji_id} emoji={p.emoji} size={24} />
@@ -154,12 +154,8 @@ export default function ShopGrid({
             const out = !p.unlimited_stock && p.stock <= 0;
             return (
               <Link key={p.id} href={loggedIn ? `/product/${p.id}` : '/login'}
-                className="card card-hover !p-4 flex flex-col"
-                style={out
-                  ? { borderColor: 'rgba(220,38,38,.45)', background: 'rgba(220,38,38,.04)' }
-                  : p.is_pinned
-                    ? { borderColor: 'rgba(22,163,106,.5)', background: 'rgba(22,163,106,.06)' }
-                    : undefined}>
+                className="card card-hover !p-3 flex flex-col"
+                style={cardStyle(p)}>
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
                     style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>
