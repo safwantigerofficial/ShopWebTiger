@@ -1,10 +1,11 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-
+import { usePathname } from 'next/navigation';
 
 type Msg = { id: number; from_admin: boolean; body: string; created_at: string };
 
 export default function SupportChat() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [draft, setDraft] = useState('');
@@ -25,6 +26,11 @@ export default function SupportChat() {
       })
       .catch(() => {});
   }, []);
+
+  // Close the widget whenever the user navigates to another page.
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     const h = () => setOpen(true);
@@ -83,7 +89,7 @@ export default function SupportChat() {
           <div className="px-4 py-3 font-bold text-sm flex items-center gap-2.5" style={{ background: 'var(--primary)', color: '#fff' }}>
             <img src="/avatars/support.jpg" alt="" className="w-8 h-8 rounded-full object-cover" style={{ border: '2px solid rgba(255,255,255,.5)' }} />
             <div>
-              <div>Support chat</div>
+              <div>Live support</div>
               <div className="text-[10px] font-medium opacity-80">We usually reply in minutes</div>
             </div>
             <button onClick={() => setOpen(false)} className="ml-auto text-white/80 text-lg leading-none px-1" aria-label="Close">×</button>

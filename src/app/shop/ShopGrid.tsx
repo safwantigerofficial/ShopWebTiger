@@ -4,6 +4,8 @@ import Link from 'next/link';
 import type { DBCategory, DBProduct } from '../../types';
 import ProductIcon from '../../components/ProductIcon';
 import { ceText } from '../../lib/premiumEmoji';
+import CE from '../../components/CE';
+import CEText from '../../components/CEText';
 
 type Section = { category: DBCategory; products: DBProduct[] };
 
@@ -51,7 +53,15 @@ export default function ShopGrid({
               onClick={() => setCat(cat === c.id ? null : c.id)}
               className={`chip shrink-0 !py-2 !px-4 !text-sm font-semibold ${cat === c.id ? 'chip-active' : 'chip-grey'}`}
             >
-              {c.emoji && <span className="mr-1.5">{c.emoji}</span>}{c.name}
+              {(() => {
+                const m = c.emoji?.match(/^\{\{ce:([^|}]+)\|/);
+                return m ? (
+                  <span className="mr-1.5"><CE id={m[1]} size={16} /></span>
+                ) : c.emoji ? (
+                  <span className="mr-1.5">{c.emoji}</span>
+                ) : null;
+              })()}
+              <CEText text={c.name} />
               <span className="ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-bold" style={{ background: 'var(--surface2)' }}>{c.count}</span>
             </button>
           ))}

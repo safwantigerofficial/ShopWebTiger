@@ -1,5 +1,5 @@
 import { currentUser } from '../../lib/session';
-import { listCategories, listProducts } from '../../db/queries';
+import { listCategories, listProducts, listSupplierProductLinks } from '../../db/queries';
 import type { DBCategory } from '../../types';
 import { applyUserPriceToProducts } from '../../lib/services/pricing';
 import ShopGrid from './ShopGrid';
@@ -34,14 +34,16 @@ export default async function ShopPage() {
     visible.push({ category: categories[0] ?? ({} as DBCategory), products: flat });
   }
   const total = visible.reduce((n, s) => n + s.products.length, 0);
+  // Supplier-linked products: hide categories that only contain imported
+  // supplier rows (VEX, TunVN, "Random"...) — chips show real shop categories.
+  const linkedIds = new Set((await listSupplierProductLinks().catch(() => [])).map((l) => l.local_product_id));
   const catChips = categories
-    .map((c) => ({
-      id: c.id,
-      name: c.name,
-      emoji: c.emoji,
-      count: flat.filter((p) => p.category_id === c.id).length,
-    }))
-    .filter((c) => c.count > 0)
+    .map((c) => {
+      const prods = flat.filter((p) => p.category_id === c.id);
+      const own = prods.filter((p) => !linkedIds.has(p.id)).length;
+      return { id: c.id, name: c.name, emoji: c.emoji, count: prods.length, own };
+    })
+    .filter((c) => c.count > 0 && c.own > 0)
     .sort((a, b) => b.count - a.count);
 
   return (
