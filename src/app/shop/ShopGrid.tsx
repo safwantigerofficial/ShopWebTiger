@@ -5,64 +5,57 @@ import type { DBCategory, DBProduct } from '../../types';
 import ProductIcon from '../../components/ProductIcon';
 import { ceText } from '../../lib/premiumEmoji';
 import CE from '../../components/CE';
-import CEText from '../../components/CEText';
 
 type Section = { category: DBCategory; products: DBProduct[] };
 
 export default function ShopGrid({
   sections,
-  categories,
+  buckets,
   total: _total,
   loggedIn,
 }: {
   sections: Section[];
-  categories: { id: number; name: string; emoji: string | null; count: number }[];
+  buckets: { key: string; label: string; emojiId: string | null; keys: string[]; count: number }[];
   total: number;
   loggedIn: boolean;
 }) {
   const [q, setQ] = useState('');
   const [inStock, setInStock] = useState(false);
-  const [cat, setCat] = useState<number | null>(null);
+  const [bucket, setBucket] = useState<string | null>(null);
 
+  const activeKeys = buckets.find((b) => b.key === bucket)?.keys;
   const products = useMemo(() => {
     const needle = q.trim().toLowerCase();
     return sections
       .flatMap((s) => s.products)
       .filter(
         (p) =>
-          (cat === null || p.category_id === cat) &&
+          (!activeKeys || activeKeys.some((k) => p.name.toLowerCase().includes(k))) &&
           (!needle || p.name.toLowerCase().includes(needle)) &&
           (!inStock || p.unlimited_stock || p.stock > 0),
       );
-  }, [sections, q, inStock, cat]);
+  }, [sections, q, inStock, activeKeys]);
 
   return (
     <div className="mt-5">
-      {/* Category chips — horizontally scrollable on mobile */}
-      {categories.length > 0 && (
+      {/* Browse buckets — horizontally scrollable on mobile */}
+      {buckets.length > 0 && (
         <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1" style={{ scrollbarWidth: 'none' }}>
           <button
-            onClick={() => setCat(null)}
-            className={`chip shrink-0 !py-2 !px-4 !text-sm ${cat === null ? 'chip-active' : 'chip-grey'}`}
+            onClick={() => setBucket(null)}
+            className={`chip shrink-0 !py-2 !px-4 !text-sm ${bucket === null ? 'chip-active' : 'chip-grey'}`}
           >
             All <span className="ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-bold" style={{ background: 'var(--surface2)' }}>{sections.flatMap((s) => s.products).length}</span>
           </button>
-          {categories.map((c) => (
+          {buckets.map((b) => (
             <button
-              key={c.id}
-              onClick={() => setCat(cat === c.id ? null : c.id)}
-              className={`chip shrink-0 !py-2 !px-4 !text-sm font-semibold ${cat === c.id ? 'chip-active' : 'chip-grey'}`}
+              key={b.key}
+              onClick={() => setBucket(bucket === b.key ? null : b.key)}
+              className={`chip shrink-0 !py-2 !px-4 !text-sm font-semibold ${bucket === b.key ? 'chip-active' : 'chip-grey'}`}
             >
-              {(() => {
-                const m = c.emoji?.match(/^\{\{ce:([^|}]+)\|/);
-                return m ? (
-                  <span className="mr-1.5"><CE id={m[1]} size={16} /></span>
-                ) : c.emoji ? (
-                  <span className="mr-1.5">{c.emoji}</span>
-                ) : null;
-              })()}
-              <CEText text={c.name} />
-              <span className="ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-bold" style={{ background: 'var(--surface2)' }}>{c.count}</span>
+              {b.emojiId && <span className="mr-1.5"><CE id={b.emojiId} size={16} /></span>}
+              {b.label}
+              <span className="ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-bold" style={{ background: 'var(--surface2)' }}>{b.count}</span>
             </button>
           ))}
         </div>

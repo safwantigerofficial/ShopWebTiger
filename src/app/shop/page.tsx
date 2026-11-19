@@ -1,5 +1,5 @@
 import { currentUser } from '../../lib/session';
-import { listCategories, listProducts, listSupplierProductLinks } from '../../db/queries';
+import { listCategories, listProducts } from '../../db/queries';
 import type { DBCategory } from '../../types';
 import { applyUserPriceToProducts } from '../../lib/services/pricing';
 import ShopGrid from './ShopGrid';
@@ -34,17 +34,27 @@ export default async function ShopPage() {
     visible.push({ category: categories[0] ?? ({} as DBCategory), products: flat });
   }
   const total = visible.reduce((n, s) => n + s.products.length, 0);
-  // Supplier-linked products: hide categories that only contain imported
-  // supplier rows (VEX, TunVN, "Random"...) — chips show real shop categories.
-  const linkedIds = new Set((await listSupplierProductLinks().catch(() => [])).map((l) => l.local_product_id));
-  const catChips = categories
-    .map((c) => {
-      const prods = flat.filter((p) => p.category_id === c.id);
-      const own = prods.filter((p) => !linkedIds.has(p.id)).length;
-      return { id: c.id, name: c.name, emoji: c.emoji, count: prods.length, own };
-    })
-    .filter((c) => c.count > 0 && c.own > 0)
-    .sort((a, b) => b.count - a.count);
+  // Web-only browse buckets matched on product names — no DB categories.
+  const BUCKETS: { label: string; emojiId?: string; keys: string[] }[] = [
+    { label: 'Capcut', keys: ['capcut'] },
+    { label: 'Claude API Keys', keys: ['claude'] },
+    { label: 'Codex API', keys: ['codex'] },
+    { label: 'LinkedIn', keys: ['linkedin'] },
+    { label: 'Muse', keys: ['muse'] },
+    { label: 'ElevenLabs AI', emojiId: '6219689196722854904', keys: ['elevenlabs', 'eleven labs', '11labs'] },
+    { label: 'Surfshark', emojiId: '5942950791550607146', keys: ['surfshark'] },
+    { label: 'Gemini AI', emojiId: '5309903664733759148', keys: ['gemini'] },
+    { label: 'ChatGPT AI', emojiId: '5796185041717433060', keys: ['chatgpt', 'chat gpt', 'openai'] },
+    { label: 'Grok AI', emojiId: '5879759208307498823', keys: ['grok'] },
+    { label: 'YouTube', keys: ['youtube'] },
+  ];
+  const buckets = BUCKETS.map((b) => ({
+    key: b.label,
+    label: b.label,
+    emojiId: b.emojiId ?? null,
+    keys: b.keys,
+    count: flat.filter((p) => b.keys.some((k) => p.name.toLowerCase().includes(k))).length,
+  })).filter((b) => b.count > 0);
 
   return (
     <div>
@@ -61,7 +71,7 @@ export default async function ShopPage() {
 
       <ShopGrid
         sections={JSON.parse(JSON.stringify(visible))}
-        categories={catChips}
+        buckets={buckets}
         total={total}
         loggedIn={loggedIn}
       />
