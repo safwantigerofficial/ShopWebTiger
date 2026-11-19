@@ -136,6 +136,12 @@ export default function CheckoutPanel({
   /* ---------- step 2: choose how to pay ---------- */
   if (step === 'method') {
     const walletOk = balance >= total;
+    const radio = (on: boolean) => (
+      <span className="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0"
+        style={{ borderColor: on ? 'var(--primary)' : 'var(--border2)' }}>
+        {on && <span className="w-2.5 h-2.5 rounded-full" style={{ background: 'var(--primary)' }} />}
+      </span>
+    );
     return (
       <div className="space-y-3">
         <h3 className="font-bold">Choose how to pay</h3>
@@ -149,12 +155,13 @@ export default function CheckoutPanel({
           disabled={!walletOk}
           onClick={() => setMethod('wallet')}
         >
+          {radio(method === 'wallet')}
           <img src={`/api/emoji?id=${WALLET_EMOJI_ID}`} alt="" width={20} height={20} />
           <span className="flex-1">
             <span className="font-semibold block">Wallet</span>
             <span className="text-xs" style={{ color: 'var(--fg3)' }}>
               {walletOk
-                ? `Deducted from your balance when you confirm.`
+                ? `Balance $${balance.toFixed(2)} — deducted when you confirm.`
                 : `Balance too low — top up below.`}
             </span>
           </span>
@@ -169,6 +176,7 @@ export default function CheckoutPanel({
             }}
             onClick={() => setMethod(m)}
           >
+            {radio(method === m)}
             <MethodIcon m={m} />
             <span className="flex-1 font-semibold"><CEText text={m.name} /></span>
             <b>${total.toFixed(2)}</b>
@@ -190,8 +198,25 @@ export default function CheckoutPanel({
   /* ---------- step 3: bot-identical payment flow ---------- */
   const m = method !== 'wallet' && method ? method : null;
   if (!m) return null;
+  const steps = ['Payment method', 'Transfer', 'Verify'];
   return (
     <div className="space-y-4">
+      <div className="flex items-center">
+        {steps.map((s, i) => (
+          <div key={s} className="flex items-center flex-1 last:flex-none">
+            <span className="flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center"
+                style={i === 1
+                  ? { background: 'var(--primary)', color: '#fff' }
+                  : { border: '1.5px solid var(--border2)', color: 'var(--fg3)' }}>
+                {i + 1}
+              </span>
+              <span className="text-sm whitespace-nowrap" style={{ color: i === 1 ? 'var(--primary)' : 'var(--fg3)', fontWeight: i === 1 ? 700 : 500 }}>{s}</span>
+            </span>
+            {i < steps.length - 1 && <span className="flex-1 h-px mx-3" style={{ background: i === 0 ? 'var(--primary)' : 'var(--border)' }} />}
+          </div>
+        ))}
+      </div>
       <div className="flex items-center gap-3">
         <MethodIcon m={m} />
         <h3 className="font-bold"><CEText text={m.name} /></h3>
