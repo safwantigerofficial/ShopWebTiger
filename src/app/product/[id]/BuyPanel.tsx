@@ -33,6 +33,24 @@ export default function BuyPanel({
         onClick={() => router.push(`/checkout/${productId}?qty=${qty}`)}>
         {preorder ? 'Pre-order' : 'Continue'}  →  ${total.toFixed(2)}
       </button>
+
+      {/* Mobile — sticky buy bar above the bottom nav */}
+      <div className="sm:hidden fixed left-0 right-0 bottom-[64px] z-40 px-4 pb-2"
+        style={{ background: 'linear-gradient(to top, var(--bg) 75%, transparent)' }}>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center rounded-xl border shrink-0" style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}>
+            <button className="w-11 h-12 text-lg font-bold" style={{ color: 'var(--fg2)' }}
+              onClick={() => setQty((v) => Math.max(1, v - 1))}>−</button>
+            <div className="w-10 text-center font-bold">{qty}</div>
+            <button className="w-11 h-12 text-lg font-bold" style={{ color: 'var(--primary)' }}
+              onClick={() => setQty((v) => Math.min(maxQty, v + 1))}>+</button>
+          </div>
+          <button className="btn-primary flex-1 !py-3.5 font-bold"
+            onClick={() => router.push(`/checkout/${productId}?qty=${qty}`)}>
+            {preorder ? 'Pre-order' : 'Buy'} · ${total.toFixed(2)}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

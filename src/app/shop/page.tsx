@@ -1,5 +1,5 @@
 import { currentUser } from '../../lib/session';
-import { listCategories, listProducts } from '../../db/queries';
+import { getProductSales, listCategories, listProducts } from '../../db/queries';
 import type { DBCategory } from '../../types';
 import { applyUserPriceToProducts } from '../../lib/services/pricing';
 import ShopGrid from './ShopGrid';
@@ -28,6 +28,8 @@ export default async function ShopPage() {
       if (a.sort_order !== b.sort_order) return a.sort_order - b.sort_order;
       return a.id - b.id;
     });
+  const sales = await getProductSales(500).catch(() => []);
+  const sold = Object.fromEntries(sales.filter((s) => s.product_id != null).map((s) => [s.product_id!, s.units_sold]));
   const visible = sections.filter((s) => s.products.length > 0);
   if (flat.length > 0) {
     visible.length = 0;
@@ -77,7 +79,7 @@ export default async function ShopPage() {
       <ShopGrid
         sections={JSON.parse(JSON.stringify(visible))}
         buckets={buckets}
-        total={total}
+        sold={sold}
         loggedIn={loggedIn}
       />
     </div>

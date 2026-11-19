@@ -22,7 +22,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
   const out = !p.unlimited_stock && p.stock <= 0;
 
   return (
-    <div>
+    <div className="pb-24 sm:pb-0">
       <Link href="/shop" className="text-sm inline-flex items-center gap-1" style={{ color: 'var(--fg2)' }}>
         ← Back
       </Link>
