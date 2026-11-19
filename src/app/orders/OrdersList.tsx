@@ -12,6 +12,7 @@ const tabs = ['Finished', 'Pending', 'Cancelled'] as const;
 
 export default function OrdersList({ orders, tutorials }: { orders: DBOrder[]; tutorials: Record<number, Tutorial> }) {
   const [tab, setTab] = useState<(typeof tabs)[number]>('Finished');
+  const [copiedId, setCopiedId] = useState<number | null>(null);
 
   const filtered = useMemo(() => {
     return orders.filter((o) => {
@@ -62,8 +63,23 @@ export default function OrdersList({ orders, tutorials }: { orders: DBOrder[]; t
                   <div className="text-[11px] group-open:hidden" style={{ color: 'var(--fg3)' }}>tap to view</div>
                 </div>
               </summary>
-              <div className="mx-4 mb-4 rounded-xl p-3.5 text-sm font-mono whitespace-pre-wrap break-all"
+              <div className="mx-4 mb-4 rounded-xl p-3.5 text-sm font-mono whitespace-pre-wrap break-all relative"
                 style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>
+                {o.delivered_items && (
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigator.clipboard.writeText(o.delivered_items!).then(() => {
+                        setCopiedId(o.id);
+                        setTimeout(() => setCopiedId(null), 1500);
+                      }).catch(() => {});
+                    }}
+                    className="absolute top-2 right-2 text-[11px] font-bold px-2 py-1 rounded-md"
+                    style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: copiedId === o.id ? 'var(--brand, var(--primary))' : 'var(--fg2)' }}
+                  >
+                    {copiedId === o.id ? 'Copied' : 'Copy'}
+                  </button>
+                )}
                 {o.delivered_items ?? 'Processing…'}
               </div>
               <div className="mx-4 mb-4 flex gap-2">

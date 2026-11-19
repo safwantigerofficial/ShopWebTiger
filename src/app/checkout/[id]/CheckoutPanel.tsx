@@ -24,6 +24,14 @@ export default function CheckoutPanel({
   const [method, setMethod] = useState<'wallet' | DBPaymentMethod | null>(null);
   const [busy, start] = useTransition();
   const [msg, setMsg] = useState('');
+  const [copied, setCopied] = useState(false);
+  const copyItems = () => {
+    if (!result?.ok || !result.items.length) return;
+    navigator.clipboard.writeText(result.items.join('\n')).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }).catch(() => {});
+  };
   const [result, setResult] = useState<
     | { ok: true; orderPublicId: string; items: string[]; pending: boolean; newBalance: number }
     | { ok: false; error: string }
@@ -63,8 +71,15 @@ export default function CheckoutPanel({
         </h2>
         {result.items.length > 0 ? (
           <>
-            <div className="rounded-xl p-3 text-sm font-mono whitespace-pre-wrap break-all"
+            <div className="rounded-xl p-3 text-sm font-mono whitespace-pre-wrap break-all relative"
               style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>
+              <button
+                onClick={copyItems}
+                className="absolute top-2 right-2 text-[11px] font-bold px-2 py-1 rounded-md"
+                style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: copied ? 'var(--brand)' : 'var(--fg2)' }}
+              >
+                {copied ? 'Copied' : 'Copy'}
+              </button>
               {result.items.join('\n')}
             </div>
             <button className="btn-ghost w-full"
