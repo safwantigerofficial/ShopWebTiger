@@ -27,6 +27,12 @@ export default function SupportChat() {
   }, []);
 
   useEffect(() => {
+    const h = () => setOpen(true);
+    window.addEventListener('st-open-support', h);
+    return () => window.removeEventListener('st-open-support', h);
+  }, []);
+
+  useEffect(() => {
     if (!open || !enabled) return;
     const tick = () =>
       fetch(`/api/support/messages?after=${lastId.current}`)
@@ -70,8 +76,12 @@ export default function SupportChat() {
           className="fixed bottom-24 md:bottom-6 right-4 z-50 w-[min(92vw,340px)] rounded-2xl overflow-hidden flex flex-col"
           style={{ background: 'var(--surface)', border: '1px solid var(--border)', boxShadow: '0 12px 40px rgba(0,0,0,.18)', height: 420 }}
         >
-          <div className="px-4 py-3 font-bold text-sm flex items-center gap-2" style={{ background: 'var(--primary)', color: '#fff' }}>
-            <CE id="5904630315946611415" size={18} /> Support chat
+          <div className="px-4 py-3 font-bold text-sm flex items-center gap-2.5" style={{ background: 'var(--primary)', color: '#fff' }}>
+            <img src="/avatars/support.jpg" alt="" className="w-8 h-8 rounded-full object-cover" style={{ border: '2px solid rgba(255,255,255,.5)' }} />
+            <div>
+              <div>Support chat</div>
+              <div className="text-[10px] font-medium opacity-80">We usually reply in minutes</div>
+            </div>
           </div>
           <div ref={box} className="flex-1 overflow-y-auto p-3 space-y-2">
             {msgs.length === 0 && (

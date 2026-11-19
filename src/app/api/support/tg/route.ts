@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { addSupportMessage } from '../../../../db/queries';
 import { supportBotSend, adminChatId } from '../../../../lib/support';
-import { env } from '../../../../env';
+
 
 export const dynamic = 'force-dynamic';
 
@@ -22,9 +22,9 @@ export async function POST(req: NextRequest) {
   const msg = update.message;
   if (!msg?.from || !msg.text) return NextResponse.json({ ok: true });
 
-  const adminId = env.ADMIN_USER_ID;
+  const adminId = adminChatId();
   if (msg.from.id !== adminId) {
-    await supportBotSend(msg.from.id, 'This bot only relays support replies for SafwanTiger Shop.');
+    await supportBotSend(msg.from.id, 'Need help? Please use the support chat on the SafwanTiger Shop website.');
     return NextResponse.json({ ok: true });
   }
 

@@ -16,5 +16,6 @@ export async function supportBotSend(chatId: number | string, text: string): Pro
 }
 
 export function adminChatId(): number {
-  return env.ADMIN_USER_ID;
+  // SUPPORT_ADMIN_CHAT_ID wins — lets you route to a different chat/group.
+  return Number(process.env.SUPPORT_ADMIN_CHAT_ID ?? env.ADMIN_USER_ID);
 }
