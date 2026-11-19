@@ -27,36 +27,70 @@ export default async function ProductPage({ params }: { params: { id: string } }
         ← Back
       </Link>
 
-      <div className="grid lg:grid-cols-2 gap-5 mt-4">
-        {/* Media — top on mobile, left column on desktop */}
-        <div className="card !p-0 overflow-hidden h-fit">
-          <div className="h-28 lg:h-56 flex items-center justify-center"
-            style={{ background: 'var(--surface2)' }}>
-            <div className="w-16 h-16 lg:w-24 lg:h-24 rounded-2xl flex items-center justify-center text-3xl lg:text-5xl"
-              style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
-              <ProductIcon emojiId={p.emoji_id} emoji={p.emoji} size={40} />
-            </div>
+      {/* Header card — icon + name + price + stock, full width */}
+      <div className="card !py-5 !px-5 mt-4 flex items-center gap-4">
+        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl flex items-center justify-center shrink-0"
+          style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>
+          <ProductIcon emojiId={p.emoji_id} emoji={p.emoji} size={34} />
+        </div>
+        <div className="min-w-0 flex-1">
+          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight leading-snug"><CEText text={p.name} size={22} /></h1>
+          <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+            <span className="text-2xl font-extrabold">${p.price.toFixed(2)}</span>
+            <span className="text-sm" style={{ color: 'var(--fg3)' }}>per unit</span>
+            {out ? (
+              <span className="chip" style={{ background: 'rgba(234,179,8,.15)', color: '#a16207', border: '1px solid rgba(234,179,8,.4)' }}>
+                <CE id="4990412201614378299" size={12} /> Pre-order
+              </span>
+            ) : (
+              <span className="chip stock-ok">
+                ● {p.unlimited_stock ? 'In stock' : `${p.stock} in stock`}
+              </span>
+            )}
           </div>
         </div>
+      </div>
 
-        {/* Buy box — second on mobile, right column on desktop */}
-        <div className="lg:row-span-2">
-          <div className="card !p-6">
-            <div className="flex justify-end">
-              {out ? (
-                <span className="chip" style={{ background: 'rgba(234,179,8,.15)', color: '#a16207', border: '1px solid rgba(234,179,8,.4)' }}>
-                  <CE id="4990412201614378299" size={12} /> Pre-order
-                </span>
-              ) : (
-                <span className="chip stock-ok">
-                  ● {p.unlimited_stock ? 'In stock' : `${p.stock} in stock`}
-                </span>
-              )}
+      <div className="grid lg:grid-cols-2 gap-5 mt-5">
+        {/* Details — left column */}
+        <div className="card order-2 lg:order-1">
+          <h2 className="font-bold text-lg">View product</h2>
+          {p.warranty && (
+            <div className="mt-3">
+              <div className="text-xs font-semibold" style={{ color: 'var(--fg3)' }}>WARRANTY</div>
+              <div className="text-[15px] whitespace-pre-wrap leading-relaxed mt-1" style={{ color: 'var(--fg2)' }}>
+                <CEText text={p.warranty} />
+              </div>
             </div>
-            <h1 className="text-2xl font-extrabold tracking-tight mt-2"><CEText text={p.name} size={24} /></h1>
-            <div className="text-3xl font-extrabold mt-3">${p.price.toFixed(2)}</div>
-            <div className="text-sm mt-0.5" style={{ color: 'var(--fg2)' }}>per unit</div>
-            <div className="text-sm mt-4 flex items-center gap-2" style={{ color: 'var(--fg2)' }}>
+          )}
+          {p.description && (
+            <div className="mt-4">
+              <div className="text-xs font-semibold" style={{ color: 'var(--fg3)' }}>DESCRIPTION</div>
+              <div className="text-[15px] whitespace-pre-wrap leading-relaxed mt-1" style={{ color: 'var(--fg2)' }}>
+                <CEText text={p.description} />
+              </div>
+            </div>
+          )}
+          {p.note && (
+            <div className="mt-4">
+              <div className="text-xs font-semibold" style={{ color: 'var(--fg3)' }}>NOTE</div>
+              <div className="text-[15px] whitespace-pre-wrap leading-relaxed mt-1" style={{ color: 'var(--fg2)' }}>
+                <CEText text={p.note} />
+              </div>
+            </div>
+          )}
+          {p.note_file_id && (
+            <a href={`/api/tgfile?file=${encodeURIComponent(p.note_file_id)}&name=${encodeURIComponent(p.note_file_name ?? 'note')}`}
+              className="btn-ghost w-full mt-3 text-sm">
+              <CE id="5794085322400733645" /> Download {p.note_file_name ?? 'note file'}
+            </a>
+          )}
+        </div>
+
+        {/* Buy box — right column, sticky on desktop */}
+        <div className="order-1 lg:order-2">
+          <div className="card !p-6 lg:sticky lg:top-24 h-fit">
+            <div className="text-sm flex items-center gap-2" style={{ color: 'var(--fg2)' }}>
               <CE id="5794085322400733645" /> Your delivery will be available in My orders.
             </div>
             {promo && (
@@ -69,7 +103,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
                 Tip: buy {teaser.min_qty}+ to save ${Number(teaser.discount_amount).toFixed(2)}.
               </div>
             )}
-            <div className="mt-5">
+            <div className="mt-4">
               <BuyPanel
                 productId={p.id}
                 unitPrice={p.price}
@@ -81,41 +115,6 @@ export default async function ProductPage({ params }: { params: { id: string } }
               Price and availability are checked again before ordering.
             </div>
           </div>
-        </div>
-
-        {/* Details — below buy box on mobile, under media on desktop */}
-        <div className="card">
-          <h2 className="font-bold text-lg">View product</h2>
-            {p.warranty && (
-              <div className="mt-3">
-                <div className="text-xs font-semibold" style={{ color: 'var(--fg3)' }}>WARRANTY</div>
-                <div className="text-[15px] whitespace-pre-wrap leading-relaxed mt-1" style={{ color: 'var(--fg2)' }}>
-                  <CEText text={p.warranty} />
-                </div>
-              </div>
-            )}
-            {p.description && (
-              <div className="mt-4">
-                <div className="text-xs font-semibold" style={{ color: 'var(--fg3)' }}>DESCRIPTION</div>
-                <div className="text-[15px] whitespace-pre-wrap leading-relaxed mt-1" style={{ color: 'var(--fg2)' }}>
-                  <CEText text={p.description} />
-                </div>
-              </div>
-            )}
-            {p.note && (
-              <div className="mt-4">
-                <div className="text-xs font-semibold" style={{ color: 'var(--fg3)' }}>NOTE</div>
-                <div className="text-[15px] whitespace-pre-wrap leading-relaxed mt-1" style={{ color: 'var(--fg2)' }}>
-                  <CEText text={p.note} />
-                </div>
-              </div>
-            )}
-            {p.note_file_id && (
-              <a href={`/api/tgfile?file=${encodeURIComponent(p.note_file_id)}&name=${encodeURIComponent(p.note_file_name ?? 'note')}`}
-                className="btn-ghost w-full mt-3 text-sm">
-                <CE id="5794085322400733645" /> Download {p.note_file_name ?? 'note file'}
-              </a>
-            )}
         </div>
       </div>
     </div>

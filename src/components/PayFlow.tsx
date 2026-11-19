@@ -34,6 +34,8 @@ export default function PayFlow({ method, presetAmount, onCredited, resumeDeposi
 }) {
   const [stage, setStage] = useState<Stage>({ k: 'loading' });
   const [value, setValue] = useState(presetAmount ? presetAmount.toFixed(2) : '');
+  // Reference (TXID) is a separate field — never pre-fill it with the amount.
+  const [ref, setRef] = useState('');
   const [msg, setMsg] = useState('');
   const [busy, start] = useTransition();
 
@@ -65,7 +67,7 @@ export default function PayFlow({ method, presetAmount, onCredited, resumeDeposi
   function submitRef() {
     setMsg('');
     start(async () => {
-      const r = await submitTopupReference(value);
+      const r = await submitTopupReference(ref);
       if (!r.ok) return setMsg(r.error);
       setStage({ k: 'result', r });
       if (r.status === 'credited') onCredited?.(r.newBalance ?? null);
@@ -150,8 +152,8 @@ export default function PayFlow({ method, presetAmount, onCredited, resumeDeposi
       {needs === 'reference' && (
         <>
           <label className="text-sm font-semibold block">{label}</label>
-          <input className="input font-mono" value={value} onChange={(e) => setValue(e.target.value)} placeholder="Paste it here after paying" />
-          <button className="btn-primary w-full !py-3" disabled={busy || !value.trim()} onClick={submitRef}>{busy ? 'Verifying…' : 'Submit & verify'}</button>
+          <input className="input font-mono" value={ref} onChange={(e) => setRef(e.target.value)} placeholder="Paste it here after paying" />
+          <button className="btn-primary w-full !py-3" disabled={busy || !ref.trim()} onClick={submitRef}>{busy ? 'Verifying…' : 'Submit & verify'}</button>
         </>
       )}
       {needs === 'none' && (

@@ -19,7 +19,8 @@ export default function CheckoutPanel({
   productId: number; unitPrice: number; maxQty: number; balance: number;
   productName: string; methods: DBPaymentMethod[]; preorder: boolean; qty: number; tutorial: Tutorial;
 }) {
-  const [step, setStep] = useState<'review' | 'method' | 'pay' | 'done'>('review');
+  // Buy goes straight to payment selection (direct pay).
+  const [step, setStep] = useState<'method' | 'pay' | 'done'>('method');
   const [qty] = useState(initQty);
   const [method, setMethod] = useState<'wallet' | DBPaymentMethod | null>(null);
   const [busy, start] = useTransition();
@@ -101,37 +102,25 @@ export default function CheckoutPanel({
     );
   }
 
-  /* ---------- step 1: review ---------- */
-  if (step === 'review') {
-    return (
-      <div className="space-y-4">
-        <div className="text-sm" style={{ color: 'var(--fg3)' }}>Your order</div>
-        <h2 className="text-2xl font-extrabold">Review</h2>
-        <div className="font-bold">{ceText(productName)}</div>
-        {preorder && (
-          <div className="rounded-xl p-3 text-sm flex items-start gap-2"
-            style={{ background: 'rgba(234,179,8,.1)', border: '1px solid rgba(234,179,8,.35)' }}>
-            <CE id="6267039884016358504" />
-            <span><b>Pre-order.</b> This item is out of stock — your order is placed in the queue and items arrive when stock is refilled.</span>
-          </div>
-        )}
-        <div className="flex justify-between text-sm pt-3" style={{ borderTop: '1px solid var(--border)', color: 'var(--fg2)' }}>
-          <span>Quantity</span><b style={{ color: 'var(--fg)' }}>{qty}</b>
-        </div>
-        <div className="flex justify-between items-baseline pt-3" style={{ borderTop: '1px solid var(--border)' }}>
-          <span className="text-sm" style={{ color: 'var(--fg2)' }}>Total</span>
-          <span className="text-3xl font-extrabold">${total.toFixed(2)}</span>
-        </div>
-        <p className="text-sm" style={{ color: 'var(--fg3)' }}>
-          Check the amount and details before confirming.
-        </p>
-        <button className="btn-primary w-full !py-3" onClick={() => setStep('method')}>
-          Continue
-        </button>
-        <Link href={`/product/${productId}`} className="btn-ghost w-full text-center block">Back</Link>
+  const summary = (
+    <div className="card !p-5 h-fit">
+      <div className="font-bold">Order summary</div>
+      <div className="text-sm mt-2 font-semibold">{ceText(productName)}</div>
+      <div className="flex justify-between text-sm mt-4 pt-3" style={{ borderTop: '1px solid var(--border)', color: 'var(--fg2)' }}>
+        <span>Quantity</span><b style={{ color: 'var(--fg)' }}>{qty}</b>
       </div>
-    );
-  }
+      <div className="flex justify-between items-baseline mt-3 pt-3" style={{ borderTop: '1px solid var(--border)' }}>
+        <span className="text-sm" style={{ color: 'var(--fg2)' }}>Total</span>
+        <span className="text-2xl font-extrabold">${total.toFixed(2)}</span>
+      </div>
+      <div className="mt-4 pt-3 flex flex-wrap gap-2" style={{ borderTop: '1px solid var(--border)' }}>
+        <button className="btn-ghost !py-2 px-4 text-sm" onClick={() => window.location.reload()}>Refresh</button>
+        <Link href={`/product/${productId}`} className="btn-ghost !py-2 px-4 text-sm">Cancel order</Link>
+        <button className="btn-ghost !py-2 px-4 text-sm"
+          onClick={() => window.dispatchEvent(new Event('st-open-support'))}>Need help?</button>
+      </div>
+    </div>
+  );
 
   /* ---------- step 2: choose how to pay ---------- */
   if (step === 'method') {
@@ -143,8 +132,17 @@ export default function CheckoutPanel({
       </span>
     );
     return (
-      <div className="space-y-3">
+      <div className="grid lg:grid-cols-2 gap-5 items-start">
+        {summary}
+        <div className="card !p-5 space-y-3">
         <h3 className="font-bold">Choose how to pay</h3>
+        {!walletOk && (
+          <div className="rounded-xl p-3.5 text-sm"
+            style={{ background: 'rgba(234,179,8,.1)', border: '1px solid rgba(234,179,8,.35)' }}>
+            Your wallet balance is insufficient. Add funds before confirming this payment.
+            <Link href="/wallet" className="btn-ghost mt-2.5 !py-1.5 px-4 text-sm inline-block">Add funds</Link>
+          </div>
+        )}
         <button
           className="w-full text-left rounded-xl border px-4 py-3.5 flex items-center gap-3"
           style={{
@@ -190,7 +188,8 @@ export default function CheckoutPanel({
           onClick={() => (method === 'wallet' ? buyWallet() : setStep('pay'))}>
           {busy ? 'Processing…' : 'Confirm payment method'}
         </button>
-        <button className="btn-ghost w-full" onClick={() => setStep('review')}>Back</button>
+        <Link href={`/product/${productId}`} className="btn-ghost w-full text-center block">Back</Link>
+        </div>
       </div>
     );
   }
@@ -200,7 +199,9 @@ export default function CheckoutPanel({
   if (!m) return null;
   const steps = ['Payment method', 'Transfer', 'Verify'];
   return (
-    <div className="space-y-4">
+    <div className="grid lg:grid-cols-2 gap-5 items-start">
+      {summary}
+      <div className="card !p-5 space-y-4">
       <div className="flex items-center">
         {steps.map((s, i) => (
           <div key={s} className="flex items-center flex-1 last:flex-none">
@@ -224,6 +225,7 @@ export default function CheckoutPanel({
       <PayFlow key={m.id} method={m} presetAmount={total} onCredited={onCredited} />
       {msg && <p className="text-sm" style={{ color: 'var(--fg2)' }}>{msg}</p>}
       <button className="btn-ghost w-full" disabled={busy} onClick={() => { setStep('method'); setMsg(''); }}>Back</button>
+      </div>
     </div>
   );
 }
