@@ -15,7 +15,7 @@ export default function ShopGrid({
   loggedIn,
 }: {
   sections: Section[];
-  buckets: { key: string; label: string; emojiId: string | null; keys: string[]; count: number }[];
+  buckets: { key: string; label: string; emojiId: string | null; emoji: string | null; keys: string[]; count: number }[];
   total: number;
   loggedIn: boolean;
 }) {
@@ -53,7 +53,11 @@ export default function ShopGrid({
               onClick={() => setBucket(bucket === b.key ? null : b.key)}
               className={`chip shrink-0 !py-2 !px-4 !text-sm font-semibold ${bucket === b.key ? 'chip-active' : 'chip-grey'}`}
             >
-              {b.emojiId && <span className="mr-1.5"><CE id={b.emojiId} size={16} /></span>}
+              {b.emojiId ? (
+                <span className="mr-1.5"><CE id={b.emojiId} size={16} /></span>
+              ) : b.emoji ? (
+                <span className="mr-1.5">{b.emoji}</span>
+              ) : null}
               {b.label}
               <span className="ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-bold" style={{ background: 'var(--surface2)' }}>{b.count}</span>
             </button>

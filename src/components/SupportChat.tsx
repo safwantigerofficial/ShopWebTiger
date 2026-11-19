@@ -27,10 +27,24 @@ export default function SupportChat() {
       .catch(() => {});
   }, []);
 
-  // Close the widget whenever the user navigates to another page.
+  // Close the widget whenever the user navigates to another page
+  // (route change or browser back).
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    const close = () => setOpen(false);
+    const onClick = (e: MouseEvent) => {
+      if ((e.target as HTMLElement).closest('a[href]')) close();
+    };
+    window.addEventListener('popstate', close);
+    document.addEventListener('click', onClick);
+    return () => {
+      window.removeEventListener('popstate', close);
+      document.removeEventListener('click', onClick);
+    };
+  }, []);
 
   useEffect(() => {
     const h = () => setOpen(true);

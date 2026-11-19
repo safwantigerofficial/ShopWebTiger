@@ -46,15 +46,20 @@ export default async function ShopPage() {
     { label: 'Gemini AI', emojiId: '5309903664733759148', keys: ['gemini'] },
     { label: 'ChatGPT AI', emojiId: '5796185041717433060', keys: ['chatgpt', 'chat gpt', 'openai'] },
     { label: 'Grok AI', emojiId: '5879759208307498823', keys: ['grok'] },
-    { label: 'YouTube', keys: ['youtube'] },
   ];
-  const buckets = BUCKETS.map((b) => ({
-    key: b.label,
-    label: b.label,
-    emojiId: b.emojiId ?? null,
-    keys: b.keys,
-    count: flat.filter((p) => b.keys.some((k) => p.name.toLowerCase().includes(k))).length,
-  })).filter((b) => b.count > 0);
+  const buckets = BUCKETS.map((b) => {
+    const hits = flat.filter((p) => b.keys.some((k) => p.name.toLowerCase().includes(k)));
+    // Icon: given premium emoji, else the first matching product's own icon.
+    const first = hits.find((p) => p.emoji_id || p.emoji);
+    return {
+      key: b.label,
+      label: b.label,
+      emojiId: b.emojiId ?? first?.emoji_id ?? null,
+      emoji: first?.emoji ?? null,
+      keys: b.keys,
+      count: hits.length,
+    };
+  }).filter((b) => b.count > 0);
 
   return (
     <div>
