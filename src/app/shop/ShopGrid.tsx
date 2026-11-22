@@ -126,7 +126,7 @@ export default function ShopGrid({
               style={bucket === null
                 ? { background: 'var(--primary)', color: '#fff', borderColor: 'var(--primary)' }
                 : { background: 'var(--surface)', color: 'var(--fg2)', borderColor: 'var(--border)' }}>
-              All {totalCount}
+              <span className="mr-1"><CE id="5861517687632433327" size={14} /></span>All {totalCount}
             </button>
             {buckets.map((b) => (
               <button key={b.key} onClick={() => setBucket(bucket === b.key ? null : b.key)}

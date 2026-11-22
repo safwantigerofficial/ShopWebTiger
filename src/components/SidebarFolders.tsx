@@ -32,7 +32,7 @@ export default function SidebarFolders() {
         <Link href="/shop"
           className="flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition"
           style={{ color: !active ? 'var(--primary)' : 'var(--fg2)', background: !active ? 'var(--primary-soft)' : 'transparent' }}>
-          <span className="w-3.5 h-3.5 rounded-sm border" style={{ borderColor: 'var(--primary)' }} />
+          <CE id="5861517687632433327" size={14} />
           All products
         </Link>
         {buckets.map((b) => {
