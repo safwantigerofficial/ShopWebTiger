@@ -25,8 +25,8 @@ export default async function CheckoutPage({
   const preorder = !p.unlimited_stock && p.stock < qty;
 
   return (
-    <div className="max-w-5xl mx-auto">
-      <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight mb-4"><CEText text={ceTitle} /></h1>
+    <div className="max-w-5xl mx-auto pb-16 sm:pb-0">
+      <h1 className="text-base sm:text-xl font-extrabold tracking-tight mb-3 break-words"><CEText text={ceTitle} /></h1>
         <CheckoutPanel
           productId={p.id}
           unitPrice={p.price}

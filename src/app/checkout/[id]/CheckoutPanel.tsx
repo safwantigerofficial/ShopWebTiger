@@ -17,9 +17,9 @@ const STEPS = ['Payment method', 'Transfer', 'Verify'];
 
 function Radio({ on }: { on: boolean }) {
   return (
-    <span className="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0"
+    <span className="w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0"
       style={{ borderColor: on ? 'var(--primary)' : 'var(--border2)' }}>
-      {on && <span className="w-2.5 h-2.5 rounded-full" style={{ background: 'var(--primary)' }} />}
+      {on && <span className="w-2 h-2 rounded-full" style={{ background: 'var(--primary)' }} />}
     </span>
   );
 }
@@ -28,14 +28,14 @@ function Tabs({ active }: { active: number }) {
   return (
     <div className="flex border-b" style={{ borderColor: 'var(--border)' }}>
       {STEPS.map((s, i) => (
-        <div key={s} className="flex items-center gap-1.5 py-2 mr-5 last:mr-0 text-[12px] sm:text-sm whitespace-nowrap"
+        <div key={s} className="flex items-center gap-1 py-1.5 mr-3 sm:mr-5 last:mr-0 text-[11px] sm:text-[13px] whitespace-nowrap"
           style={{
             color: i === active ? 'var(--primary)' : 'var(--fg3)',
             fontWeight: i === active ? 700 : 500,
             borderBottom: i === active ? '2px solid var(--primary)' : '2px solid transparent',
             marginBottom: -1,
           }}>
-          <span className="w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center shrink-0"
+          <span className="w-4 h-4 rounded-full text-[9px] font-bold flex items-center justify-center shrink-0"
             style={i === active
               ? { background: 'var(--primary)', color: '#fff' }
               : { border: '1.5px solid var(--border2)', color: 'var(--fg3)' }}>
@@ -142,23 +142,25 @@ export default function CheckoutPanel({
   }
 
   const summary = (
-    <div className="card !p-5 h-fit lg:w-[320px] shrink-0">
-      <div className="font-bold">Order summary</div>
-      <div className="flex justify-between text-sm mt-4" style={{ color: 'var(--fg2)' }}>
-        <span>Quantity</span><b style={{ color: 'var(--fg)' }}>{qty}</b>
-      </div>
-      <div className="flex justify-between items-baseline mt-6 pt-4" style={{ borderTop: '1px solid var(--border)' }}>
-        <span className="text-sm" style={{ color: 'var(--fg2)' }}>Total</span>
-        <span className="text-3xl font-extrabold">${total.toFixed(2)}</span>
+    <div className="card !p-3 sm:!p-4 h-fit lg:w-[300px] shrink-0">
+      <div className="font-bold text-sm hidden lg:block mb-3">Order summary</div>
+      <div className="flex lg:block items-center justify-between gap-3">
+        <div className="flex lg:justify-between items-center gap-2 text-xs sm:text-sm" style={{ color: 'var(--fg2)' }}>
+          <span>Quantity</span><b style={{ color: 'var(--fg)' }}>{qty}</b>
+        </div>
+        <div className="flex justify-between items-baseline gap-2 lg:mt-4 lg:pt-3 lg:border-t" style={{ borderColor: 'var(--border)' }}>
+          <span className="text-xs sm:text-sm" style={{ color: 'var(--fg2)' }}>Total</span>
+          <span className="text-lg lg:text-2xl font-extrabold">${total.toFixed(2)}</span>
+        </div>
       </div>
     </div>
   );
 
   const actions = (
-    <div className="flex flex-wrap gap-2 pt-4 mt-4" style={{ borderTop: '1px solid var(--border)' }}>
-      <button className="btn-ghost !py-2 px-4 text-sm" onClick={() => window.location.reload()}>Refresh</button>
-      <Link href={`/product/${productId}`} className="btn-ghost !py-2 px-4 text-sm">Cancel order</Link>
-      <button className="btn-ghost !py-2 px-4 text-sm"
+    <div className="flex flex-wrap gap-1.5 pt-3 mt-3" style={{ borderTop: '1px solid var(--border)' }}>
+      <button className="btn-ghost !py-1 !px-2.5 !text-xs !rounded-lg" onClick={() => window.location.reload()}>Refresh</button>
+      <Link href={`/product/${productId}`} className="btn-ghost !py-1 !px-2.5 !text-xs !rounded-lg">Cancel order</Link>
+      <button className="btn-ghost !py-1 !px-2.5 !text-xs !rounded-lg"
         onClick={() => window.dispatchEvent(new Event('st-open-support'))}>Need help?</button>
     </div>
   );
@@ -169,10 +171,10 @@ export default function CheckoutPanel({
     return (
       <div className="lg:flex lg:gap-6 lg:items-start">
         {summary}
-        <div className="card !p-5 flex-1 mt-4 lg:mt-0 pb-20 sm:pb-5">
-          <div className="font-bold text-lg">Your order</div>
+        <div className="card !p-3.5 sm:!p-4 flex-1 mt-3 lg:mt-0">
+          <div className="font-bold text-sm sm:text-base">Your order</div>
           <div className="mt-3"><Tabs active={0} /></div>
-          <div className="font-semibold mt-4 mb-2.5 text-sm sm:text-base">Choose how to pay</div>
+          <div className="font-semibold mt-3 mb-2 text-sm">Choose how to pay</div>
           {!walletOk && (
             <div className="rounded-xl p-3 text-sm mb-2.5"
               style={{ background: 'rgba(234,179,8,.1)', border: '1px solid rgba(234,179,8,.35)' }}>
@@ -182,7 +184,7 @@ export default function CheckoutPanel({
           )}
           <div className="grid sm:grid-cols-2 gap-2.5">
             <button
-              className="text-left rounded-xl border px-4 py-3 flex items-center gap-3"
+              className="text-left rounded-lg border px-3 py-2.5 flex items-center gap-2.5 text-sm"
               style={{
                 borderColor: method === 'wallet' ? 'var(--primary)' : 'var(--border)',
                 background: method === 'wallet' ? 'rgba(37,99,235,.06)' : 'transparent',
@@ -200,7 +202,7 @@ export default function CheckoutPanel({
             </button>
             {methods.map((m) => (
               <button key={m.id}
-                className="text-left rounded-xl border px-4 py-3 flex items-center gap-3"
+                className="text-left rounded-lg border px-3 py-2.5 flex items-center gap-2.5 text-sm"
                 style={{
                   borderColor: method === m ? 'var(--primary)' : 'var(--border)',
                   background: method === m ? 'rgba(37,99,235,.06)' : 'transparent',
@@ -219,14 +221,14 @@ export default function CheckoutPanel({
           {msg && <p className="text-red-500 text-sm mt-2">{msg}</p>}
           {/* Desktop: right-aligned confirm. Mobile: sticky bottom bar. */}
           <div className="hidden sm:flex justify-end mt-4">
-            <button className="btn-primary !px-8" disabled={!method || busy}
+            <button className="btn-primary !px-6" disabled={!method || busy}
               onClick={() => (method === 'wallet' ? buyWallet() : method && router.push(`/checkout/${productId}?qty=${qty}&m=${method.id}`))}>
               {busy ? 'Processing…' : 'Confirm payment method'}
             </button>
           </div>
-          <div className="sm:hidden fixed left-0 right-0 bottom-[64px] z-40 px-4 pb-2"
+          <div className="sm:hidden fixed left-0 right-0 bottom-[60px] z-40 px-3 pb-2 pt-3"
             style={{ background: 'linear-gradient(to top, var(--bg) 75%, transparent)' }}>
-            <button className="btn-primary w-full !py-3.5 font-bold" disabled={!method || busy}
+            <button className="btn-primary w-full h-10 !py-0 font-bold" disabled={!method || busy}
               onClick={() => (method === 'wallet' ? buyWallet() : method && router.push(`/checkout/${productId}?qty=${qty}&m=${method.id}`))}>
               {busy ? 'Processing…' : 'Confirm payment method'}
             </button>
@@ -244,7 +246,7 @@ export default function CheckoutPanel({
   return (
     <div className="lg:flex lg:gap-6 lg:items-start">
       {summary}
-      <div className="card !p-4 sm:!p-5 flex-1 mt-4 lg:mt-0 space-y-4">
+      <div className="card !p-3.5 sm:!p-4 flex-1 mt-3 lg:mt-0 space-y-3">
         <button onClick={back} disabled={busy} className="text-sm inline-flex items-center gap-1" style={{ color: 'var(--fg2)' }}>
           ← Change payment method
         </button>

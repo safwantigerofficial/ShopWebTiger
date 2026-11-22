@@ -125,7 +125,7 @@ export default function PayFlow({ method, presetAmount, onCredited, resumeDeposi
     return (
       <div className="space-y-3">
         <div className={box} style={boxStyle}><BotText text={stage.screen} /></div>
-        <a href={stage.url} target="_blank" rel="noreferrer" className="btn-primary w-full block text-center !py-3"><CE id="5386367538735104399" />  Open invoice</a>
+        <a href={stage.url} target="_blank" rel="noreferrer" className="btn-primary w-full block text-center"><CE id="5386367538735104399" />  Open invoice</a>
         <button className="btn-ghost w-full" disabled={busy} onClick={() => check(stage.depositId)}><CE id="5854985398857503237" />  I’ve paid / Check</button>
         {msg && <p className="text-sm" style={{ color: 'var(--fg2)' }}>{msg}</p>}
       </div>
@@ -156,18 +156,18 @@ export default function PayFlow({ method, presetAmount, onCredited, resumeDeposi
           <label className="text-sm font-semibold block">{method.provider === 'ltc' ? 'Amount (USD)' : 'Amount (USDT)'}</label>
           <input className="input" inputMode="decimal" value={value} onChange={(e) => setValue(e.target.value)}
             placeholder={o?.min ? o.min.toFixed(2) : '10'} />
-          <button className="btn-primary w-full !py-3" disabled={busy || !value} onClick={submitAmount}>{busy ? '…' : 'Continue'}</button>
+          <button className="btn-primary w-full" disabled={busy || !value} onClick={submitAmount}>{busy ? '…' : 'Continue'}</button>
         </>
       )}
       {needs === 'reference' && (
         <>
           <label className="text-sm font-semibold block">{label}</label>
-          <input className="input font-mono" value={ref} onChange={(e) => setRef(e.target.value)} placeholder="Paste it here after paying" />
-          <button className="btn-primary w-full !py-3" disabled={busy || !ref.trim()} onClick={submitRef}>{busy ? 'Verifying…' : 'Submit & verify'}</button>
+          <input className="input font-mono !py-2 !text-sm" value={ref} onChange={(e) => setRef(e.target.value)} placeholder="Paste it here after paying" />
+          <button className="btn-primary w-full" disabled={busy || !ref.trim()} onClick={submitRef}>{busy ? 'Verifying…' : 'Submit & verify'}</button>
         </>
       )}
       {needs === 'none' && (
-        <button className="btn-primary w-full !py-3" disabled={busy} onClick={manual}>💸 {method.name}</button>
+        <button className="btn-primary w-full" disabled={busy} onClick={manual}>💸 {method.name}</button>
       )}
       {msg && <p className="text-sm whitespace-pre-wrap" style={{ color: 'var(--warn)' }}>{msg}</p>}
     </div>
