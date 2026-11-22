@@ -2,6 +2,7 @@ import './globals.css';
 import Sidebar from '../components/Sidebar';
 import Topbar from '../components/Topbar';
 import MobileTabs from '../components/MobileTabs';
+import ScrollTop from '../components/ScrollTop';
 import SupportChat from '../components/SupportChat';
 import { getSession, currentUser } from '../lib/session';
 
@@ -37,6 +38,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           </div>
         </div>
         <MobileTabs />
+        <ScrollTop />
         <SupportChat />
       </body>
     </html>
