@@ -157,11 +157,11 @@ html { scroll-behavior: smooth; }
 
 html, body { overflow-x: clip; max-width: 100%; }
 
-@keyframes st-fade-up {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes st-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
-main > div { animation: st-fade-up 0.3s ease-out both; will-change: opacity, transform; }
+main > div { animation: st-fade-in 0.3s ease-out; }
 .card-hover { transition: border-color 0.25s, box-shadow 0.3s, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
 a, button { transition: color .18s ease, background-color .18s ease, border-color .18s ease, box-shadow .2s ease, transform .18s cubic-bezier(.34,1.56,.64,1); }
 ::-webkit-scrollbar { width: 8px; height: 8px; }
