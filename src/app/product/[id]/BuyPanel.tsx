@@ -62,11 +62,25 @@ export default function BuyPanel({
       )}
       <div>
         <label className="text-xs font-semibold" style={{ color: 'var(--fg2)' }}>Quantity</label>
-        <input
-          className="input mt-1 !py-2"
-          type="number" min={1} max={maxQty} value={qty}
-          onChange={(e) => setQty(Math.max(1, Math.min(maxQty, Number(e.target.value) || 1)))}
-        />
+        <div className="mt-1 flex items-center rounded-lg border" style={{ borderColor: 'var(--border2)', background: 'var(--surface)' }}>
+          <button className="w-10 h-10 text-base font-bold shrink-0" style={{ color: 'var(--fg2)' }}
+            onClick={() => step(-1)}>−</button>
+          <input
+            type="text" inputMode="numeric" pattern="[0-9]*" aria-label="Quantity"
+            className="flex-1 h-10 text-center text-base font-bold bg-transparent outline-none"
+            value={raw}
+            onFocus={(e) => e.target.select()}
+            onChange={(e) => {
+              const d = e.target.value.replace(/\D/g, '').slice(0, 6);
+              if (!d) { setRaw(''); return; }
+              const n = Math.max(1, Math.min(maxQty, Number(d)));
+              setQty(n); setRaw(Number(d) > maxQty ? String(maxQty) : d);
+            }}
+            onBlur={() => setRaw(String(qty))}
+          />
+          <button className="w-10 h-10 text-base font-bold shrink-0" style={{ color: 'var(--primary)' }}
+            onClick={() => step(1)}>+</button>
+        </div>
       </div>
       <button className="btn-primary w-full"
         onClick={() => router.push(`/checkout/${productId}?qty=${qty}`)}>
