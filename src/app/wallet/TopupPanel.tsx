@@ -27,6 +27,24 @@ function Radio({ on }: { on: boolean }) {
   );
 }
 
+export function WalletTopup({ methods, balance }: { methods: DBPaymentMethod[]; balance: number }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <div className="card mt-4 flex items-center justify-between">
+        <div>
+          <div className="text-sm" style={{ color: 'var(--fg2)' }}>Balance</div>
+          <div className="text-2xl font-extrabold mt-0.5">{balance.toFixed(2)} USD</div>
+        </div>
+        <button onClick={() => setOpen((v) => !v)} className="btn-primary !px-5 !py-2.5 text-sm">
+          <CE id="6043882458582095360" /> Top up
+        </button>
+      </div>
+      {open && <div id="topup" className="mt-4"><TopupPanel methods={methods} balance={balance} /></div>}
+    </>
+  );
+}
+
 export default function TopupPanel({ methods, balance }: { methods: DBPaymentMethod[]; balance: number }) {
   const [method, setMethod] = useState<DBPaymentMethod | null>(null);
   const [amount, setAmount] = useState('');

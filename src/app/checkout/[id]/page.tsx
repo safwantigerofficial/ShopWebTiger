@@ -26,7 +26,7 @@ export default async function CheckoutPage({
 
   return (
     <div className="max-w-5xl mx-auto">
-      <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-5"><CEText text={ceTitle} /></h1>
+      <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight mb-4"><CEText text={ceTitle} /></h1>
         <CheckoutPanel
           productId={p.id}
           unitPrice={p.price}

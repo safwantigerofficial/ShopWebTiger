@@ -1,8 +1,7 @@
 import { requireUserOrRedirect } from '../../lib/guard';
 import { expireStaleUserDeposits, listDeposits, listPaymentMethods } from '../../db/queries';
-import TopupPanel from './TopupPanel';
+import { WalletTopup } from './TopupPanel';
 import PendingResume from '../../components/PendingResume';
-import CE from '../../components/CE';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,19 +15,9 @@ export default async function WalletPage() {
   return (
     <div>
       <div className="text-sm font-semibold" style={{ color: 'var(--fg2)' }}>Customer area</div>
-      <h1 className="text-3xl font-extrabold tracking-tight mt-1">Wallet</h1>
+      <h1 className="text-2xl font-extrabold tracking-tight mt-1">Wallet</h1>
 
-      <div className="card mt-5 flex items-center justify-between !p-6">
-        <div>
-          <div className="text-sm" style={{ color: 'var(--fg2)' }}>Balance</div>
-          <div className="text-3xl font-extrabold mt-1">{user.balance.toFixed(2)} USD</div>
-        </div>
-        <a href="#topup" className="btn-primary !px-6 !py-3 text-[15px]"><CE id="6043882458582095360" />  Top up</a>
-      </div>
-
-      <div id="topup" className="mt-6">
-        <TopupPanel methods={methods} balance={user.balance} />
-      </div>
+      <WalletTopup methods={methods} balance={user.balance} />
 
       <section className="mt-7">
         {pendingDeposits.length === 0 && (
