@@ -176,7 +176,7 @@ export default function CheckoutPanel({
           >
             {radio(method === m)}
             <MethodIcon m={m} />
-            <span className="flex-1 min-w-0 font-semibold truncate"><CEText text={m.name} /></span>
+            <span className="flex-1 min-w-0 font-semibold"><CEText text={m.name} /></span>
             <b className="shrink-0">${total.toFixed(2)}</b>
           </button>
         ))}

@@ -23,8 +23,7 @@ export default async function CheckoutPage({
   const preorder = !p.unlimited_stock && p.stock < qty;
 
   return (
-    <div className="max-w-lg mx-auto">
-      <div className="card !p-6">
+    <div className="max-w-3xl mx-auto">
         <CheckoutPanel
           productId={p.id}
           unitPrice={p.price}
@@ -36,7 +35,6 @@ export default async function CheckoutPage({
           qty={qty}
           tutorial={{ text: p.tutorial_text, url: p.tutorial_url, fileId: p.tutorial_file_id, fileType: p.tutorial_file_type }}
         />
-      </div>
     </div>
   );
 }
