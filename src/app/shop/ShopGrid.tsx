@@ -71,7 +71,7 @@ export default function ShopGrid({
   };
 
   const cardStyle = (p: DBProduct) => {
-    const c = TINTS[tints[p.id]];
+    const c = TINTS[tints[p.id] ?? ''];
     return c ? { borderColor: `${c}80`, boxShadow: `inset 2px 0 0 ${c}` } : undefined;
   };
 

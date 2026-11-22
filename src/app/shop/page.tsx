@@ -42,7 +42,7 @@ export default async function ShopPage() {
   // category default. Out-of-stock = red. In-stock default = neutral (no tint).
   const oosColor = modeOf('color.out_of_stock') ?? 'red';
   const catDefault = modeOf('color.category.default');
-  const tintOf = (p: (typeof flat)[number]): string => {
+  const tintOf = (p: (typeof flat)[number]): string | undefined => {
     const inStock = p.unlimited_stock || p.stock > 0;
     if (!inStock) return oosColor;
     return (
