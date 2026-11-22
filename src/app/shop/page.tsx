@@ -61,7 +61,7 @@ export default async function ShopPage() {
 
   return (
     <div>
-      <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">The shop</h1>
+      <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight">The shop</h1>
       {visible.length === 0 && <p className="mt-8" style={{ color: 'var(--fg2)' }}>No products available right now.</p>}
 
       <ShopGrid

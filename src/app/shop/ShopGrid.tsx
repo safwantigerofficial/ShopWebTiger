@@ -76,10 +76,10 @@ export default function ShopGrid({
   };
 
   return (
-    <div className="mt-5">
+    <div className="mt-3 sm:mt-5">
       <div className="flex-1 min-w-0">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-3 justify-between">
-          <span className="text-[15px]" style={{ color: 'var(--fg2)' }}>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 justify-between">
+          <span className="hidden sm:inline text-[15px]" style={{ color: 'var(--fg2)' }}>
             {products.length} product{products.length === 1 ? '' : 's'}
           </span>
           <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3">
@@ -103,14 +103,14 @@ export default function ShopGrid({
                 </svg>
               )}
             </div>
-            <select className="input !w-auto !py-2 !pr-8 !text-sm shrink-0" value={sort}
+            <select className="input !w-auto flex-1 sm:flex-none !py-2 !pr-8 !text-sm shrink-0" value={sort}
               onChange={(e) => setSort(e.target.value as typeof sort)} aria-label="Sort">
               <option value="default">Featured</option>
               <option value="low">Price: low → high</option>
               <option value="high">Price: high → low</option>
               <option value="name">Name A–Z</option>
             </select>
-            <label className="flex items-center gap-2 text-sm whitespace-nowrap select-none" style={{ color: 'var(--fg2)' }}>
+            <label className="flex items-center gap-1.5 text-xs sm:text-sm whitespace-nowrap select-none" style={{ color: 'var(--fg2)' }}>
               <input type="checkbox" checked={inStock} onChange={(e) => setInStock(e.target.checked)}
                 className="w-4 h-4 accent-orange-500" />
               In stock only
