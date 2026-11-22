@@ -233,7 +233,7 @@ export default function CheckoutPanel({
     );
   }
 
-  /* ---------- step 2: transfer & verify ---------- */
+  /* ---------- step 2: transfer & verify (popup window) ---------- */
   const m = method !== 'wallet' && method ? method : null;
   if (!m) return null;
   return (
@@ -242,14 +242,21 @@ export default function CheckoutPanel({
       <div className="card !p-5 flex-1 mt-4 lg:mt-0 space-y-4">
         <div className="font-bold text-lg">Your order</div>
         <Tabs active={1} />
-        <div className="flex items-center gap-3">
-          <MethodIcon m={m} />
-          <h3 className="font-bold"><CEText text={m.name} /></h3>
-        </div>
-        <PayFlow key={m.id} method={m} presetAmount={total} onCredited={onCredited} />
         {msg && <p className="text-sm" style={{ color: 'var(--fg2)' }}>{msg}</p>}
-        <button className="btn-ghost w-full sm:w-auto" disabled={busy} onClick={() => { setStep('method'); setMsg(''); }}>← Back</button>
-        {actions}
+      </div>
+      <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
+        style={{ background: 'rgba(0,0,0,.55)' }} onClick={() => { if (!busy) { setStep('method'); setMsg(''); } }}>
+        <div className="w-full sm:max-w-lg card !rounded-b-none sm:!rounded-b-2xl !p-5 max-h-[92vh] overflow-y-auto space-y-4"
+          onClick={(e) => e.stopPropagation()}>
+          <div className="flex items-center gap-3">
+            <MethodIcon m={m} />
+            <h3 className="font-bold flex-1"><CEText text={m.name} /></h3>
+            <button onClick={() => { setStep('method'); setMsg(''); }} disabled={busy}
+              className="text-xl leading-none px-2" style={{ color: 'var(--fg3)' }}>×</button>
+          </div>
+          <PayFlow key={m.id} method={m} presetAmount={total} onCredited={onCredited} />
+          {actions}
+        </div>
       </div>
     </div>
   );

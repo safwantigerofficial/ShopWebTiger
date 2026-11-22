@@ -93,14 +93,23 @@ export default function TopupPanel({ methods, balance }: { methods: DBPaymentMet
               Payment details appear after you confirm your method.
             </p>
           </>
-        ) : (
-          <>
-            <button onClick={() => setMethod(null)} className="text-sm mb-3 inline-flex items-center gap-1" style={{ color: 'var(--fg2)' }}>← All methods</button>
-            <div className="flex items-center gap-3 mb-3"><MethodIcon m={method} /><h3 className="font-bold"><CEText text={method.name} /></h3></div>
-            <PayFlow key={method.id} method={method} presetAmount={preset} onCredited={() => router.refresh()} />
-          </>
-        )}
+        ) : null}
       </div>
+      {/* Payment details open in a popup window, not inline */}
+      {method && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
+          style={{ background: 'rgba(0,0,0,.55)' }} onClick={() => setMethod(null)}>
+          <div className="w-full sm:max-w-lg card !rounded-b-none sm:!rounded-b-2xl !p-5 max-h-[92vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-3 mb-3">
+              <MethodIcon m={method} />
+              <h3 className="font-bold flex-1"><CEText text={method.name} /></h3>
+              <button onClick={() => setMethod(null)} className="text-xl leading-none px-2" style={{ color: 'var(--fg3)' }}>×</button>
+            </div>
+            <PayFlow key={method.id} method={method} presetAmount={preset} onCredited={() => router.refresh()} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

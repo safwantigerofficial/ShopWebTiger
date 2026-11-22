@@ -1,6 +1,7 @@
 import { requireUserOrRedirect } from '../../lib/guard';
 import { expireStaleUserDeposits, listDeposits, listPaymentMethods } from '../../db/queries';
 import { WalletTopup } from './TopupPanel';
+import ShowMore from '../../components/ShowMore';
 import PendingResume from '../../components/PendingResume';
 
 export const dynamic = 'force-dynamic';
@@ -54,13 +55,14 @@ export default async function WalletPage() {
 
       <section className="mt-7">
         <h2 className="font-bold text-lg">Recent top-ups</h2>
-        <div className="mt-3 space-y-2">
+        <div className="mt-3">
           {deposits.length === 0 && (
             <div className="rounded-xl p-6 text-sm text-center"
               style={{ border: '1.5px dashed var(--border2)', color: 'var(--fg2)' }}>
               No entries yet
             </div>
           )}
+          <ShowMore max={3}>
           {deposits.map((d) => (
             <div key={d.id} className="card flex items-center justify-between !py-3.5">
               <div>
@@ -74,6 +76,7 @@ export default async function WalletPage() {
               }`}>{d.status}</span>
             </div>
           ))}
+          </ShowMore>
         </div>
       </section>
     </div>
