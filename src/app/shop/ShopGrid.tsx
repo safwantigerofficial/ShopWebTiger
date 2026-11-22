@@ -145,7 +145,7 @@ export default function ShopGrid({
               const out = !p.unlimited_stock && p.stock <= 0;
               return (
                 <Link key={p.id} href={loggedIn ? `/product/${p.id}` : '/login'}
-                  className="card !py-2 !px-2.5 flex items-center gap-2 !rounded-lg"
+                  className="card !py-2 !px-2.5 flex items-center gap-2 !rounded-2xl"
                   style={cardStyle(p)}>
                   <div className="w-8 h-8 rounded-md flex items-center justify-center shrink-0"
                     style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>

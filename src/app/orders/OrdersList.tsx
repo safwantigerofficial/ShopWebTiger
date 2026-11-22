@@ -27,18 +27,18 @@ export default function OrdersList({ orders, tutorials }: { orders: DBOrder[]; t
       <div className="flex gap-2">
         {tabs.map((t) => (
           <button key={t} onClick={() => setTab(t)}
-            className={`chip !px-5 !py-2 !text-sm ${tab === t ? 'chip-active' : 'chip-grey'}`}>
+            className={`chip !px-3.5 !py-1.5 !text-xs sm:!px-5 sm:!py-2 sm:!text-sm ${tab === t ? 'chip-active' : 'chip-grey'}`}>
             {t}
           </button>
         ))}
       </div>
 
-      <div className="mt-4 rounded-2xl p-8 text-center"
+      <div className="mt-3 rounded-2xl p-5 sm:p-8 text-center"
         style={{ border: '1.5px dashed var(--border2)', background: 'transparent' }}>
         {filtered.length === 0 && (
           <>
-            <p className="text-[15px]" style={{ color: 'var(--fg2)' }}>No orders yet</p>
-            <Link href="/shop" className="btn-primary !px-6 !py-2.5 mt-4 inline-flex text-sm">
+            <p className="text-sm sm:text-[15px]" style={{ color: 'var(--fg2)' }}>No orders yet</p>
+            <Link href="/shop" className="btn-primary !px-5 !py-2 mt-3 inline-flex text-xs sm:text-sm">
               Continue shopping
             </Link>
           </>
@@ -46,12 +46,12 @@ export default function OrdersList({ orders, tutorials }: { orders: DBOrder[]; t
       </div>
 
       {filtered.length > 0 && (
-        <div className="space-y-3 -mt-4">
+        <div className="space-y-2.5 -mt-4">
           {filtered.map((o) => (
             <details key={o.id} className="card group !p-0 overflow-hidden">
-              <summary className="cursor-pointer list-none flex items-center justify-between gap-3 p-4">
+              <summary className="cursor-pointer list-none flex items-center justify-between gap-3 p-3 sm:p-4">
                 <div>
-                  <div className="font-semibold text-[15px]">{o.product_name} ×{o.qty}</div>
+                  <div className="font-semibold text-sm sm:text-[15px]">{o.product_name} ×{o.qty}</div>
                   <div className="text-xs mt-0.5" style={{ color: 'var(--fg3)' }}>
                     {publicOrderId(o)} · {new Date(o.created_at).toLocaleString()}
                   </div>
@@ -63,7 +63,7 @@ export default function OrdersList({ orders, tutorials }: { orders: DBOrder[]; t
                   <div className="text-[11px] group-open:hidden" style={{ color: 'var(--fg3)' }}>tap to view</div>
                 </div>
               </summary>
-              <div className="mx-4 mb-4 rounded-xl p-3.5 text-sm font-mono whitespace-pre-wrap break-all relative"
+              <div className="mx-3 mb-3 sm:mx-4 sm:mb-4 rounded-xl p-3 text-xs sm:text-sm font-mono whitespace-pre-wrap break-all relative"
                 style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>
                 {o.delivered_items && (
                   <button
@@ -82,10 +82,10 @@ export default function OrdersList({ orders, tutorials }: { orders: DBOrder[]; t
                 )}
                 {o.delivered_items ?? 'Processing…'}
               </div>
-              <div className="mx-4 mb-4 flex flex-col sm:flex-row gap-2">
+              <div className="mx-3 mb-3 sm:mx-4 sm:mb-4 flex flex-col sm:flex-row gap-2">
                 {o.delivered_items && (
                   <button
-                    className="btn-ghost sm:flex-1 !py-2.5 text-sm"
+                    className="btn-ghost sm:flex-1 !py-2 text-xs sm:text-sm"
                     onClick={(e) => {
                       e.preventDefault();
                       downloadTxt(
@@ -99,7 +99,7 @@ export default function OrdersList({ orders, tutorials }: { orders: DBOrder[]; t
                 )}
                 <div className="sm:flex-1"><UsingMethod t={o.product_id != null ? tutorials[o.product_id] : null} /></div>
               </div>
-              <div className="mx-4 mb-4">
+              <div className="mx-3 mb-3 sm:mx-4 sm:mb-4">
                 <SupportLink
                   issue={`Hi, I have an issue with order ${publicOrderId(o)} (${o.product_name} ×${o.qty}, $${Number(o.total).toFixed(2)}).`}
                   label="Report an issue with this order"

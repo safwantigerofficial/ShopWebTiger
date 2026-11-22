@@ -14,9 +14,9 @@ export default async function ProfilePage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-extrabold tracking-tight">{name}</h1>
+      <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight">{name}</h1>
       <AvatarPicker name={name} />
-      <p className="mt-1.5 text-[15px]" style={{ color: 'var(--fg2)' }}>
+      <p className="mt-1 text-sm sm:text-[15px]" style={{ color: 'var(--fg2)' }}>
         Your orders, wallet and next steps, in one place.
       </p>
 
@@ -36,20 +36,20 @@ export default async function ProfilePage() {
           { href: '/wallet', icon: '6028517788606272241', title: 'Wallet', sub: `$${user.balance.toFixed(2)}` },
           { href: '/wallet/topup', icon: '6043882458582095360', title: 'Top up', sub: 'Add funds' },
         ].map((c) => (
-          <Link key={c.href} href={c.href} className="card card-hover !p-5 flex items-center justify-between">
+          <Link key={c.href} href={c.href} className="card card-hover !p-3.5 sm:!p-5 flex items-center justify-between">
             <div>
-              <div className="font-semibold text-[15px]">
+              <div className="font-semibold text-sm sm:text-[15px]">
                 <span className="mr-2"><CE id={c.icon} /></span>{c.title}
               </div>
-              <div className="text-sm mt-1" style={{ color: 'var(--fg2)' }}>{c.sub}</div>
+              <div className="text-xs sm:text-sm mt-0.5" style={{ color: 'var(--fg2)' }}>{c.sub}</div>
             </div>
             <span style={{ color: 'var(--fg3)' }}>↗</span>
           </Link>
         ))}
       </div>
 
-      <h2 className="font-bold text-lg mt-8">Pending activity</h2>
-      <div className="mt-3 rounded-2xl p-6 text-[15px] text-center"
+      <h2 className="font-bold text-sm sm:text-lg mt-6 sm:mt-8">Pending activity</h2>
+      <div className="mt-2 rounded-2xl p-4 text-sm text-center"
         style={{ border: '1.5px dashed var(--border2)', color: 'var(--fg2)' }}>
         You have no pending activity.
       </div>

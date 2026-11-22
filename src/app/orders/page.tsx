@@ -18,8 +18,8 @@ export default async function OrdersPage() {
 
   return (
     <div>
-      <div className="text-sm font-semibold" style={{ color: 'var(--fg2)' }}>Customer area</div>
-      <h1 className="text-3xl font-extrabold tracking-tight mt-1">My orders</h1>
+      <div className="text-xs sm:text-sm font-semibold" style={{ color: 'var(--fg2)' }}>Customer area</div>
+      <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight mt-1">My orders</h1>
       <OrdersList orders={JSON.parse(JSON.stringify(orders))} tutorials={tutorials} />
     </div>
   );

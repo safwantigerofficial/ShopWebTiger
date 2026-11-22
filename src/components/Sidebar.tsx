@@ -31,14 +31,14 @@ export default function Sidebar({ loggedIn, balance }: { loggedIn: boolean; bala
 
       <div className="px-5">
         {loggedIn && balance !== null ? (
-          <div className={`rounded-xl text-white ${c ? 'p-2.5' : 'p-3.5'}`} style={{ background: 'linear-gradient(135deg,#f59a3c,#d9620a)' }}>
+          <div className={`rounded-xl text-white ${c ? 'p-2.5' : 'p-3.5'}`} style={{ background: 'linear-gradient(135deg,#14b8a6,#0f766e)' }}>
             <div className="flex items-center gap-1.5 text-[13px] font-medium opacity-90">
               <img src="/api/emoji?id=6028517788606272241" alt="" width={15} height={15} className="w-[15px] h-[15px]" />
               {t('balance')}
             </div>
             <div className={`font-extrabold mt-0.5 ${c ? 'text-lg' : 'text-2xl'}`}>${balance.toFixed(2)}</div>
             <Link href="/wallet/topup"
-              className={`flex items-center justify-between rounded-lg bg-white font-semibold ${c ? 'mt-2 text-xs px-2.5 py-1.5' : 'mt-3 text-sm px-3 py-2'}`} style={{ color: '#c2570a' }}>
+              className={`flex items-center justify-between rounded-lg bg-white font-semibold ${c ? 'mt-2 text-xs px-2.5 py-1.5' : 'mt-3 text-sm px-3 py-2'}`} style={{ color: '#0f766e' }}>
               <img src="/api/emoji?id=5197434882321567830" alt="" width={15} height={15} className="w-[15px] h-[15px]" />
               {t('topup')} <span className="text-lg leading-none">+</span>
             </Link>

@@ -15,13 +15,13 @@ export default async function WalletPage() {
 
   return (
     <div>
-      <div className="text-sm font-semibold" style={{ color: 'var(--fg2)' }}>Customer area</div>
-      <h1 className="text-2xl font-extrabold tracking-tight mt-1">Wallet</h1>
+      <div className="text-xs sm:text-sm font-semibold" style={{ color: 'var(--fg2)' }}>Customer area</div>
+      <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight mt-1">Wallet</h1>
 
       <div className="card mt-4 flex items-center justify-between">
         <div>
           <div className="text-xs" style={{ color: 'var(--fg2)' }}>Balance</div>
-          <div className="text-2xl font-extrabold mt-0.5">{user.balance.toFixed(2)} USD</div>
+          <div className="text-xl sm:text-2xl font-extrabold mt-0.5">{user.balance.toFixed(2)} USD</div>
         </div>
         <Link href="/wallet/topup" className="btn-primary !px-4 !py-2 text-sm">
           <CE id="6043882458582095360" /> Top up
@@ -29,7 +29,7 @@ export default async function WalletPage() {
       </div>
 
       <section className="mt-6">
-        <h2 className="font-bold text-base">Pending activity</h2>
+        <h2 className="font-bold text-sm sm:text-base">Pending activity</h2>
         {pendingDeposits.length === 0 && (
           <div className="rounded-xl p-4 text-sm text-center mt-2.5"
             style={{ border: '1.5px dashed var(--border2)', color: 'var(--fg2)' }}>
@@ -45,7 +45,7 @@ export default async function WalletPage() {
               <div key={d.id} className="card !py-2.5">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-sm font-semibold">${Number(d.amount).toFixed(2)} · {d.method}</div>
+                    <div className="text-xs sm:text-sm font-semibold">${Number(d.amount).toFixed(2)} · {d.method}</div>
                     <div className="text-xs mt-0.5" style={{ color: 'var(--fg3)' }}>
                       {new Date(d.created_at).toLocaleString()}
                     </div>
@@ -64,7 +64,7 @@ export default async function WalletPage() {
       </section>
 
       <section className="mt-6">
-        <h2 className="font-bold text-base">Recent top-ups</h2>
+        <h2 className="font-bold text-sm sm:text-base">Recent top-ups</h2>
         <div className="mt-2.5">
           {deposits.length === 0 && (
             <div className="rounded-xl p-4 text-sm text-center mt-2.5"
@@ -76,7 +76,7 @@ export default async function WalletPage() {
           {deposits.map((d) => (
             <div key={d.id} className="card flex items-center justify-between !py-2.5">
               <div>
-                <div className="text-sm font-semibold">${Number(d.amount).toFixed(2)} · {d.method}</div>
+                <div className="text-xs sm:text-sm font-semibold">${Number(d.amount).toFixed(2)} · {d.method}</div>
                 <div className="text-xs mt-0.5" style={{ color: 'var(--fg3)' }}>
                   {new Date(d.created_at).toLocaleString()}
                 </div>
