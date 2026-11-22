@@ -25,7 +25,7 @@ export default function ShopGrid({
 }: {
   sections: Section[];
   buckets: Bucket[];
-  tints: Record<number, string>;
+  tints: Record<number, string | undefined>;
   loggedIn: boolean;
 }) {
   const [q, setQ] = useState('');
