@@ -147,9 +147,9 @@ export default function ShopGrid({
                 <Link key={p.id} href={loggedIn ? `/product/${p.id}` : '/login'}
                   className="card !py-2 !px-2.5 flex items-center gap-2 !rounded-lg"
                   style={cardStyle(p)}>
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+                  <div className="w-8 h-8 rounded-md flex items-center justify-center shrink-0"
                     style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>
-                    <ProductIcon emojiId={p.emoji_id} emoji={p.emoji} size={20} />
+                    <ProductIcon emojiId={p.emoji_id} emoji={p.emoji} size={18} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="font-semibold text-[13px] leading-snug">{ceText(p.name)}</div>
