@@ -42,16 +42,19 @@ export default async function ShopPage() {
   // category default. Out-of-stock = red. In-stock default = neutral (no tint).
   const oosColor = modeOf('color.out_of_stock') ?? 'red';
   const catDefault = modeOf('color.category.default');
-  const tintOf = (p: (typeof flat)[number]): string | undefined => {
+  // Explicit bot colors win; otherwise: first 4 in shop order = green,
+  // the rest of in-stock = blue, out-of-stock = red.
+  const tintOf = (p: (typeof flat)[number], i: number): string => {
     const inStock = p.unlimited_stock || p.stock > 0;
     if (!inStock) return oosColor;
     return (
       modeOf(`color.product.${p.id}`) ??
       (p.category_id != null ? modeOf(`color.category.${p.category_id}`) : undefined) ??
-      catDefault
+      catDefault ??
+      (i < 4 ? 'green' : 'blue')
     );
   };
-  const tints = Object.fromEntries(flat.map((p) => [p.id, tintOf(p)]));
+  const tints = Object.fromEntries(flat.map((p, i) => [p.id, tintOf(p, i)]));
   const visible = sections.filter((s) => s.products.length > 0);
   if (flat.length > 0) {
     visible.length = 0;
