@@ -27,12 +27,18 @@ export default async function WalletPage() {
       </div>
 
       <div id="topup" className="mt-6">
-        <TopupPanel methods={methods} />
+        <TopupPanel methods={methods} balance={user.balance} />
       </div>
 
-      {pendingDeposits.length > 0 && (
-        <section className="mt-7">
-          <h2 className="font-bold text-lg">Pending top-ups</h2>
+      <section className="mt-7">
+        {pendingDeposits.length === 0 && (
+          <div className="rounded-xl p-6 text-sm text-center"
+            style={{ border: '1.5px dashed var(--border2)', color: 'var(--fg2)' }}>
+            You have no pending activity.
+          </div>
+        )}
+        {pendingDeposits.length > 0 && (<>
+          <h2 className="font-bold text-lg">Pending activity</h2>
           <div className="mt-3 space-y-2">
             {pendingDeposits.map((d) => {
               const m = methods.find((x) => x.name === d.method);
@@ -54,8 +60,8 @@ export default async function WalletPage() {
               );
             })}
           </div>
-        </section>
-      )}
+        </>)}
+      </section>
 
       <section className="mt-7">
         <h2 className="font-bold text-lg">Recent top-ups</h2>

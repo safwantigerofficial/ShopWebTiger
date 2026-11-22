@@ -18,37 +18,71 @@ export function MethodIcon({ m }: { m: DBPaymentMethod }) {
   return <CE id={PROVIDER_ICON[m.provider] ?? '5386367538735104399'} size={22} />;
 }
 
-export default function TopupPanel({ methods }: { methods: DBPaymentMethod[] }) {
-  const [method, setMethod] = useState<DBPaymentMethod | null>(null);
-  const router = useRouter();
+function Radio({ on }: { on: boolean }) {
+  return (
+    <span className="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0"
+      style={{ borderColor: on ? 'var(--primary)' : 'var(--border2)' }}>
+      {on && <span className="w-2.5 h-2.5 rounded-full" style={{ background: 'var(--primary)' }} />}
+    </span>
+  );
+}
 
-  if (!method) {
-    return (
-      <div className="card !p-5">
-        <div className="flex items-center gap-2 font-bold mb-3">
-          <img src="/api/emoji?id=6043882458582095360" alt="" width={20} height={20} /> Top Up Wallet
-        </div>
-        <div className="text-sm mb-3" style={{ color: 'var(--fg2)' }}>Select a payment method</div>
-        <div className="space-y-2">
-          {methods.map((m) => (
-            <button key={m.id} onClick={() => setMethod(m)}
-              className="w-full flex items-center justify-between rounded-xl border px-4 py-3 text-left font-semibold text-[15px]"
-              style={{ borderColor: 'var(--border)', color: 'var(--fg)' }}>
-              <span className="flex items-center gap-3"><MethodIcon m={m} /><CEText text={m.name} /></span>
-              <span className="text-xs font-normal" style={{ color: 'var(--fg3)' }}>{m.min_amount ? `min $${m.min_amount}` : ''}</span>
-            </button>
-          ))}
-          {methods.length === 0 && <div className="text-sm" style={{ color: 'var(--fg3)' }}>No payment methods configured. Please contact support.</div>}
-        </div>
-      </div>
-    );
-  }
+export default function TopupPanel({ methods, balance }: { methods: DBPaymentMethod[]; balance: number }) {
+  const [method, setMethod] = useState<DBPaymentMethod | null>(null);
+  const [amount, setAmount] = useState('');
+  const router = useRouter();
+  const preset = Number(amount) > 0 ? Number(amount) : undefined;
 
   return (
-    <div className="card !p-5">
-      <button onClick={() => setMethod(null)} className="text-sm mb-3 inline-flex items-center gap-1" style={{ color: 'var(--fg2)' }}>← All methods</button>
-      <div className="flex items-center gap-3 mb-3"><MethodIcon m={method} /><h3 className="font-bold"><CEText text={method.name} /></h3></div>
-      <PayFlow key={method.id} method={method} onCredited={() => router.refresh()} />
+    <div className="lg:flex lg:gap-6 lg:items-start">
+      {/* Left: title + balance */}
+      <div className="lg:w-[280px] shrink-0 mb-4 lg:mb-0">
+        <h2 className="text-2xl font-extrabold tracking-tight">Top up</h2>
+        <div className="text-sm mt-1" style={{ color: 'var(--fg2)' }}>
+          Balance <b className="text-base" style={{ color: 'var(--fg)' }}>{balance.toFixed(2)} USD</b>
+        </div>
+      </div>
+
+      <div className="card !p-5 flex-1">
+        {!method ? (
+          <>
+            <div className="font-bold">Choose an amount</div>
+            <div className="text-sm font-semibold mt-3.5 mb-1.5" style={{ color: 'var(--fg2)' }}>Amount (USD)</div>
+            <div className="relative">
+              <input
+                className="input !pr-14"
+                inputMode="decimal"
+                placeholder="0.00"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value.replace(/[^0-9.]/g, ''))}
+              />
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm" style={{ color: 'var(--fg3)' }}>USD</span>
+            </div>
+            <div className="text-sm font-semibold mt-4 mb-2" style={{ color: 'var(--fg2)' }}>Payment method</div>
+            <div className="grid grid-cols-2 lg:grid-cols-1 gap-2.5">
+              {methods.map((m) => (
+                <button key={m.id} onClick={() => setMethod(m)}
+                  className="text-left rounded-xl border px-3.5 py-3 flex items-center gap-3"
+                  style={{ borderColor: 'var(--border)', color: 'var(--fg)' }}>
+                  <Radio on={false} />
+                  <MethodIcon m={m} />
+                  <span className="flex-1 min-w-0 font-semibold text-sm sm:text-[15px]"><CEText text={m.name} /></span>
+                </button>
+              ))}
+              {methods.length === 0 && <div className="text-sm col-span-2" style={{ color: 'var(--fg3)' }}>No payment methods configured. Please contact support.</div>}
+            </div>
+            <p className="text-xs mt-3" style={{ color: 'var(--fg3)' }}>
+              Payment details appear after you confirm your method.
+            </p>
+          </>
+        ) : (
+          <>
+            <button onClick={() => setMethod(null)} className="text-sm mb-3 inline-flex items-center gap-1" style={{ color: 'var(--fg2)' }}>← All methods</button>
+            <div className="flex items-center gap-3 mb-3"><MethodIcon m={method} /><h3 className="font-bold"><CEText text={method.name} /></h3></div>
+            <PayFlow key={method.id} method={method} presetAmount={preset} onCredited={() => router.refresh()} />
+          </>
+        )}
+      </div>
     </div>
   );
 }

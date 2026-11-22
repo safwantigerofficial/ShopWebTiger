@@ -3,6 +3,7 @@ import { requireUserOrRedirect } from '../../../lib/guard';
 import { getProduct, listPaymentMethods } from '../../../db/queries';
 import { applyUserPriceToProduct } from '../../../lib/services/pricing';
 import CheckoutPanel from './CheckoutPanel';
+import CEText from '../../../components/CEText';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,10 +21,12 @@ export default async function CheckoutPage({
   const p = await applyUserPriceToProduct(user.telegram_id, raw);
   const qty = Math.max(1, Math.min(QTY_MAX, Number(searchParams.qty) || 1));
   const methods = await listPaymentMethods();
+  const ceTitle = p.name;
   const preorder = !p.unlimited_stock && p.stock < qty;
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-5xl mx-auto">
+      <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-5"><CEText text={ceTitle} /></h1>
         <CheckoutPanel
           productId={p.id}
           unitPrice={p.price}
