@@ -12,8 +12,8 @@ export default function PendingResume({
   const [open, setOpen] = useState(false);
   return (
     <div>
-      <button className="btn-ghost !py-1.5 !px-3 text-xs" onClick={() => setOpen((v) => !v)}>
-        <CE id="5854985398857503237" size={13} /> {open ? 'Hide' : 'Resume'}
+      <button className="btn-ghost !py-1 !px-2 !text-[11px] !rounded-lg" onClick={() => setOpen((v) => !v)}>
+        <CE id="5854985398857503237" size={11} /> {open ? 'Hide' : 'Resume'}
       </button>
       {open && (
         <div className="mt-3 text-left">

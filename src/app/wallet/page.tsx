@@ -1,6 +1,7 @@
 import { requireUserOrRedirect } from '../../lib/guard';
 import { expireStaleUserDeposits, listDeposits, listPaymentMethods } from '../../db/queries';
-import { WalletTopup } from './TopupPanel';
+import Link from 'next/link';
+import CE from '../../components/CE';
 import ShowMore from '../../components/ShowMore';
 import PendingResume from '../../components/PendingResume';
 
@@ -18,22 +19,31 @@ export default async function WalletPage() {
       <div className="text-sm font-semibold" style={{ color: 'var(--fg2)' }}>Customer area</div>
       <h1 className="text-2xl font-extrabold tracking-tight mt-1">Wallet</h1>
 
-      <WalletTopup methods={methods} balance={user.balance} />
+      <div className="card mt-4 flex items-center justify-between">
+        <div>
+          <div className="text-xs" style={{ color: 'var(--fg2)' }}>Balance</div>
+          <div className="text-2xl font-extrabold mt-0.5">{user.balance.toFixed(2)} USD</div>
+        </div>
+        <Link href="/wallet/topup" className="btn-primary !px-4 !py-2 text-sm">
+          <CE id="6043882458582095360" /> Top up
+        </Link>
+      </div>
 
-      <section className="mt-7">
+      <section className="mt-6">
+        <h2 className="font-bold text-base">Pending activity</h2>
         {pendingDeposits.length === 0 && (
-          <div className="rounded-xl p-6 text-sm text-center"
+          <div className="rounded-xl p-4 text-sm text-center mt-2.5"
             style={{ border: '1.5px dashed var(--border2)', color: 'var(--fg2)' }}>
             You have no pending activity.
           </div>
         )}
         {pendingDeposits.length > 0 && (<>
-          <h2 className="font-bold text-lg">Pending activity</h2>
-          <div className="mt-3 space-y-2">
+          <div className="mt-2.5">
+            <ShowMore max={3}>
             {pendingDeposits.map((d) => {
               const m = methods.find((x) => x.name === d.method);
               return (
-              <div key={d.id} className="card !py-3.5">
+              <div key={d.id} className="card !py-2.5">
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-sm font-semibold">${Number(d.amount).toFixed(2)} · {d.method}</div>
@@ -49,22 +59,23 @@ export default async function WalletPage() {
               </div>
               );
             })}
+            </ShowMore>
           </div>
         </>)}
       </section>
 
-      <section className="mt-7">
-        <h2 className="font-bold text-lg">Recent top-ups</h2>
-        <div className="mt-3">
+      <section className="mt-6">
+        <h2 className="font-bold text-base">Recent top-ups</h2>
+        <div className="mt-2.5">
           {deposits.length === 0 && (
-            <div className="rounded-xl p-6 text-sm text-center"
+            <div className="rounded-xl p-4 text-sm text-center mt-2.5"
               style={{ border: '1.5px dashed var(--border2)', color: 'var(--fg2)' }}>
               No entries yet
             </div>
           )}
           <ShowMore max={3}>
           {deposits.map((d) => (
-            <div key={d.id} className="card flex items-center justify-between !py-3.5">
+            <div key={d.id} className="card flex items-center justify-between !py-2.5">
               <div>
                 <div className="text-sm font-semibold">${Number(d.amount).toFixed(2)} · {d.method}</div>
                 <div className="text-xs mt-0.5" style={{ color: 'var(--fg3)' }}>

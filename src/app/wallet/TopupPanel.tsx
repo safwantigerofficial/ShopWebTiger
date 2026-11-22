@@ -27,24 +27,6 @@ function Radio({ on }: { on: boolean }) {
   );
 }
 
-export function WalletTopup({ methods, balance }: { methods: DBPaymentMethod[]; balance: number }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <div className="card mt-4 flex items-center justify-between">
-        <div>
-          <div className="text-sm" style={{ color: 'var(--fg2)' }}>Balance</div>
-          <div className="text-2xl font-extrabold mt-0.5">{balance.toFixed(2)} USD</div>
-        </div>
-        <button onClick={() => setOpen((v) => !v)} className="btn-primary !px-5 !py-2.5 text-sm">
-          <CE id="6043882458582095360" /> Top up
-        </button>
-      </div>
-      {open && <div id="topup" className="mt-4"><TopupPanel methods={methods} balance={balance} /></div>}
-    </>
-  );
-}
-
 export default function TopupPanel({ methods, balance }: { methods: DBPaymentMethod[]; balance: number }) {
   const [method, setMethod] = useState<DBPaymentMethod | null>(null);
   const [amount, setAmount] = useState('');
@@ -54,21 +36,21 @@ export default function TopupPanel({ methods, balance }: { methods: DBPaymentMet
   return (
     <div className="lg:flex lg:gap-6 lg:items-start">
       {/* Left: title + balance */}
-      <div className="lg:w-[280px] shrink-0 mb-4 lg:mb-0">
-        <h2 className="text-2xl font-extrabold tracking-tight">Top up</h2>
+      <div className="lg:w-[220px] shrink-0 mb-3 lg:mb-0">
+        <h1 className="text-xl font-extrabold tracking-tight">Top up</h1>
         <div className="text-sm mt-1" style={{ color: 'var(--fg2)' }}>
-          Balance <b className="text-base" style={{ color: 'var(--fg)' }}>{balance.toFixed(2)} USD</b>
+          Balance <b className="text-sm" style={{ color: 'var(--fg)' }}>{balance.toFixed(2)} USD</b>
         </div>
       </div>
 
-      <div className="card !p-5 flex-1">
+      <div className="card !p-4 flex-1">
         {!method ? (
           <>
-            <div className="font-bold">Choose an amount</div>
-            <div className="text-sm font-semibold mt-3.5 mb-1.5" style={{ color: 'var(--fg2)' }}>Amount (USD)</div>
+            <div className="font-bold text-sm">Choose an amount</div>
+            <div className="text-xs font-semibold mt-3 mb-1" style={{ color: 'var(--fg2)' }}>Amount (USD)</div>
             <div className="relative">
               <input
-                className="input !pr-14"
+                className="input !py-2 !pr-14"
                 inputMode="decimal"
                 placeholder="0.00"
                 value={amount}
@@ -76,15 +58,15 @@ export default function TopupPanel({ methods, balance }: { methods: DBPaymentMet
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm" style={{ color: 'var(--fg3)' }}>USD</span>
             </div>
-            <div className="text-sm font-semibold mt-4 mb-2" style={{ color: 'var(--fg2)' }}>Payment method</div>
-            <div className="grid grid-cols-2 lg:grid-cols-1 gap-2.5">
+            <div className="text-xs font-semibold mt-3 mb-1.5" style={{ color: 'var(--fg2)' }}>Payment method</div>
+            <div className="grid grid-cols-2 gap-2">
               {methods.map((m) => (
                 <button key={m.id} onClick={() => setMethod(m)}
-                  className="text-left rounded-xl border px-3.5 py-3 flex items-center gap-3"
+                  className="text-left rounded-lg border px-2.5 py-2 flex items-center gap-2"
                   style={{ borderColor: 'var(--border)', color: 'var(--fg)' }}>
                   <Radio on={false} />
                   <MethodIcon m={m} />
-                  <span className="flex-1 min-w-0 font-semibold text-sm sm:text-[15px]"><CEText text={m.name} /></span>
+                  <span className="flex-1 min-w-0 font-semibold text-[13px] leading-tight"><CEText text={m.name} /></span>
                 </button>
               ))}
               {methods.length === 0 && <div className="text-sm col-span-2" style={{ color: 'var(--fg3)' }}>No payment methods configured. Please contact support.</div>}

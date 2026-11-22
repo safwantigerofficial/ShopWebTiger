@@ -72,7 +72,7 @@ export default function BuffPanel({ balance }: { balance: number }) {
           </div>
           <div className="text-xs text-slate-500">Wallet: ${balance.toFixed(2)}</div>
           {balance < quote.priceUsdt ? (
-            <Link href="/wallet" className="btn-primary w-full block text-center">Top up wallet first</Link>
+            <Link href="/wallet/topup" className="btn-primary w-full block text-center">Top up wallet first</Link>
           ) : (
             <button className="btn-primary w-full" disabled={busy} onClick={buy}>
               {busy ? 'Placing order…' : `<CE id="5854985398857503237" />  Confirm & Pay $${quote.priceUsdt.toFixed(2)}`}

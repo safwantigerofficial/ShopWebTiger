@@ -173,7 +173,7 @@ export default function CheckoutPanel({
             <div className="rounded-xl p-3 text-sm mb-2.5"
               style={{ background: 'rgba(234,179,8,.1)', border: '1px solid rgba(234,179,8,.35)' }}>
               Your wallet balance is insufficient. Add funds before confirming this payment.
-              <Link href="/wallet" className="btn-ghost mt-2 !py-1.5 px-4 text-sm inline-block">Add funds</Link>
+              <Link href="/wallet/topup" className="btn-ghost mt-2 !py-1 px-3 text-xs inline-block">Add funds</Link>
             </div>
           )}
           <div className="grid sm:grid-cols-2 gap-2.5">

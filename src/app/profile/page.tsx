@@ -34,7 +34,7 @@ export default async function ProfilePage() {
         {[
           { href: '/orders', icon: '5893255507380014983', title: 'My orders', sub: 'Order history' },
           { href: '/wallet', icon: '6028517788606272241', title: 'Wallet', sub: `$${user.balance.toFixed(2)}` },
-          { href: '/wallet#topup', icon: '6043882458582095360', title: 'Top up', sub: 'Add funds' },
+          { href: '/wallet/topup', icon: '6043882458582095360', title: 'Top up', sub: 'Add funds' },
         ].map((c) => (
           <Link key={c.href} href={c.href} className="card card-hover !p-5 flex items-center justify-between">
             <div>
