@@ -1,6 +1,7 @@
 'use client';
 import { useState, useTransition } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { buyProduct } from '../../actions/shop';
 import PayFlow from '../../../components/PayFlow';
 import { MethodIcon } from '../../wallet/TopupPanel';
@@ -48,15 +49,18 @@ function Tabs({ active }: { active: number }) {
 }
 
 export default function CheckoutPanel({
-  productId, unitPrice, maxQty, balance, productName, methods, preorder, qty: initQty, tutorial,
+  productId, unitPrice, maxQty, balance, productName, methods, preorder, qty: initQty, tutorial, methodId,
 }: {
   productId: number; unitPrice: number; maxQty: number; balance: number;
   productName: string; methods: DBPaymentMethod[]; preorder: boolean; qty: number; tutorial: Tutorial;
+  methodId?: number;
 }) {
+  const router = useRouter();
+  const initMethod = methodId ? methods.find((x) => x.id === methodId) ?? null : null;
   // Buy goes straight to payment selection (direct pay).
-  const [step, setStep] = useState<'method' | 'pay' | 'done'>('method');
+  const [step, setStep] = useState<'method' | 'pay' | 'done'>(initMethod ? 'pay' : 'method');
   const [qty] = useState(initQty);
-  const [method, setMethod] = useState<'wallet' | DBPaymentMethod | null>(null);
+  const [method, setMethod] = useState<'wallet' | DBPaymentMethod | null>(initMethod);
   const [busy, start] = useTransition();
   const [msg, setMsg] = useState('');
   const [copied, setCopied] = useState(false);
@@ -216,14 +220,14 @@ export default function CheckoutPanel({
           {/* Desktop: right-aligned confirm. Mobile: sticky bottom bar. */}
           <div className="hidden sm:flex justify-end mt-4">
             <button className="btn-primary !px-8" disabled={!method || busy}
-              onClick={() => (method === 'wallet' ? buyWallet() : setStep('pay'))}>
+              onClick={() => (method === 'wallet' ? buyWallet() : method && router.push(`/checkout/${productId}?qty=${qty}&m=${method.id}`))}>
               {busy ? 'Processing…' : 'Confirm payment method'}
             </button>
           </div>
           <div className="sm:hidden fixed left-0 right-0 bottom-[64px] z-40 px-4 pb-2"
             style={{ background: 'linear-gradient(to top, var(--bg) 75%, transparent)' }}>
             <button className="btn-primary w-full !py-3.5 font-bold" disabled={!method || busy}
-              onClick={() => (method === 'wallet' ? buyWallet() : setStep('pay'))}>
+              onClick={() => (method === 'wallet' ? buyWallet() : method && router.push(`/checkout/${productId}?qty=${qty}&m=${method.id}`))}>
               {busy ? 'Processing…' : 'Confirm payment method'}
             </button>
           </div>
@@ -233,30 +237,25 @@ export default function CheckoutPanel({
     );
   }
 
-  /* ---------- step 2: transfer & verify (popup window) ---------- */
+  /* ---------- step 2: transfer & verify (own page) ---------- */
   const m = method !== 'wallet' && method ? method : null;
   if (!m) return null;
+  const back = () => router.push(`/checkout/${productId}?qty=${qty}`);
   return (
     <div className="lg:flex lg:gap-6 lg:items-start">
       {summary}
-      <div className="card !p-5 flex-1 mt-4 lg:mt-0 space-y-4">
-        <div className="font-bold text-lg">Your order</div>
+      <div className="card !p-4 sm:!p-5 flex-1 mt-4 lg:mt-0 space-y-4">
+        <button onClick={back} disabled={busy} className="text-sm inline-flex items-center gap-1" style={{ color: 'var(--fg2)' }}>
+          ← Change payment method
+        </button>
         <Tabs active={1} />
-        {msg && <p className="text-sm" style={{ color: 'var(--fg2)' }}>{msg}</p>}
-      </div>
-      <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
-        style={{ background: 'rgba(0,0,0,.55)' }} onClick={() => { if (!busy) { setStep('method'); setMsg(''); } }}>
-        <div className="w-full sm:max-w-lg card !rounded-b-none sm:!rounded-b-2xl !p-5 max-h-[92vh] overflow-y-auto space-y-4"
-          onClick={(e) => e.stopPropagation()}>
-          <div className="flex items-center gap-3">
-            <MethodIcon m={m} />
-            <h3 className="font-bold flex-1"><CEText text={m.name} /></h3>
-            <button onClick={() => { setStep('method'); setMsg(''); }} disabled={busy}
-              className="text-xl leading-none px-2" style={{ color: 'var(--fg3)' }}>×</button>
-          </div>
-          <PayFlow key={m.id} method={m} presetAmount={total} onCredited={onCredited} />
-          {actions}
+        <div className="flex items-center gap-3">
+          <MethodIcon m={m} />
+          <h3 className="font-bold"><CEText text={m.name} /></h3>
         </div>
+        <PayFlow key={m.id} method={m} presetAmount={total} onCredited={onCredited} />
+        {msg && <p className="text-sm" style={{ color: 'var(--fg2)' }}>{msg}</p>}
+        {actions}
       </div>
     </div>
   );

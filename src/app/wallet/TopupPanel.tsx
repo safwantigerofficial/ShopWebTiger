@@ -28,7 +28,6 @@ function Radio({ on }: { on: boolean }) {
 }
 
 export default function TopupPanel({ methods, balance }: { methods: DBPaymentMethod[]; balance: number }) {
-  const [method, setMethod] = useState<DBPaymentMethod | null>(null);
   const [amount, setAmount] = useState('');
   const router = useRouter();
   const preset = Number(amount) > 0 ? Number(amount) : undefined;
@@ -44,8 +43,6 @@ export default function TopupPanel({ methods, balance }: { methods: DBPaymentMet
       </div>
 
       <div className="card !p-4 flex-1">
-        {!method ? (
-          <>
             <div className="font-bold text-sm">Choose an amount</div>
             <div className="text-xs font-semibold mt-3 mb-1" style={{ color: 'var(--fg2)' }}>Amount (USD)</div>
             <div className="relative">
@@ -61,7 +58,7 @@ export default function TopupPanel({ methods, balance }: { methods: DBPaymentMet
             <div className="text-xs font-semibold mt-3 mb-1.5" style={{ color: 'var(--fg2)' }}>Payment method</div>
             <div className="grid grid-cols-2 gap-2">
               {methods.map((m) => (
-                <button key={m.id} onClick={() => setMethod(m)}
+                <button key={m.id} onClick={() => router.push(`/wallet/topup/${m.id}${preset ? `?amount=${preset}` : ''}`)}
                   className="text-left rounded-lg border px-2.5 py-2 flex items-center gap-2"
                   style={{ borderColor: 'var(--border)', color: 'var(--fg)' }}>
                   <Radio on={false} />
@@ -74,24 +71,17 @@ export default function TopupPanel({ methods, balance }: { methods: DBPaymentMet
             <p className="text-xs mt-3" style={{ color: 'var(--fg3)' }}>
               Payment details appear after you confirm your method.
             </p>
-          </>
-        ) : null}
       </div>
-      {/* Payment details open in a popup window, not inline */}
-      {method && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
-          style={{ background: 'rgba(0,0,0,.55)' }} onClick={() => setMethod(null)}>
-          <div className="w-full sm:max-w-lg card !rounded-b-none sm:!rounded-b-2xl !p-5 max-h-[92vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center gap-3 mb-3">
-              <MethodIcon m={method} />
-              <h3 className="font-bold flex-1"><CEText text={method.name} /></h3>
-              <button onClick={() => setMethod(null)} className="text-xl leading-none px-2" style={{ color: 'var(--fg3)' }}>×</button>
-            </div>
-            <PayFlow key={method.id} method={method} presetAmount={preset} onCredited={() => router.refresh()} />
-          </div>
-        </div>
-      )}
+    </div>
+  );
+}
+
+export function TopupPay({ method, amount }: { method: DBPaymentMethod; amount?: number }) {
+  const router = useRouter();
+  return (
+    <div className="card !p-4 sm:!p-5">
+      <div className="flex items-center gap-3 mb-3"><MethodIcon m={method} /><h3 className="font-bold"><CEText text={method.name} /></h3></div>
+      <PayFlow key={method.id} method={method} presetAmount={amount} onCredited={() => router.refresh()} />
     </div>
   );
 }

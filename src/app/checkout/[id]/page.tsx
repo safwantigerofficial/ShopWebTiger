@@ -13,7 +13,7 @@ export default async function CheckoutPage({
   params, searchParams,
 }: {
   params: { id: string };
-  searchParams: { qty?: string };
+  searchParams: { qty?: string; m?: string };
 }) {
   const user = await requireUserOrRedirect();
   const raw = await getProduct(Number(params.id));
@@ -36,6 +36,7 @@ export default async function CheckoutPage({
           methods={methods}
           preorder={preorder}
           qty={qty}
+          methodId={Number(searchParams.m) || undefined}
           tutorial={{ text: p.tutorial_text, url: p.tutorial_url, fileId: p.tutorial_file_id, fileType: p.tutorial_file_type }}
         />
     </div>
