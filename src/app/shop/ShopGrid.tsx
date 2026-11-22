@@ -10,11 +10,11 @@ import CE from '../../components/CE';
 type Section = { category: DBCategory; products: DBProduct[] };
 type Bucket = { key: string; label: string; emojiId: string | null; emoji: string | null; keys: string[]; count: number };
 
-const TINTS: Record<string, { border: string; bg: string } | undefined> = {
-  green: { border: 'rgba(22,163,106,.5)', bg: 'rgba(22,163,106,.07)' },
-  red: { border: 'rgba(220,38,38,.5)', bg: 'rgba(220,38,38,.06)' },
-  blue: { border: 'rgba(99,102,241,.4)', bg: 'rgba(99,102,241,.07)' },
-  yellow: { border: 'rgba(234,179,8,.45)', bg: 'rgba(234,179,8,.07)' },
+const TINTS: Record<string, string | undefined> = {
+  green: '#16a36a',
+  red: '#dc2626',
+  blue: '#4f46e5',
+  yellow: '#d97706',
 };
 
 export default function ShopGrid({
@@ -30,6 +30,7 @@ export default function ShopGrid({
 }) {
   const [q, setQ] = useState('');
   const [inStock, setInStock] = useState(false);
+  const [sort, setSort] = useState<'default' | 'low' | 'high' | 'name'>('default');
   const params = useSearchParams();
   const [bucket, setBucketState] = useState<string | null>(params.get('b'));
   // Sidebar folder links drive ?b=…; keep chip taps in the URL too.
@@ -42,7 +43,7 @@ export default function ShopGrid({
   const activeKeys = buckets.find((b) => b.key === bucket)?.keys;
   const products = useMemo(() => {
     const needle = q.trim().toLowerCase();
-    return sections
+    const filtered = sections
       .flatMap((s) => s.products)
       .filter(
         (p) =>
@@ -50,22 +51,28 @@ export default function ShopGrid({
           (!needle || p.name.toLowerCase().includes(needle)) &&
           (!inStock || p.unlimited_stock || p.stock > 0),
       );
-  }, [sections, q, inStock, activeKeys]);
+    const list = [...filtered];
+    if (sort === 'low') list.sort((a, b) => a.price - b.price);
+    else if (sort === 'high') list.sort((a, b) => b.price - a.price);
+    else if (sort === 'name') list.sort((a, b) => a.name.localeCompare(b.name));
+    return list;
+  }, [sections, q, inStock, activeKeys, sort]);
 
   const totalCount = sections.flatMap((s) => s.products).length;
 
   const stockLine = (p: DBProduct) => {
     const out = !p.unlimited_stock && p.stock <= 0;
+    const low = !out && !p.unlimited_stock && p.stock <= 5;
     return (
-      <span className="text-xs" style={{ color: out ? '#dc2626' : 'var(--ok, #16a36a)' }}>
-        ● {out ? 'Pre-order' : p.unlimited_stock ? 'In stock' : `${p.stock} in stock`}
+      <span className="text-xs font-medium" style={{ color: out ? '#dc2626' : low ? '#ea7a12' : 'var(--ok, #16a36a)' }}>
+        ● {out ? 'Pre-order' : p.unlimited_stock ? 'In stock' : low ? `Only ${p.stock} left` : `${p.stock} in stock`}
       </span>
     );
   };
 
   const cardStyle = (p: DBProduct) => {
-    const t = TINTS[tints[p.id]];
-    return t ? { borderColor: t.border, background: t.bg } : undefined;
+    const c = TINTS[tints[p.id]];
+    return c ? { borderColor: c, boxShadow: `inset 3px 0 0 ${c}` } : undefined;
   };
 
   return (
@@ -75,7 +82,7 @@ export default function ShopGrid({
           <span className="text-[15px]" style={{ color: 'var(--fg2)' }}>
             {products.length} product{products.length === 1 ? '' : 's'}
           </span>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3">
             <div className="relative w-full sm:w-64">
               <input
                 className="input !py-2 pr-9"
@@ -96,6 +103,13 @@ export default function ShopGrid({
                 </svg>
               )}
             </div>
+            <select className="input !w-auto !py-2 !pr-8 !text-sm shrink-0" value={sort}
+              onChange={(e) => setSort(e.target.value as typeof sort)} aria-label="Sort">
+              <option value="default">Featured</option>
+              <option value="low">Price: low → high</option>
+              <option value="high">Price: high → low</option>
+              <option value="name">Name A–Z</option>
+            </select>
             <label className="flex items-center gap-2 text-sm whitespace-nowrap select-none" style={{ color: 'var(--fg2)' }}>
               <input type="checkbox" checked={inStock} onChange={(e) => setInStock(e.target.checked)}
                 className="w-4 h-4 accent-orange-500" />
@@ -148,33 +162,32 @@ export default function ShopGrid({
           </div>
         </div>
 
-        {/* Desktop — compact tile grid */}
-        <div className="hidden sm:grid sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 mt-4">
-          {products.map((p) => {
-            const t = TINTS[tints[p.id]];
-            return (
-              <Link key={p.id} href={loggedIn ? `/product/${p.id}` : '/login'}
-                className="group rounded-xl overflow-hidden flex flex-col border card-hover"
-                style={{ background: t?.bg ?? 'var(--surface)', borderColor: t?.border ?? 'var(--border)' }}>
-                <div className="h-[52px] flex items-center justify-center"
-                  style={{ background: 'linear-gradient(135deg, var(--primary-soft), var(--surface2))' }}>
-                  <div className="w-9 h-9 rounded-lg flex items-center justify-center"
-                    style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
-                    <ProductIcon emojiId={p.emoji_id} emoji={p.emoji} size={22} />
-                  </div>
+        {/* Desktop — slim card grid */}
+        <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mt-4">
+          {products.map((p) => (
+            <Link key={p.id} href={loggedIn ? `/product/${p.id}` : '/login'}
+              className="group card card-hover !p-3 flex flex-col"
+              style={cardStyle(p)}>
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+                  style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>
+                  <ProductIcon emojiId={p.emoji_id} emoji={p.emoji} size={22} />
                 </div>
-                <div className="px-2.5 pt-2 pb-2 flex flex-col flex-1">
-                  <div className="font-semibold text-[13px] leading-snug line-clamp-2 min-h-[34px]" title={p.name}>{ceText(p.name)}</div>
-                  <div className="mt-1 text-[11px]">{stockLine(p)}</div>
-                  <div className="mt-2 pt-2 border-t flex items-center justify-between" style={{ borderColor: 'var(--border)' }}>
-                    <div className="text-[15px] font-extrabold">${p.price.toFixed(2)}</div>
-                    <span className="w-6 h-6 rounded-md flex items-center justify-center text-xs font-bold"
-                      style={{ background: 'var(--primary-soft)', color: 'var(--primary)' }}>›</span>
-                  </div>
+                <div className="min-w-0">
+                  <div className="font-bold text-sm leading-snug truncate" title={p.name}>{ceText(p.name)}</div>
+                  <div className="text-xs mt-0.5" style={{ color: 'var(--fg3)' }}>per unit</div>
                 </div>
-              </Link>
-            );
-          })}
+              </div>
+              <div className="mt-3 flex items-end justify-between gap-2">
+                {stockLine(p)}
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <div className="text-lg font-extrabold">${p.price.toFixed(2)}</div>
+                  <span className="text-base font-bold opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition"
+                    style={{ color: 'var(--primary)' }}>›</span>
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </div>
