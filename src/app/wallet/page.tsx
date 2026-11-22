@@ -3,7 +3,6 @@ import { expireStaleUserDeposits, listDeposits, listPaymentMethods } from '../..
 import Link from 'next/link';
 import CE from '../../components/CE';
 import ShowMore from '../../components/ShowMore';
-import PendingResume from '../../components/PendingResume';
 
 export const dynamic = 'force-dynamic';
 
@@ -52,8 +51,8 @@ export default async function WalletPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    {m && <PendingResume depositId={d.id} method={m} />}
                     <span className="chip chip-amber text-xs">Pending</span>
+                    {m && <Link href={`/wallet/deposit/${d.id}`} className="text-xs font-semibold whitespace-nowrap" style={{ color: 'var(--primary)' }}>Resume →</Link>}
                   </div>
                 </div>
               </div>
@@ -82,9 +81,12 @@ export default async function WalletPage() {
                   {new Date(d.created_at).toLocaleString()}
                 </div>
               </div>
-              <span className={`chip text-xs ${
-                d.status === 'approved' ? 'stock-ok' : d.status === 'pending' ? 'chip-amber' : 'chip-red'
-              }`}>{d.status}</span>
+              <div className="flex items-center gap-2 shrink-0">
+                <span className={`chip text-xs ${
+                  d.status === 'approved' ? 'stock-ok' : d.status === 'pending' ? 'chip-amber' : 'chip-red'
+                }`}>{d.status === 'rejected' && /expired/i.test(d.note ?? '') ? 'expired' : d.status}</span>
+                <Link href={`/wallet/deposit/${d.id}`} className="text-xs font-semibold whitespace-nowrap" style={{ color: 'var(--primary)' }}>View →</Link>
+              </div>
             </div>
           ))}
           </ShowMore>
