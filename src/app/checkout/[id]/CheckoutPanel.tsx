@@ -155,7 +155,7 @@ export default function CheckoutPanel({
         >
           {radio(method === 'wallet')}
           <img src={`/api/emoji?id=${WALLET_EMOJI_ID}`} alt="" width={20} height={20} />
-          <span className="flex-1">
+          <span className="flex-1 min-w-0">
             <span className="font-semibold block">Wallet</span>
             <span className="text-xs" style={{ color: 'var(--fg3)' }}>
               {walletOk
@@ -163,7 +163,7 @@ export default function CheckoutPanel({
                 : `Balance too low — top up below.`}
             </span>
           </span>
-          <b>${total.toFixed(2)}</b>
+          <b className="shrink-0">${total.toFixed(2)}</b>
         </button>
         {methods.map((m) => (
           <button key={m.id}
@@ -176,8 +176,8 @@ export default function CheckoutPanel({
           >
             {radio(method === m)}
             <MethodIcon m={m} />
-            <span className="flex-1 font-semibold"><CEText text={m.name} /></span>
-            <b>${total.toFixed(2)}</b>
+            <span className="flex-1 min-w-0 font-semibold truncate"><CEText text={m.name} /></span>
+            <b className="shrink-0">${total.toFixed(2)}</b>
           </button>
         ))}
         <p className="text-xs pt-1" style={{ color: 'var(--fg3)' }}>

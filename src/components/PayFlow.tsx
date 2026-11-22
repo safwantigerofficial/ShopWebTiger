@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import BotText from './BotText';
 import {
   openTopupMethod, submitTopupAmount, submitTopupReference, requestManualTopup, checkInvoiceTopup, resumeTopup,
@@ -53,6 +53,16 @@ export default function PayFlow({ method, presetAmount, onCredited, resumeDeposi
       openTopupMethod(method.id).then((o) => setStage(o.ok ? { k: 'open', o } : { k: 'error', error: o.error }));
     }
   }, [method.id, resumeDepositId]);
+
+  // Direct pay: when an exact order total is preset and the method asks
+  // for an amount, submit it automatically instead of asking the user.
+  const autoSent = useRef(false);
+  useEffect(() => {
+    if (autoSent.current || !presetAmount) return;
+    if (stage.k !== 'open' || stage.o.input !== 'amount') return;
+    autoSent.current = true;
+    submitAmount();
+  }, [stage, presetAmount]);
 
   function submitAmount() {
     setMsg('');

@@ -31,7 +31,7 @@ export default function BuyPanel({
       </div>
       <button className="btn-primary w-full !py-3"
         onClick={() => router.push(`/checkout/${productId}?qty=${qty}`)}>
-        {preorder ? 'Pre-order' : 'Continue'}  →  ${total.toFixed(2)}
+        {preorder ? 'Pre-order' : 'Buy'} · ${total.toFixed(2)}
       </button>
 
       {/* Mobile — sticky buy bar above the bottom nav */}
