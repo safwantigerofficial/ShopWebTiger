@@ -187,7 +187,7 @@ export default function CheckoutPanel({
               className="text-left rounded-lg border px-3 py-2.5 flex items-center gap-2.5 text-sm"
               style={{
                 borderColor: method === 'wallet' ? 'var(--primary)' : 'var(--border)',
-                background: method === 'wallet' ? 'rgba(37,99,235,.06)' : 'transparent',
+                background: method === 'wallet' ? 'var(--primary-soft)' : 'transparent',
                 opacity: walletOk ? 1 : 0.55,
               }}
               disabled={!walletOk}
@@ -205,7 +205,7 @@ export default function CheckoutPanel({
                 className="text-left rounded-lg border px-3 py-2.5 flex items-center gap-2.5 text-sm"
                 style={{
                   borderColor: method === m ? 'var(--primary)' : 'var(--border)',
-                  background: method === m ? 'rgba(37,99,235,.06)' : 'transparent',
+                  background: method === m ? 'var(--primary-soft)' : 'transparent',
                 }}
                 onClick={() => setMethod(m)}
               >

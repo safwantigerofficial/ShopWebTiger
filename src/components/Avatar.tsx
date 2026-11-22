@@ -51,7 +51,7 @@ export default function Avatar({ size = 32, name = '' }: { size?: number; name?:
   }
   return (
     <span className="rounded-full inline-flex items-center justify-center font-bold text-white shrink-0"
-      style={{ ...box, background: 'linear-gradient(135deg,#2563eb,#1d4ed8)', fontSize: size * 0.42 }}>
+      style={{ ...box, background: 'linear-gradient(135deg,#f59a3c,#d9620a)', fontSize: size * 0.42 }}>
       {(name.trim()[0] ?? 'U').toUpperCase()}
     </span>
   );

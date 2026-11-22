@@ -13,8 +13,9 @@
   --fg3: #8b93a3;
   --brand: #16a36a;
   --brand-hover: #18a86b;
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
+  --primary: #ea7a12;
+  --primary-hover: #d16a08;
+  --primary-soft: rgba(234, 122, 18, 0.1);
   --tiger: #e07a1f;
   --nav: rgba(255, 255, 255, 0.85);
   --hover: #eef1f6;
@@ -31,8 +32,9 @@
   --fg3: #6f7684;
   --brand: #3ecf8e;
   --brand-hover: #54dba1;
-  --primary: #3b82f6;
-  --primary-hover: #60a5fa;
+  --primary: #f59a3c;
+  --primary-hover: #f7b062;
+  --primary-soft: rgba(245, 154, 60, 0.12);
   --tiger: #f2a65a;
   --nav: rgba(17, 19, 24, 0.75);
   --hover: #262b34;

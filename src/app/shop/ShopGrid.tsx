@@ -78,7 +78,7 @@ export default function ShopGrid({
           <div className="flex items-center gap-3">
             <div className="relative w-full sm:w-64">
               <input
-                className="input !py-2.5 pr-9"
+                className="input !py-2 pr-9"
                 style={{ fontSize: 16 }}
                 placeholder="Search products..."
                 value={q}
@@ -98,7 +98,7 @@ export default function ShopGrid({
             </div>
             <label className="flex items-center gap-2 text-sm whitespace-nowrap select-none" style={{ color: 'var(--fg2)' }}>
               <input type="checkbox" checked={inStock} onChange={(e) => setInStock(e.target.checked)}
-                className="w-4 h-4 accent-blue-600" />
+                className="w-4 h-4 accent-orange-500" />
               In stock only
             </label>
           </div>
@@ -131,44 +131,46 @@ export default function ShopGrid({
               const out = !p.unlimited_stock && p.stock <= 0;
               return (
                 <Link key={p.id} href={loggedIn ? `/product/${p.id}` : '/login'}
-                  className="card !py-3 !px-4 flex items-center gap-3"
+                  className="card !py-2.5 !px-3 flex items-center gap-2.5 !rounded-xl"
                   style={cardStyle(p)}>
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
                     style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>
-                    <ProductIcon emojiId={p.emoji_id} emoji={p.emoji} size={24} />
+                    <ProductIcon emojiId={p.emoji_id} emoji={p.emoji} size={20} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-sm leading-snug">{ceText(p.name)}</div>
+                    <div className="font-semibold text-[13px] leading-snug">{ceText(p.name)}</div>
                     <span className="mt-0.5 inline-block">{stockLine(p)}</span>
                   </div>
-                  <div className="text-base font-extrabold shrink-0">${p.price.toFixed(2)}</div>
+                  <div className="text-sm font-extrabold shrink-0">${p.price.toFixed(2)}</div>
                 </Link>
               );
             })}
           </div>
         </div>
 
-        {/* Desktop — slim card grid */}
-        <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mt-4">
+        {/* Desktop — compact tile grid */}
+        <div className="hidden sm:grid sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 mt-4">
           {products.map((p) => {
-            const out = !p.unlimited_stock && p.stock <= 0;
+            const t = TINTS[tints[p.id]];
             return (
               <Link key={p.id} href={loggedIn ? `/product/${p.id}` : '/login'}
-                className="card card-hover !p-3 flex flex-col"
-                style={cardStyle(p)}>
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
-                    style={{ background: 'var(--surface2)', border: '1px solid var(--border)' }}>
+                className="group rounded-xl overflow-hidden flex flex-col border card-hover"
+                style={{ background: t?.bg ?? 'var(--surface)', borderColor: t?.border ?? 'var(--border)' }}>
+                <div className="h-[52px] flex items-center justify-center"
+                  style={{ background: 'linear-gradient(135deg, var(--primary-soft), var(--surface2))' }}>
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center"
+                    style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
                     <ProductIcon emojiId={p.emoji_id} emoji={p.emoji} size={22} />
                   </div>
-                  <div className="min-w-0">
-                    <div className="font-bold text-sm leading-snug truncate" title={p.name}>{ceText(p.name)}</div>
-                    <div className="text-xs mt-0.5" style={{ color: 'var(--fg3)' }}>per unit</div>
-                  </div>
                 </div>
-                <div className="mt-3 flex items-end justify-between gap-2">
-                  {stockLine(p)}
-                  <div className="text-lg font-extrabold shrink-0">${p.price.toFixed(2)}</div>
+                <div className="px-2.5 pt-2 pb-2 flex flex-col flex-1">
+                  <div className="font-semibold text-[13px] leading-snug line-clamp-2 min-h-[34px]" title={p.name}>{ceText(p.name)}</div>
+                  <div className="mt-1 text-[11px]">{stockLine(p)}</div>
+                  <div className="mt-2 pt-2 border-t flex items-center justify-between" style={{ borderColor: 'var(--border)' }}>
+                    <div className="text-[15px] font-extrabold">${p.price.toFixed(2)}</div>
+                    <span className="w-6 h-6 rounded-md flex items-center justify-center text-xs font-bold"
+                      style={{ background: 'var(--primary-soft)', color: 'var(--primary)' }}>›</span>
+                  </div>
                 </div>
               </Link>
             );

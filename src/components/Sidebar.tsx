@@ -29,14 +29,14 @@ export default function Sidebar({ loggedIn, balance }: { loggedIn: boolean; bala
 
       <div className="px-5">
         {loggedIn && balance !== null ? (
-          <div className="rounded-xl p-4 text-white" style={{ background: 'linear-gradient(135deg,#2563eb,#1d4ed8)' }}>
+          <div className="rounded-xl p-3.5 text-white" style={{ background: 'linear-gradient(135deg,#f59a3c,#d9620a)' }}>
             <div className="flex items-center gap-1.5 text-[13px] font-medium opacity-90">
               <img src="/api/emoji?id=6028517788606272241" alt="" width={15} height={15} className="w-[15px] h-[15px]" />
               {t('balance')}
             </div>
             <div className="text-2xl font-extrabold mt-0.5">${balance.toFixed(2)}</div>
-            <Link href="/wallet"
-              className="mt-3 flex items-center justify-between rounded-lg bg-white text-blue-700 font-semibold text-sm px-3.5 py-2.5">
+            <Link href="/wallet/topup"
+              className="mt-3 flex items-center justify-between rounded-lg bg-white font-semibold text-sm px-3 py-2" style={{ color: '#c2570a' }}>
               <img src="/api/emoji?id=5197434882321567830" alt="" width={15} height={15} className="w-[15px] h-[15px]" />
               {t('topup')} <span className="text-lg leading-none">+</span>
             </Link>
@@ -62,12 +62,13 @@ export default function Sidebar({ loggedIn, balance }: { loggedIn: boolean; bala
             const active = path.startsWith(it.href);
             return (
               <Link key={it.href} href={it.href}
-                className="flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-base font-semibold transition"
+                className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-semibold transition"
                 style={{
                   color: active ? 'var(--primary)' : 'var(--fg2)',
-                  background: active ? 'rgba(37,99,235,.09)' : 'transparent',
+                  background: active ? 'var(--primary-soft)' : 'transparent',
+                  boxShadow: active ? 'inset 0 0 0 1px var(--primary)' : 'none',
                 }}>
-                <img src={`/api/emoji?id=${it.emojiId}`} alt="" width={24} height={24} className="w-6 h-6" />
+                <img src={`/api/emoji?id=${it.emojiId}`} alt="" width={18} height={18} className="w-[18px] h-[18px]" />
                 {t(it.key)}
               </Link>
             );
