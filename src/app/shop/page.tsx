@@ -38,7 +38,8 @@ export default async function ShopPage() {
     const v = settings.get(k);
     return typeof v === 'string' && MODES.has(v) ? (v as string) : undefined;
   };
-  const inStockColor = modeOf('color.in_stock') ?? 'blue';
+  // Only explicit bot colors tint cards: product override → category color →
+  // category default. Out-of-stock = red. In-stock default = neutral (no tint).
   const oosColor = modeOf('color.out_of_stock') ?? 'red';
   const catDefault = modeOf('color.category.default');
   const tintOf = (p: (typeof flat)[number]): string => {
@@ -47,8 +48,7 @@ export default async function ShopPage() {
     return (
       modeOf(`color.product.${p.id}`) ??
       (p.category_id != null ? modeOf(`color.category.${p.category_id}`) : undefined) ??
-      catDefault ??
-      inStockColor
+      catDefault
     );
   };
   const tints = Object.fromEntries(flat.map((p) => [p.id, tintOf(p)]));
