@@ -109,4 +109,4 @@ html { scroll-behavior: smooth; }
   .custom-cursor, .custom-cursor * { cursor: none !important; }
 }
 
-html, body { overflow-x: hidden; max-width: 100%; }
+html, body { overflow-x: clip; max-width: 100%; }

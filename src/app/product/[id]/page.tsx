@@ -121,6 +121,15 @@ export default async function ProductPage({ params }: { params: { id: string } }
           </div>
         </div>
       </div>
+      <div className="sm:hidden">
+        <BuyPanel
+          productId={p.id}
+          unitPrice={p.price}
+          maxQty={p.unlimited_stock || out ? 100 : Math.max(p.stock, 1)}
+          preorder={out}
+          mobileBar
+        />
+      </div>
     </div>
   );
 }
