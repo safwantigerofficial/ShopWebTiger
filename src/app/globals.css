@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --bg: #f6f5f1;
-  --surface: #ffffff;
-  --surface2: #f2f0ea;
-  --border: #eae6dd;
-  --border2: #ddd8cc;
+  --bg: #f5f0e4;
+  --surface: #fffdf8;
+  --surface2: #f0ead9;
+  --border: #e9e2d0;
+  --border2: #d8cfba;
   --fg: #111827;
   --fg2: #4b5563;
   --fg3: #8b93a3;
@@ -22,22 +22,22 @@
   color-scheme: light;
 }
 :root[data-theme='dark'] {
-  --bg: #101114;
-  --surface: #1e2025;
-  --surface2: #202228;
-  --border: #2c303a;
-  --border2: #3a404c;
-  --fg: #ededed;
-  --fg2: #a1a7b5;
-  --fg3: #6f7684;
+  --bg: #0c1214;
+  --surface: #131c1f;
+  --surface2: #182427;
+  --border: #22323a;
+  --border2: #2f434d;
+  --fg: #e9f0f0;
+  --fg2: #a3b4b8;
+  --fg3: #6e8389;
   --brand: #3ecf8e;
   --brand-hover: #54dba1;
   --primary: #2dd4bf;
   --primary-hover: #5eead4;
-  --primary-soft: rgba(45, 212, 191, 0.12);
+  --primary-soft: rgba(45, 212, 191, 0.14);
   --tiger: #f2a65a;
-  --nav: rgba(17, 19, 24, 0.75);
-  --hover: #262b34;
+  --nav: rgba(12, 18, 20, 0.75);
+  --hover: #1c2a2f;
   color-scheme: dark;
 }
 
@@ -50,6 +50,12 @@ body {
   background-attachment: fixed;
   color: var(--fg);
   transition: background 0.3s, color 0.3s;
+}
+:root[data-theme='dark'] body {
+  background:
+    radial-gradient(1100px 500px at 12% -6%, rgba(45, 212, 191, 0.08), transparent 60%),
+    radial-gradient(900px 420px at 95% 8%, rgba(242, 166, 90, 0.05), transparent 60%),
+    var(--bg);
 }
 
 .serif {
